@@ -575,7 +575,7 @@ class Renderer {
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureIndexY.rawValue))
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureIndexCbCr.rawValue))
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureDepth), index: Int(kTextureIndexDepth.rawValue))
-        renderEncoder.setFragmentBuffer(SharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
+        renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
         
         // Draw each submesh of our mesh
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)

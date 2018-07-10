@@ -16,7 +16,6 @@
 		A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A201F4D120EB5FF6000E574A /* LaunchScreen.storyboard */; };
 		A201F4DF20EB5FF6000E574A /* SummerHolidayProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4DE20EB5FF6000E574A /* SummerHolidayProjectTests.swift */; };
 		A201F4EA20EB5FF6000E574A /* SummerHolidayProjectUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4E920EB5FF6000E574A /* SummerHolidayProjectUITests.swift */; };
-		A201F50D20ECE63D000E574A /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = A201F50C20ECE63D000E574A /* sample.png */; };
 		A201F51C20ECE78E000E574A /* ProjectFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A201F51320ECE78E000E574A /* ProjectFramework.framework */; };
 		A201F52320ECE78E000E574A /* ProjectFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F52220ECE78E000E574A /* ProjectFrameworkTests.swift */; };
 		A201F52520ECE78E000E574A /* ProjectFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = A201F51520ECE78E000E574A /* ProjectFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -115,7 +114,6 @@
 		A201F50620EC01E7000E574A /* NonMaxSuppression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
 		A201F50820EC1D60000E574A /* SRCNNModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRCNNModel.swift; sourceTree = "<group>"; };
 		A201F50A20ECE45C000E574A /* SRCNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SRCNN.mlmodel; sourceTree = "<group>"; };
-		A201F50C20ECE63D000E574A /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = "<group>"; };
 		A201F51320ECE78E000E574A /* ProjectFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ProjectFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A201F51520ECE78E000E574A /* ProjectFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectFramework.h; sourceTree = "<group>"; };
 		A201F51620ECE78E000E574A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -193,7 +191,6 @@
 		A201F4C220EB5FF4000E574A /* SummerHolidayProject */ = {
 			isa = PBXGroup;
 			children = (
-				A201F50C20ECE63D000E574A /* sample.png */,
 				A201F4F720EB67B0000E574A /* CoreMLUtils */,
 				A201F4C320EB5FF4000E574A /* AppDelegate.swift */,
 				A201F4C520EB5FF4000E574A /* Shaders.metal */,
@@ -429,7 +426,6 @@
 				A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */,
 				A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */,
 				A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */,
-				A201F50D20ECE63D000E574A /* sample.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

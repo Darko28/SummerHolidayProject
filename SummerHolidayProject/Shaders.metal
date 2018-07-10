@@ -126,7 +126,7 @@ vertex ColorInOut anchorGeometryVertexTransform(Vertex in [[stage_in]],
 
 // Anchor geometry fragment function
 fragment float4 anchorGeometryFragmentLighting(ColorInOut in [[stage_in]],
-                                               texture2d<float: access::sample> diffuseTexture [[ texture(kTextureIndexColor) ]],
+                                               texture2d<float, access::sample> diffuseTexture [[ texture(kTextureIndexColor) ]],
                                                constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]]) {
     
     float3 normal = float3(in.normal);
@@ -172,7 +172,7 @@ fragment float4 anchorGeometryFragmentLighting(ColorInOut in [[stage_in]],
     // We compute the final color by multiplying the sample from our color maps by the fragment's
     // lighting value
 //    float3 color = in.color.rgb * lightContributions;
-    constexpr sampler colorSampler(mip_filer::linear,
+    constexpr sampler colorSampler(mip_filter::linear,
                                    mag_filter::linear,
                                    min_filter::linear);
     float4 diffColor = diffuseTexture.sample(colorSampler, in.texCoord);
