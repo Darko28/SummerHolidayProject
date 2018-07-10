@@ -42,7 +42,9 @@ vertex ImageColorInOut capturedImageVertexTransform(ImageVertex in [[stage_in]])
 // Captured image fragment function
 fragment float4 capturedImageFragmentShader(ImageColorInOut in [[stage_in]],
                                             texture2d<float, access::sample> capturedImageTextureY [[ texture(kTextureIndexY) ]],
-                                            texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(kTextureIndexCbCr) ]]) {
+                                            texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(kTextureIndexCbCr) ]],
+                                            texture2d<float, access::sample> capturedImageTextureDepth [[ texture(kTextureIndexDepth) ]],
+                                            constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]]) {
     
     constexpr sampler colorSampler(mip_filter::linear,
                                    mag_filter::linear,
@@ -58,9 +60,14 @@ fragment float4 capturedImageFragmentShader(ImageColorInOut in [[stage_in]],
     // Sample Y and CbCr textures to get the YCbCr color at the given texture coordinate
     float4 ycbcr = float4(capturedImageTextureY.sample(colorSampler, in.texCoord).r,
                           capturedImageTextureCbCr.sample(colorSampler, in.texCoord).rg, 1.0);
+    float depth = capturedImageTextureDepth.sample(colorSampler, in.texCoord).r;
     
     // Return converted RGB color
-    return ycbcrToRGBTransform * ycbcr;
+    if (depth < uniforms.cutoffDistance) {
+        return ycbcrToRGBTransform * ycbcr;
+    } else {
+        discard_fragment();
+    }
 }
 
 
@@ -76,6 +83,7 @@ typedef struct {
     float4 color;
     half3  eyePosition;
     half3  normal;
+    float2 texCoord [[attribute(kVertexAttributeTexcoord)]];
 } ColorInOut;
 
 
@@ -111,12 +119,14 @@ vertex ColorInOut anchorGeometryVertexTransform(Vertex in [[stage_in]],
     // Rotate our normals to world coordinates
     float4 normal = modelMatrix * float4(in.normal.x, in.normal.y, in.normal.z, 0.0f);
     out.normal = normalize(half3(normal.xyz));
+    out.texCoord = in.texCoord;
     
     return out;
 }
 
 // Anchor geometry fragment function
 fragment float4 anchorGeometryFragmentLighting(ColorInOut in [[stage_in]],
+                                               texture2d<float: access::sample> diffuseTexture [[ texture(kTextureIndexColor) ]],
                                                constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]]) {
     
     float3 normal = float3(in.normal);
@@ -156,11 +166,17 @@ fragment float4 anchorGeometryFragmentLighting(ColorInOut in [[stage_in]],
     
     // Now that we have the contributions our light sources in the scene, we sum them together
     // to get the fragment's lighting value
+//    float3 lightContributions = ambientContribution + directionalContribution;
     float3 lightContributions = ambientContribution + directionalContribution;
     
     // We compute the final color by multiplying the sample from our color maps by the fragment's
     // lighting value
-    float3 color = in.color.rgb * lightContributions;
+//    float3 color = in.color.rgb * lightContributions;
+    constexpr sampler colorSampler(mip_filer::linear,
+                                   mag_filter::linear,
+                                   min_filter::linear);
+    float4 diffColor = diffuseTexture.sample(colorSampler, in.texCoord);
+    float3 color = diffColor.rgb;   // in.color.rgb; // * lightContributions;
     
     // We use the color we just computed and the alpha channel of our
     // colorMap for this fragment's alpha value

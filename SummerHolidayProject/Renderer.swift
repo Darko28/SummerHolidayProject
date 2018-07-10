@@ -43,6 +43,7 @@ class Renderer {
     let device: MTLDevice
     let inFlightSemaphore = DispatchSemaphore(value: kMaxBuffersInFlight)
     var renderDestination: RenderDestinationProvider
+    var shouldRender: Bool = true
     
     // Metal objects
     var commandQueue: MTLCommandQueue!
@@ -55,6 +56,8 @@ class Renderer {
     var anchorDepthState: MTLDepthStencilState!
     var capturedImageTextureY: CVMetalTexture?
     var capturedImageTextureCbCr: CVMetalTexture?
+    var capturedImageTextureDepth: CVMetalTexture?
+    var anchorTexture: MTLTexture?
     
     // Captured image texture cache
     var capturedImageTextureCache: CVMetalTextureCache!
@@ -122,7 +125,7 @@ class Renderer {
             //   we use from the CVMetalTextures are not valid unless their parent CVMetalTextures
             //   are retained. Since we may release our CVMetalTexture ivars during the rendering
             //   cycle, we must retain them separately here.
-            var textures = [capturedImageTextureY, capturedImageTextureCbCr]
+            var textures = [capturedImageTextureY, capturedImageTextureCbCr, capturedImageTextureDepth]
             commandBuffer.addCompletedHandler{ [weak self] commandBuffer in
                 if let strongSelf = self {
                     strongSelf.inFlightSemaphore.signal()
@@ -131,7 +134,11 @@ class Renderer {
             }
             
             updateBufferStates()
-            updateGameState()
+//            updateGameState()
+            let shouldUpdate = updateGameState()
+            if !shouldUpdate {
+                return
+            }
             
             if let renderPassDescriptor = renderDestination.currentRenderPassDescriptor, let currentDrawable = renderDestination.currentDrawable, let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
                 
@@ -298,6 +305,17 @@ class Renderer {
     func loadAssets() {
         // Create and load our assets into Metal objects including meshes and textures
         
+        // Load texture for the model
+        let loader = MTKTextureLoader(device: device)
+        guard let texUrl = Bundle.main.url(forResource: "GameTex", withExtension: "png") else { fatalError("Failed to find model file.") }
+        
+        do {
+            var modelTex: MTLTexture
+            try modelTex = loader.newTexture(URL: texUrl, options: [.origin: MTKTextureLoader.Origin.flippedVertically, .SRGB: false])
+        } catch let error {
+            print(error)
+        }
+        
         // Create a MetalKit mesh buffer allocator so that ModelIO will load mesh data directly into
         //   Metal buffers accessible by the GPU
         let metalAllocator = MTKMeshBufferAllocator(device: device)
@@ -311,8 +329,15 @@ class Renderer {
         (vertexDescriptor.attributes[Int(kVertexAttributeTexcoord.rawValue)] as! MDLVertexAttribute).name = MDLVertexAttributeTextureCoordinate
         (vertexDescriptor.attributes[Int(kVertexAttributeNormal.rawValue)] as! MDLVertexAttribute).name   = MDLVertexAttributeNormal
         
+        // Load the .OBJ file
+        guard let url = Bundle.main.url(forResource: "Game", withExtension: "obj") else { fatalError("Failed to find model file.") }
+        
+        let asset = MDLAsset(url: url, vertexDescriptor: vertexDescriptor, bufferAllocator: metalAllocator)
+        guard let object = asset.object(at: 0) as? MDLMesh else { fatalError("Failed to get mesh from asset.") }
+        
         // Use ModelIO to create a box mesh as our object
-        let mesh = MDLMesh(boxWithExtent: vector3(0.075, 0.075, 0.075), segments: vector3(1, 1, 1), inwardNormals: false, geometryType: .triangles, allocator: metalAllocator)
+//        let mesh = MDLMesh(boxWithExtent: vector3(0.075, 0.075, 0.075), segments: vector3(1, 1, 1), inwardNormals: false, geometryType: .triangles, allocator: metalAllocator)
+        let mesh = object
         
         // Perform the format/relayout of mesh vertices by setting the new vertex descriptor in our
         //   Model IO mesh
@@ -339,11 +364,11 @@ class Renderer {
         anchorUniformBufferAddress = anchorUniformBuffer.contents().advanced(by: anchorUniformBufferOffset)
     }
     
-    func updateGameState() {
+    func updateGameState() -> Bool {
         // Update any game state
         
         guard let currentFrame = session.currentFrame else {
-            return
+            return false
         }
         
         updateSharedUniforms(frame: currentFrame)
@@ -355,6 +380,8 @@ class Renderer {
             
             updateImagePlane(frame: currentFrame)
         }
+        
+        return currentFrame.capturedDepthData != nil
     }
     
     func updateSharedUniforms(frame: ARFrame) {
@@ -380,9 +407,11 @@ class Renderer {
         uniforms.pointee.directionalLightDirection = directionalLightDirection
         
         let directionalLightColor: vector_float3 = vector3(0.6, 0.6, 0.6)
-        uniforms.pointee.directionalLightColor = directionalLightColor * ambientIntensity
+//        uniforms.pointee.directionalLightColor = directionalLightColor * ambientIntensity
+        uniforms.pointee.directionalLightColor = directionalLightColor
         
-        uniforms.pointee.materialShininess = 30
+//        uniforms.pointee.materialShininess = 30
+        uniforms.pointee.materialShininess = 0
     }
     
     func updateAnchors(frame: ARFrame) {

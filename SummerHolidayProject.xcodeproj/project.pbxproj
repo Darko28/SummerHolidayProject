@@ -16,6 +16,23 @@
 		A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A201F4D120EB5FF6000E574A /* LaunchScreen.storyboard */; };
 		A201F4DF20EB5FF6000E574A /* SummerHolidayProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4DE20EB5FF6000E574A /* SummerHolidayProjectTests.swift */; };
 		A201F4EA20EB5FF6000E574A /* SummerHolidayProjectUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4E920EB5FF6000E574A /* SummerHolidayProjectUITests.swift */; };
+		A201F50D20ECE63D000E574A /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = A201F50C20ECE63D000E574A /* sample.png */; };
+		A201F51C20ECE78E000E574A /* ProjectFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A201F51320ECE78E000E574A /* ProjectFramework.framework */; };
+		A201F52320ECE78E000E574A /* ProjectFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F52220ECE78E000E574A /* ProjectFrameworkTests.swift */; };
+		A201F52520ECE78E000E574A /* ProjectFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = A201F51520ECE78E000E574A /* ProjectFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A201F52820ECE78E000E574A /* ProjectFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A201F51320ECE78E000E574A /* ProjectFramework.framework */; };
+		A201F52A20ECE78E000E574A /* ProjectFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A201F51320ECE78E000E574A /* ProjectFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A201F53120ECE91E000E574A /* SRCNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A201F50A20ECE45C000E574A /* SRCNN.mlmodel */; };
+		A201F53220ECE91E000E574A /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4F820EB680F000E574A /* Math.swift */; };
+		A201F53320ECE91E000E574A /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4FA20EB6AB1000E574A /* Array.swift */; };
+		A201F53420ECE91E000E574A /* CVPixelBuffer+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4FC20EB6E8F000E574A /* CVPixelBuffer+Helpers.swift */; };
+		A201F53520ECE91E000E574A /* MLMultiArray+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4FE20EB7CDC000E574A /* MLMultiArray+Image.swift */; };
+		A201F53620ECE91E000E574A /* MultiArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50020EB7D82000E574A /* MultiArray.swift */; };
+		A201F53720ECE91E000E574A /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50220EBCE10000E574A /* UIImage+CVPixelBuffer.swift */; };
+		A201F53820ECE91E000E574A /* Predictions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50420EBFFBC000E574A /* Predictions.swift */; };
+		A201F53920ECE91E000E574A /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50620EC01E7000E574A /* NonMaxSuppression.swift */; };
+		A201F53A20ECE91E000E574A /* SRCNNModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50820EC1D60000E574A /* SRCNNModel.swift */; };
+		A201F53E20ECEB28000E574A /* UIImageView+SRCNN.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,7 +50,42 @@
 			remoteGlobalIDString = A201F4BF20EB5FF4000E574A;
 			remoteInfo = SummerHolidayProject;
 		};
+		A201F51D20ECE78E000E574A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A201F4B820EB5FF4000E574A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A201F51220ECE78E000E574A;
+			remoteInfo = ProjectFramework;
+		};
+		A201F51F20ECE78E000E574A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A201F4B820EB5FF4000E574A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A201F4BF20EB5FF4000E574A;
+			remoteInfo = SummerHolidayProject;
+		};
+		A201F52620ECE78E000E574A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A201F4B820EB5FF4000E574A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A201F51220ECE78E000E574A;
+			remoteInfo = ProjectFramework;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A201F52920ECE78E000E574A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A201F52A20ECE78E000E574A /* ProjectFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A201F4C020EB5FF4000E574A /* SummerHolidayProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SummerHolidayProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,6 +105,24 @@
 		A201F4E520EB5FF6000E574A /* SummerHolidayProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SummerHolidayProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A201F4E920EB5FF6000E574A /* SummerHolidayProjectUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummerHolidayProjectUITests.swift; sourceTree = "<group>"; };
 		A201F4EB20EB5FF6000E574A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A201F4F820EB680F000E574A /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		A201F4FA20EB6AB1000E574A /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		A201F4FC20EB6E8F000E574A /* CVPixelBuffer+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Helpers.swift"; sourceTree = "<group>"; };
+		A201F4FE20EB7CDC000E574A /* MLMultiArray+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MLMultiArray+Image.swift"; sourceTree = "<group>"; };
+		A201F50020EB7D82000E574A /* MultiArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiArray.swift; sourceTree = "<group>"; };
+		A201F50220EBCE10000E574A /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
+		A201F50420EBFFBC000E574A /* Predictions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictions.swift; sourceTree = "<group>"; };
+		A201F50620EC01E7000E574A /* NonMaxSuppression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
+		A201F50820EC1D60000E574A /* SRCNNModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRCNNModel.swift; sourceTree = "<group>"; };
+		A201F50A20ECE45C000E574A /* SRCNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SRCNN.mlmodel; sourceTree = "<group>"; };
+		A201F50C20ECE63D000E574A /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = "<group>"; };
+		A201F51320ECE78E000E574A /* ProjectFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ProjectFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A201F51520ECE78E000E574A /* ProjectFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProjectFramework.h; sourceTree = "<group>"; };
+		A201F51620ECE78E000E574A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A201F51B20ECE78E000E574A /* ProjectFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProjectFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A201F52220ECE78E000E574A /* ProjectFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFrameworkTests.swift; sourceTree = "<group>"; };
+		A201F52420ECE78E000E574A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+SRCNN.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A201F52820ECE78E000E574A /* ProjectFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +148,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A201F50F20ECE78E000E574A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A201F51820ECE78E000E574A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A201F51C20ECE78E000E574A /* ProjectFramework.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -86,6 +172,8 @@
 				A201F4C220EB5FF4000E574A /* SummerHolidayProject */,
 				A201F4DD20EB5FF6000E574A /* SummerHolidayProjectTests */,
 				A201F4E820EB5FF6000E574A /* SummerHolidayProjectUITests */,
+				A201F51420ECE78E000E574A /* ProjectFramework */,
+				A201F52120ECE78E000E574A /* ProjectFrameworkTests */,
 				A201F4C120EB5FF4000E574A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,6 +184,8 @@
 				A201F4C020EB5FF4000E574A /* SummerHolidayProject.app */,
 				A201F4DA20EB5FF6000E574A /* SummerHolidayProjectTests.xctest */,
 				A201F4E520EB5FF6000E574A /* SummerHolidayProjectUITests.xctest */,
+				A201F51320ECE78E000E574A /* ProjectFramework.framework */,
+				A201F51B20ECE78E000E574A /* ProjectFrameworkTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +193,8 @@
 		A201F4C220EB5FF4000E574A /* SummerHolidayProject */ = {
 			isa = PBXGroup;
 			children = (
+				A201F50C20ECE63D000E574A /* sample.png */,
+				A201F4F720EB67B0000E574A /* CoreMLUtils */,
 				A201F4C320EB5FF4000E574A /* AppDelegate.swift */,
 				A201F4C520EB5FF4000E574A /* Shaders.metal */,
 				A201F4C720EB5FF4000E574A /* ShaderTypes.h */,
@@ -135,7 +227,54 @@
 			path = SummerHolidayProjectUITests;
 			sourceTree = "<group>";
 		};
+		A201F4F720EB67B0000E574A /* CoreMLUtils */ = {
+			isa = PBXGroup;
+			children = (
+				A201F4F820EB680F000E574A /* Math.swift */,
+				A201F4FA20EB6AB1000E574A /* Array.swift */,
+				A201F4FC20EB6E8F000E574A /* CVPixelBuffer+Helpers.swift */,
+				A201F4FE20EB7CDC000E574A /* MLMultiArray+Image.swift */,
+				A201F50020EB7D82000E574A /* MultiArray.swift */,
+				A201F50220EBCE10000E574A /* UIImage+CVPixelBuffer.swift */,
+				A201F50420EBFFBC000E574A /* Predictions.swift */,
+				A201F50620EC01E7000E574A /* NonMaxSuppression.swift */,
+			);
+			path = CoreMLUtils;
+			sourceTree = "<group>";
+		};
+		A201F51420ECE78E000E574A /* ProjectFramework */ = {
+			isa = PBXGroup;
+			children = (
+				A201F51520ECE78E000E574A /* ProjectFramework.h */,
+				A201F50820EC1D60000E574A /* SRCNNModel.swift */,
+				A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */,
+				A201F50A20ECE45C000E574A /* SRCNN.mlmodel */,
+				A201F51620ECE78E000E574A /* Info.plist */,
+			);
+			path = ProjectFramework;
+			sourceTree = "<group>";
+		};
+		A201F52120ECE78E000E574A /* ProjectFrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				A201F52220ECE78E000E574A /* ProjectFrameworkTests.swift */,
+				A201F52420ECE78E000E574A /* Info.plist */,
+			);
+			path = ProjectFrameworkTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A201F51020ECE78E000E574A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A201F52520ECE78E000E574A /* ProjectFramework.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		A201F4BF20EB5FF4000E574A /* SummerHolidayProject */ = {
@@ -145,10 +284,12 @@
 				A201F4BC20EB5FF4000E574A /* Sources */,
 				A201F4BD20EB5FF4000E574A /* Frameworks */,
 				A201F4BE20EB5FF4000E574A /* Resources */,
+				A201F52920ECE78E000E574A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A201F52720ECE78E000E574A /* PBXTargetDependency */,
 			);
 			name = SummerHolidayProject;
 			productName = SummerHolidayProject;
@@ -191,6 +332,43 @@
 			productReference = A201F4E520EB5FF6000E574A /* SummerHolidayProjectUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A201F51220ECE78E000E574A /* ProjectFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A201F52B20ECE78E000E574A /* Build configuration list for PBXNativeTarget "ProjectFramework" */;
+			buildPhases = (
+				A201F50E20ECE78E000E574A /* Sources */,
+				A201F50F20ECE78E000E574A /* Frameworks */,
+				A201F51020ECE78E000E574A /* Headers */,
+				A201F51120ECE78E000E574A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProjectFramework;
+			productName = ProjectFramework;
+			productReference = A201F51320ECE78E000E574A /* ProjectFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A201F51A20ECE78E000E574A /* ProjectFrameworkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A201F52E20ECE78E000E574A /* Build configuration list for PBXNativeTarget "ProjectFrameworkTests" */;
+			buildPhases = (
+				A201F51720ECE78E000E574A /* Sources */,
+				A201F51820ECE78E000E574A /* Frameworks */,
+				A201F51920ECE78E000E574A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A201F51E20ECE78E000E574A /* PBXTargetDependency */,
+				A201F52020ECE78E000E574A /* PBXTargetDependency */,
+			);
+			name = ProjectFrameworkTests;
+			productName = ProjectFrameworkTests;
+			productReference = A201F51B20ECE78E000E574A /* ProjectFrameworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -212,6 +390,13 @@
 						CreatedOnToolsVersion = 9.4.1;
 						TestTargetID = A201F4BF20EB5FF4000E574A;
 					};
+					A201F51220ECE78E000E574A = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+					A201F51A20ECE78E000E574A = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = A201F4BF20EB5FF4000E574A;
+					};
 				};
 			};
 			buildConfigurationList = A201F4BB20EB5FF4000E574A /* Build configuration list for PBXProject "SummerHolidayProject" */;
@@ -228,8 +413,10 @@
 			projectRoot = "";
 			targets = (
 				A201F4BF20EB5FF4000E574A /* SummerHolidayProject */,
+				A201F51220ECE78E000E574A /* ProjectFramework */,
 				A201F4D920EB5FF6000E574A /* SummerHolidayProjectTests */,
 				A201F4E420EB5FF6000E574A /* SummerHolidayProjectUITests */,
+				A201F51A20ECE78E000E574A /* ProjectFrameworkTests */,
 			);
 		};
 /* End PBXProject section */
@@ -242,6 +429,7 @@
 				A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */,
 				A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */,
 				A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */,
+				A201F50D20ECE63D000E574A /* sample.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +447,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A201F51120ECE78E000E574A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A201F51920ECE78E000E574A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -266,10 +468,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A201F4C620EB5FF4000E574A /* Shaders.metal in Sources */,
-				A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */,
 				A201F4CB20EB5FF4000E574A /* ViewController.swift in Sources */,
 				A201F4C420EB5FF4000E574A /* AppDelegate.swift in Sources */,
+				A201F4C620EB5FF4000E574A /* Shaders.metal in Sources */,
+				A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +491,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A201F50E20ECE78E000E574A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A201F53A20ECE91E000E574A /* SRCNNModel.swift in Sources */,
+				A201F53220ECE91E000E574A /* Math.swift in Sources */,
+				A201F53320ECE91E000E574A /* Array.swift in Sources */,
+				A201F53420ECE91E000E574A /* CVPixelBuffer+Helpers.swift in Sources */,
+				A201F53520ECE91E000E574A /* MLMultiArray+Image.swift in Sources */,
+				A201F53620ECE91E000E574A /* MultiArray.swift in Sources */,
+				A201F53720ECE91E000E574A /* UIImage+CVPixelBuffer.swift in Sources */,
+				A201F53120ECE91E000E574A /* SRCNN.mlmodel in Sources */,
+				A201F53E20ECEB28000E574A /* UIImageView+SRCNN.swift in Sources */,
+				A201F53820ECE91E000E574A /* Predictions.swift in Sources */,
+				A201F53920ECE91E000E574A /* NonMaxSuppression.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A201F51720ECE78E000E574A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A201F52320ECE78E000E574A /* ProjectFrameworkTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -301,6 +529,21 @@
 			isa = PBXTargetDependency;
 			target = A201F4BF20EB5FF4000E574A /* SummerHolidayProject */;
 			targetProxy = A201F4E620EB5FF6000E574A /* PBXContainerItemProxy */;
+		};
+		A201F51E20ECE78E000E574A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A201F51220ECE78E000E574A /* ProjectFramework */;
+			targetProxy = A201F51D20ECE78E000E574A /* PBXContainerItemProxy */;
+		};
+		A201F52020ECE78E000E574A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A201F4BF20EB5FF4000E574A /* SummerHolidayProject */;
+			targetProxy = A201F51F20ECE78E000E574A /* PBXContainerItemProxy */;
+		};
+		A201F52720ECE78E000E574A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A201F51220ECE78E000E574A /* ProjectFramework */;
+			targetProxy = A201F52620ECE78E000E574A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -441,6 +684,7 @@
 		A201F4EF20EB5FF6000E574A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HCYK33GWAM;
@@ -460,6 +704,7 @@
 		A201F4F020EB5FF6000E574A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HCYK33GWAM;
@@ -558,6 +803,102 @@
 			};
 			name = Release;
 		};
+		A201F52C20ECE78E000E574A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HCYK33GWAM;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ProjectFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Darko.ProjectFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		A201F52D20ECE78E000E574A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HCYK33GWAM;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ProjectFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Darko.ProjectFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A201F52F20ECE78E000E574A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HCYK33GWAM;
+				INFOPLIST_FILE = ProjectFrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Darko.ProjectFrameworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SummerHolidayProject.app/SummerHolidayProject";
+			};
+			name = Debug;
+		};
+		A201F53020ECE78E000E574A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HCYK33GWAM;
+				INFOPLIST_FILE = ProjectFrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Darko.ProjectFrameworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SummerHolidayProject.app/SummerHolidayProject";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -593,6 +934,24 @@
 			buildConfigurations = (
 				A201F4F520EB5FF6000E574A /* Debug */,
 				A201F4F620EB5FF6000E574A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A201F52B20ECE78E000E574A /* Build configuration list for PBXNativeTarget "ProjectFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A201F52C20ECE78E000E574A /* Debug */,
+				A201F52D20ECE78E000E574A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A201F52E20ECE78E000E574A /* Build configuration list for PBXNativeTarget "ProjectFrameworkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A201F52F20ECE78E000E574A /* Debug */,
+				A201F53020ECE78E000E574A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
