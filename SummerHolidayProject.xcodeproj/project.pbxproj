@@ -191,11 +191,10 @@
 		A201F4C220EB5FF4000E574A /* SummerHolidayProject */ = {
 			isa = PBXGroup;
 			children = (
+				A28FEF9E20F4EDD200F047D9 /* Backdrop */,
 				A201F4F720EB67B0000E574A /* CoreMLUtils */,
 				A201F4C320EB5FF4000E574A /* AppDelegate.swift */,
-				A201F4C520EB5FF4000E574A /* Shaders.metal */,
 				A201F4C720EB5FF4000E574A /* ShaderTypes.h */,
-				A201F4C820EB5FF4000E574A /* Renderer.swift */,
 				A201F4CA20EB5FF4000E574A /* ViewController.swift */,
 				A201F4CC20EB5FF4000E574A /* Main.storyboard */,
 				A201F4CF20EB5FF6000E574A /* Assets.xcassets */,
@@ -258,6 +257,15 @@
 				A201F52420ECE78E000E574A /* Info.plist */,
 			);
 			path = ProjectFrameworkTests;
+			sourceTree = "<group>";
+		};
+		A28FEF9E20F4EDD200F047D9 /* Backdrop */ = {
+			isa = PBXGroup;
+			children = (
+				A201F4C520EB5FF4000E574A /* Shaders.metal */,
+				A201F4C820EB5FF4000E574A /* Renderer.swift */,
+			);
+			path = Backdrop;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
