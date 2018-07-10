@@ -112,6 +112,10 @@ class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
     
     // MARK: - ARSessionDelegate
     
+//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        renderer.update()
+//    }
+    
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
         

@@ -49,6 +49,7 @@ class Renderer {
     var commandQueue: MTLCommandQueue!
     var sharedUniformBuffer: MTLBuffer!
     var anchorUniformBuffer: MTLBuffer!
+    var planeAnchorUniformBuffer: MTLBuffer!
     var imagePlaneVertexBuffer: MTLBuffer!
     var capturedImagePipelineState: MTLRenderPipelineState!
     var capturedImageDepthState: MTLDepthStencilState!
@@ -69,6 +70,12 @@ class Renderer {
     // MetalKit mesh containing vertex data and index buffer for our anchor geometry
     var cubeMesh: MTKMesh!
     
+    // MetalKit mesh containing vertex data and index buffer for our anchor geometry
+    var instanceMesh: MTKMesh!
+    
+    // MetalKit mesh containing vertex data and index buffer for our anchor geometry
+    var planeMesh: MTKMesh!
+    
     // Used to determine _uniformBufferStride each frame.
     //   This is the current frame number modulo kMaxBuffersInFlight
     var uniformBufferIndex: Int = 0
@@ -79,14 +86,23 @@ class Renderer {
     // Offset within _anchorUniformBuffer to set for the current frame
     var anchorUniformBufferOffset: Int = 0
     
+    // Offset within _planeAnchorUniformBuffer to set for the current frame
+    var planeAnchorUniformBufferOffset: Int = 0
+    
     // Addresses to write shared uniforms to each frame
     var sharedUniformBufferAddress: UnsafeMutableRawPointer!
     
     // Addresses to write anchor uniforms to each frame
     var anchorUniformBufferAddress: UnsafeMutableRawPointer!
     
+    // Addresses to write plane anchor uniforms to each frame
+    var planeAnchorUniformBufferAddress: UnsafeMutableRawPointer!
+    
     // The number of anchor instances to render
     var anchorInstanceCount: Int = 0
+    
+    // The number of plane anchor instances to render
+    var planeAnchorInstanceCount: Int = 0
     
     // The current viewport size
     var viewportSize: CGSize = CGSize()
@@ -312,6 +328,7 @@ class Renderer {
         do {
             var modelTex: MTLTexture
             try modelTex = loader.newTexture(URL: texUrl, options: [.origin: MTKTextureLoader.Origin.flippedVertically, .SRGB: false])
+            anchorTexture = modelTex
         } catch let error {
             print(error)
         }
@@ -415,12 +432,17 @@ class Renderer {
     }
     
     func updateAnchors(frame: ARFrame) {
+        
+//        let anchors: [ARAnchor] = frame.anchors.filter { !$0.isKind(of: ARPlaneAnchor.self) }
+        
         // Update the anchor uniform buffer with transforms of the current frame's anchors
+//        anchorInstanceCount = min(frame.anchors.count, kMaxAnchorInstanceCount)
         anchorInstanceCount = min(frame.anchors.count, kMaxAnchorInstanceCount)
         
         var anchorOffset: Int = 0
         if anchorInstanceCount == kMaxAnchorInstanceCount {
             anchorOffset = max(frame.anchors.count - kMaxAnchorInstanceCount, 0)
+//            anchorOffset = max(anchors.count - kMaxAnchorInstanceCount, 0)
         }
         
         for index in 0..<anchorInstanceCount {
@@ -430,23 +452,79 @@ class Renderer {
             var coordinateSpaceTransform = matrix_identity_float4x4
             coordinateSpaceTransform.columns.2.z = -1.0
             
-            let modelMatrix = simd_mul(anchor.transform, coordinateSpaceTransform)
+            // 0th index is the face. Use the z distance for the backdrop
+            if index == 0 {
+                
+                var behindDist: Float = 0.15
+                
+                // Calculate the eye-depth of the anchor
+                let uniforms = sharedUniformBufferAddress.assumingMemoryBound(to: SharedUniforms.self)
+                let viewMatrix = frame.camera.viewMatrix(for: .landscapeRight)
+                let upwardsCam = viewMatrix[1, 2]
+                let camHeight = viewMatrix[3, 1]
+                let headHeight = anchor.transform[3, 1]
+                if upwardsCam > 0.33 && camHeight - headHeight > 0.1 {
+                    behindDist = 1.0
+                }
+                
+                let modelMatrix = anchor.transform
+                let modelViewMatrix = viewMatrix * modelMatrix
+                uniforms.pointee.cutoffDistance = -modelViewMatrix[3, 2] + behindDist
+            }
+            
+//            let modelMatrix = simd_mul(anchor.transform, coordinateSpaceTransform)
+            let modelMatrix = simd_mul(matrix_identity_float4x4, coordinateSpaceTransform)
             
             let anchorUniforms = anchorUniformBufferAddress.assumingMemoryBound(to: InstanceUniforms.self).advanced(by: index)
             anchorUniforms.pointee.modelMatrix = modelMatrix
         }
     }
     
+//    func updatePlaneAnchors(frame: ARFrame) {
+//
+//        let anchors: [ARPlaneAnchor] = frame.anchors.filter ({ $0.isKind(of: ARPlaneAnchor.self) }) as! [ARPlaneAnchor]
+//
+//        // Update the anchor uniform buffer with transforms of the current frame's anchors
+//        planeAnchorInstanceCount = min(anchors.count, kMaxPlaneAnchorInstanceCount)
+//
+//        var anchorOffset: Int = 0
+//        if planeAnchorInstanceCount == kMaxPlaneAnchorInstanceCount {
+//            anchorOffset = max(anchors.count - kMaxPlaneAnchorInstanceCount)
+//        }
+//
+//        for index in 0..<planeAnchorInstanceCount {
+//            let anchor = anchors[index + anchorOffset]
+//
+//            // Flip Z axis to convert geometry from right handed to left handed
+//            var coordinateSpaceTransform = matrix_identity_float4x4
+//            coordinateSpaceTransform.columns.2.z = -1.0
+//
+//            let rotation = matrix4x4_rotation(radians: float.pi/2.0, axis: float3(0.0, 0.0, 1.0))
+//            let modelMatrix = simd_mul(anchor.transform, simd_mul(rotation, coordinateSpaceTransform))
+//
+//            let anchorUniforms = planeAnchorUniformBufferAddress.assumingMemoryBound(to: InstanceUniforms.self).advanced(by: index)
+//            anchorUniforms.pointee.modelMatrix = modelMatrix
+//        }
+//    }
+    
     func updateCapturedImageTextures(frame: ARFrame) {
         // Create two textures (Y and CbCr) from the provided frame's captured image
         let pixelBuffer = frame.capturedImage
+        let depthData = frame.capturedDepthData
         
         if (CVPixelBufferGetPlaneCount(pixelBuffer) < 2) {
             return
         }
         
-        capturedImageTextureY = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.r8Unorm, planeIndex:0)
-        capturedImageTextureCbCr = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.rg8Unorm, planeIndex:1)
+        if depthData != nil {
+            
+            let depthBuffer = depthData!.depthDataMap
+            
+            capturedImageTextureDepth = createTexture(fromPixelBuffer: depthBuffer, pixelFormat: .r32Float, planeIndex: 0)
+            
+            capturedImageTextureY = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.r8Unorm, planeIndex:0)
+            capturedImageTextureCbCr = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.rg8Unorm, planeIndex:1)
+        }
     }
     
     func createTexture(fromPixelBuffer pixelBuffer: CVPixelBuffer, pixelFormat: MTLPixelFormat, planeIndex: Int) -> CVMetalTexture? {
@@ -465,7 +543,7 @@ class Renderer {
     
     func updateImagePlane(frame: ARFrame) {
         // Update the texture coordinates of our image plane to aspect fill the viewport
-        let displayToCameraTransform = frame.displayTransform(for: .landscapeRight, viewportSize: viewportSize).inverted()
+        let displayToCameraTransform = frame.displayTransform(for: .portrait, viewportSize: viewportSize).inverted()
 
         let vertexData = imagePlaneVertexBuffer.contents().assumingMemoryBound(to: Float.self)
         for index in 0...3 {
@@ -478,7 +556,7 @@ class Renderer {
     }
     
     func drawCapturedImage(renderEncoder: MTLRenderCommandEncoder) {
-        guard let textureY = capturedImageTextureY, let textureCbCr = capturedImageTextureCbCr else {
+        guard let textureY = capturedImageTextureY, let textureCbCr = capturedImageTextureCbCr, let textureDepth = capturedImageTextureDepth else {
             return
         }
         
@@ -496,6 +574,8 @@ class Renderer {
         // Set any textures read/sampled from our render pipeline
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureIndexY.rawValue))
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureIndexCbCr.rawValue))
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureDepth), index: Int(kTextureIndexDepth.rawValue))
+        renderEncoder.setFragmentBuffer(SharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
         
         // Draw each submesh of our mesh
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
@@ -504,7 +584,7 @@ class Renderer {
     }
     
     func drawAnchorGeometry(renderEncoder: MTLRenderCommandEncoder) {
-        guard anchorInstanceCount > 0 else {
+        guard anchorInstanceCount > 0, let textureColor = anchorTexture else {
             return
         }
         
@@ -522,7 +602,7 @@ class Renderer {
         renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
         
         // Set mesh's vertex buffers
-        for bufferIndex in 0..<cubeMesh.vertexBuffers.count {
+        for bufferIndex in 0..<cubeMesh.vertexBuffers.count {   // cubeMesh.vertexBuffers.count
             let vertexBuffer = cubeMesh.vertexBuffers[bufferIndex]
             renderEncoder.setVertexBuffer(vertexBuffer.buffer, offset: vertexBuffer.offset, index:bufferIndex)
         }
@@ -533,5 +613,61 @@ class Renderer {
         }
         
         renderEncoder.popDebugGroup()
+    }
+    
+//    func drawPlaneAnchorGeometry(renderEncoder: MTLRenderCommandEncoder) {
+//        guard planeAnchorInstanceCount > 0 else {
+//            return
+//        }
+//
+//        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
+//        renderEncoder.pushDebugGroup("DrawPlaneAnchors")
+//
+//        // Set render command encoder state
+//        renderEncoder.setCullMode(.back)
+//        renderEncoder.setRenderPipelineState(anchorPipelineState)
+//        renderEncoder.setDepthStencilState(anchorDepthState)
+//
+//        // Set any buffers fed into our render pipeline
+//        renderEncoder.setVertexBuffer(planeAnchorUniformBuffer, offset: planeAnchorUniformBufferOffset, index: Int(kBufferIndexInstanceUniforms.rawValue))
+//        renderEncoder.setVertexBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
+//        renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
+//
+//        // Set mesh's vertex buffers
+//        for bufferIndex in 0..<planeMesh.vertexBuffers.count {   // cubeMesh.vertexBuffers.count
+//            let vertexBuffer = planeMesh.vertexBuffers[bufferIndex]
+//            renderEncoder.setVertexBuffer(vertexBuffer.buffer, offset: vertexBuffer.offset, index:bufferIndex)
+//        }
+//
+//        // Draw each submesh of our mesh
+//        for submesh in planeMesh.submeshes {
+//            renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset, instanceCount: anchorInstanceCount)
+//        }
+//
+//        renderEncoder.popDebugGroup()
+//    }
+    
+    func pixelBuffer(forImage image: CGImage) -> CVPixelBuffer? {
+        
+        let frameSize = CGSize(width: image.width, height: image.height)
+        
+        var pixelBuffer: CVPixelBuffer? = nil
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(frameSize.width), Int(frameSize.height), kCVPixelFormatType_32BGRA, nil, &pixelBuffer)
+        
+        if status != kCVReturnSuccess {
+            return nil
+        }
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags.init(rawValue: 0))
+        let data = CVPixelBufferGetBaseAddress(pixelBuffer!)
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
+        let context = CGContext(data: data, width: Int(frameSize.width), height: Int(frameSize.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: bitmapInfo.rawValue)
+        
+        context?.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        
+        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        
+        return pixelBuffer
     }
 }
