@@ -15,7 +15,7 @@ import ProjectFramework
 extension MTKView : RenderDestinationProvider {
 }
 
-class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
+class BackdropViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
     
     @IBOutlet weak var inputImageView: UIImageView!
     
@@ -56,7 +56,7 @@ class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
             renderer.drawRectResized(size: view.bounds.size)
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTap(gestureRecognize:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(BackdropViewController.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
     }
     

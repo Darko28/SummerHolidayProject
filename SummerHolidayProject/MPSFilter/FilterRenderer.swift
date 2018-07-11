@@ -1,49 +1,60 @@
 //
-//  Renderer.swift
+//  FilterRenderer.swift
 //  SummerHolidayProject
 //
-//  Created by Darko on 2018/7/3.
+//  Created by Darko on 2018/7/11.
 //  Copyright © 2018年 Darko. All rights reserved.
 //
 
 import Foundation
 import Metal
 import MetalKit
+import MetalPerformanceShaders
 import ARKit
 
-protocol RenderDestinationProvider {
-    var currentRenderPassDescriptor: MTLRenderPassDescriptor? { get }
-    var currentDrawable: CAMetalDrawable? { get }
-    var colorPixelFormat: MTLPixelFormat { get set }
-    var depthStencilPixelFormat: MTLPixelFormat { get set }
-    var sampleCount: Int { get set }
+protocol RenderDelegate: class {
+    func renderer(_ renderer: FilterRenderer, didFinishProcess texture: MTLTexture)
 }
 
-// The max number of command buffers in flight
-let kMaxBuffersInFlight: Int = 3
+//// The max number of command buffers in flight
+//let kMaxBuffersInFlight: Int = 3
+//
+//// The max number anchors our uniform buffer will hold
+//let kMaxAnchorInstanceCount: Int = 64
+let kMaxPlaneAnchorInstanceCount: Int = 64
 
-// The max number anchors our uniform buffer will hold
-let kMaxAnchorInstanceCount: Int = 64
+//// The 16 byte aligned size of our uniform structures
+//let kAlignedSharedUniformsSize: Int = (MemoryLayout<SharedUniforms>.size & ~0xFF) + 0x100
+//let kAlignedInstanceUniformsSize: Int = ((MemoryLayout<InstanceUniforms>.size * kMaxAnchorInstanceCount) & ~0xFF) + 0x100
 
-// The 16 byte aligned size of our uniform structures
-let kAlignedSharedUniformsSize: Int = (MemoryLayout<SharedUniforms>.size & ~0xFF) + 0x100
-let kAlignedInstanceUniformsSize: Int = ((MemoryLayout<InstanceUniforms>.size * kMaxAnchorInstanceCount) & ~0xFF) + 0x100
-
-// Vertex data for an image plane
-let kImagePlaneVertexData: [Float] = [
-    -1.0, -1.0,  0.0, 1.0,
-    1.0, -1.0,  1.0, 1.0,
-    -1.0,  1.0,  0.0, 0.0,
-    1.0,  1.0,  1.0, 0.0,
-]
+//// Vertex data for an image plane
+//let kImagePlaneVertexData: [Float] = [
+//    -1.0, -1.0,  0.0, 1.0,
+//    1.0, -1.0,  1.0, 1.0,
+//    -1.0,  1.0,  0.0, 0.0,
+//    1.0,  1.0,  1.0, 0.0,
+//]
 
 
-class Renderer {
+/// Rendering all objects.
+class FilterRenderer {
+    
+    struct Constants {
+        static let DepthStencilPixelFormat: MTLPixelFormat = .depth32Float_stencil8
+        static let ColorPixelFormat: MTLPixelFormat = .bgra8Unorm
+        static let SampleCount: Int = 1
+    }
+    
+    init(session: ARSession, metalDevice device: MTLDevice) {
+        self.session = session
+        self.device = device
+        loadMetal()
+        loadAssets()
+    }
+    
     let session: ARSession
     let device: MTLDevice
     let inFlightSemaphore = DispatchSemaphore(value: kMaxBuffersInFlight)
-    var renderDestination: RenderDestinationProvider
-    var shouldRender: Bool = true
     
     // Metal objects
     var commandQueue: MTLCommandQueue!
@@ -57,8 +68,8 @@ class Renderer {
     var anchorDepthState: MTLDepthStencilState!
     var capturedImageTextureY: CVMetalTexture?
     var capturedImageTextureCbCr: CVMetalTexture?
-    var capturedImageTextureDepth: CVMetalTexture?
-    var anchorTexture: MTLTexture?
+    var capturedImageWidth: Int = 0
+    var capturedImageHeight: Int = 0
     
     // Captured image texture cache
     var capturedImageTextureCache: CVMetalTextureCache!
@@ -110,18 +121,22 @@ class Renderer {
     // Flag for viewport size changes
     var viewportSizeDidChange: Bool = false
     
+    // RendererDelegate
+    weak var delegate: RenderDelegate?
     
-    init(session: ARSession, metalDevice device: MTLDevice, renderDestination: RenderDestinationProvider) {
-        self.session = session
-        self.device = device
-        self.renderDestination = renderDestination
-        loadMetal()
-        loadAssets()
-    }
+    // MARK: - Metal Performance Shader
+    
+    lazy var sobel: MPSImageSobel = {
+        return MPSImageSobel(device: device)
+    }()
+    
+    // MARK: - Update
     
     func drawRectResized(size: CGSize) {
         viewportSize = size
         viewportSizeDidChange = true
+        capturedImageWidth = Int(viewportSize.width * UIScreen.main.scale)
+        capturedImageHeight = Int(viewportSize.height * UIScreen.main.scale)
     }
     
     func update() {
@@ -130,49 +145,85 @@ class Renderer {
         let _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
         
         // Create a new command buffer for each renderpass to the current drawable
-        if let commandBuffer = commandQueue.makeCommandBuffer() {
-            commandBuffer.label = "MyCommand"
-            
-            // Add completion hander which signal _inFlightSemaphore when Metal and the GPU has fully
-            //   finished proccssing the commands we're encoding this frame.  This indicates when the
-            //   dynamic buffers, that we're writing to this frame, will no longer be needed by Metal
-            //   and the GPU.
-            // Retain our CVMetalTextures for the duration of the rendering cycle. The MTLTextures
-            //   we use from the CVMetalTextures are not valid unless their parent CVMetalTextures
-            //   are retained. Since we may release our CVMetalTexture ivars during the rendering
-            //   cycle, we must retain them separately here.
-            var textures = [capturedImageTextureY, capturedImageTextureCbCr, capturedImageTextureDepth]
-            commandBuffer.addCompletedHandler{ [weak self] commandBuffer in
-                if let strongSelf = self {
-                    strongSelf.inFlightSemaphore.signal()
-                }
-                textures.removeAll()
-            }
-            
-            updateBufferStates()
-//            updateGameState()
-            let shouldUpdate = updateGameState()
-            if !shouldUpdate {
-                return
-            }
-            
-            if let renderPassDescriptor = renderDestination.currentRenderPassDescriptor, let currentDrawable = renderDestination.currentDrawable, let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
-                
-                renderEncoder.label = "MyRenderEncoder"
-                
-                drawCapturedImage(renderEncoder: renderEncoder)
-                drawAnchorGeometry(renderEncoder: renderEncoder)
-                
-                // We're done encoding commands
-                renderEncoder.endEncoding()
-                
-                // Schedule a present once the framebuffer is complete using the current drawable
-                commandBuffer.present(currentDrawable)
-            }
-            
-            // Finalize rendering here & push the command buffer to the GPU
-            commandBuffer.commit()
+        guard let commandBuffer = commandQueue.makeCommandBuffer() else { inFlightSemaphore.signal(); return }
+//        if let commandBuffer = commandQueue.makeCommandBuffer() {
+        commandBuffer.label = "ARDrawingCommand"
+        
+        // Add completion hander which signal _inFlightSemaphore when Metal and the GPU has fully
+        //   finished proccssing the commands we're encoding this frame.  This indicates when the
+        //   dynamic buffers, that we're writing to this frame, will no longer be needed by Metal
+        //   and the GPU.
+        // Retain our CVMetalTextures for the duration of the rendering cycle. The MTLTextures
+        //   we use from the CVMetalTextures are not valid unless their parent CVMetalTextures
+        //   are retained. Since we may release our CVMetalTexture ivars during the rendering
+        //   cycle, we must retain them separately here.
+        var textures = [capturedImageTextureY, capturedImageTextureCbCr]
+        
+        updateBufferStates()
+        updateGameState()
+        
+        guard capturedImageWidth > 0 && capturedImageHeight > 0 else {
+            inFlightSemaphore.signal()
+            return
         }
+        
+        let textureDescriptor: MTLTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .bgra8Unorm, width: capturedImageWidth, height: capturedImageHeight, mipmapped: false)
+        let cameraSourceTexture: MTLTexture = device.makeTexture(descriptor: textureDescriptor)!
+        let output: MTLTexture = device.makeTexture(descriptor: textureDescriptor)!
+        
+        commandBuffer.addCompletedHandler{ [weak self] commandBuffer in
+            if let strongSelf = self {
+                strongSelf.delegate?.renderer(strongSelf, didFinishProcess: output)
+                strongSelf.inFlightSemaphore.signal()
+            }
+            textures.removeAll()
+        }
+        
+        // draw camera source
+        let cameraSourceRenderPassDescriptor: MTLRenderPassDescriptor = MTLRenderPassDescriptor()
+        cameraSourceRenderPassDescriptor.colorAttachments[0].texture = cameraSourceTexture
+        cameraSourceRenderPassDescriptor.colorAttachments[0].loadAction = .dontCare
+        cameraSourceRenderPassDescriptor.colorAttachments[0].storeAction = .store
+        
+        if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: cameraSourceRenderPassDescriptor) {
+            renderEncoder.label = "camera source"
+            drawCapturedImage(renderEncoder: renderEncoder)
+            renderEncoder.endEncoding()
+        }
+        
+        // sobel filter
+        sobel.encode(commandBuffer: commandBuffer, sourceTexture: cameraSourceTexture, destinationTexture: output)
+        
+        // draw instances
+        let drawingInstancesRenderPassDescriptor: MTLRenderPassDescriptor = MTLRenderPassDescriptor()
+        drawingInstancesRenderPassDescriptor.colorAttachments[0].loadAction = .load
+        drawingInstancesRenderPassDescriptor.colorAttachments[0].storeAction = .store
+        drawingInstancesRenderPassDescriptor.colorAttachments[0].texture = output
+        
+        if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: drawingInstancesRenderPassDescriptor) {
+            renderEncoder.label = "camera source"
+            drawAnchorGeometry(renderEncoder: renderEncoder)
+            drawPlaneAnchorGeometry(renderEncoder: renderEncoder)
+            renderEncoder.endEncoding()
+        }
+        
+//        if let renderPassDescriptor = renderDestination.currentRenderPassDescriptor, let currentDrawable = renderDestination.currentDrawable, let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
+//
+//            renderEncoder.label = "MyRenderEncoder"
+//
+//            drawCapturedImage(renderEncoder: renderEncoder)
+//            drawAnchorGeometry(renderEncoder: renderEncoder)
+//
+//            // We're done encoding commands
+//            renderEncoder.endEncoding()
+//
+//            // Schedule a present once the framebuffer is complete using the current drawable
+//            commandBuffer.present(currentDrawable)
+//        }
+        
+        // Finalize rendering here & push the command buffer to the GPU
+        commandBuffer.commit()
+//        }
     }
     
     // MARK: - Private
@@ -180,10 +231,10 @@ class Renderer {
     func loadMetal() {
         // Create and load our basic Metal state objects
         
-        // Set the default formats needed to render
-        renderDestination.depthStencilPixelFormat = .depth32Float_stencil8
-        renderDestination.colorPixelFormat = .bgra8Unorm
-        renderDestination.sampleCount = 1
+//        // Set the default formats needed to render
+//        renderDestination.depthStencilPixelFormat = .depth32Float_stencil8
+//        renderDestination.colorPixelFormat = .bgra8Unorm
+//        renderDestination.sampleCount = 1
         
         // Calculate our uniform buffer sizes. We allocate kMaxBuffersInFlight instances for uniform
         //   storage in a single buffer. This allows us to update uniforms in a ring (i.e. triple
@@ -193,6 +244,7 @@ class Renderer {
         //   argument in the constant address space of our shading functions.
         let sharedUniformBufferSize = kAlignedSharedUniformsSize * kMaxBuffersInFlight
         let anchorUniformBufferSize = kAlignedInstanceUniformsSize * kMaxBuffersInFlight
+        let planeAnchorUniformBufferSize = kAlignedInstanceUniformsSize * kMaxBuffersInFlight
         
         // Create and allocate our uniform buffer objects. Indicate shared storage so that both the
         //   CPU can access the buffer
@@ -201,6 +253,9 @@ class Renderer {
         
         anchorUniformBuffer = device.makeBuffer(length: anchorUniformBufferSize, options: .storageModeShared)
         anchorUniformBuffer.label = "AnchorUniformBuffer"
+        
+        planeAnchorUniformBuffer = device.makeBuffer(length: planeAnchorUniformBufferSize, options: .storageModeShared)
+        planeAnchorUniformBuffer.label = "PlaneAnchorUniformBuffer"
         
         // Create a vertex buffer with our image plane vertex data.
         let imagePlaneVertexDataCount = kImagePlaneVertexData.count * MemoryLayout<Float>.size
@@ -211,7 +266,7 @@ class Renderer {
         let defaultLibrary = device.makeDefaultLibrary()!
         
         let capturedImageVertexFunction = defaultLibrary.makeFunction(name: "capturedImageVertexTransform")!
-        let capturedImageFragmentFunction = defaultLibrary.makeFunction(name: "capturedImageFragmentShaderForBackdrop")!
+        let capturedImageFragmentFunction = defaultLibrary.makeFunction(name: "capturedImageFragmentShaderForMPSFilter")!
         
         // Create a vertex descriptor for our image plane vertex buffer
         let imagePlaneVertexDescriptor = MTLVertexDescriptor()
@@ -234,13 +289,13 @@ class Renderer {
         // Create a pipeline state for rendering the captured image
         let capturedImagePipelineStateDescriptor = MTLRenderPipelineDescriptor()
         capturedImagePipelineStateDescriptor.label = "MyCapturedImagePipeline"
-        capturedImagePipelineStateDescriptor.sampleCount = renderDestination.sampleCount
+        capturedImagePipelineStateDescriptor.sampleCount = Constants.SampleCount
         capturedImagePipelineStateDescriptor.vertexFunction = capturedImageVertexFunction
         capturedImagePipelineStateDescriptor.fragmentFunction = capturedImageFragmentFunction
         capturedImagePipelineStateDescriptor.vertexDescriptor = imagePlaneVertexDescriptor
-        capturedImagePipelineStateDescriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
-        capturedImagePipelineStateDescriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
-        capturedImagePipelineStateDescriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        capturedImagePipelineStateDescriptor.colorAttachments[0].pixelFormat = Constants.ColorPixelFormat
+        capturedImagePipelineStateDescriptor.depthAttachmentPixelFormat = Constants.DepthStencilPixelFormat
+        capturedImagePipelineStateDescriptor.stencilAttachmentPixelFormat = Constants.DepthStencilPixelFormat
         
         do {
             try capturedImagePipelineState = device.makeRenderPipelineState(descriptor: capturedImagePipelineStateDescriptor)
@@ -258,8 +313,8 @@ class Renderer {
         CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache)
         capturedImageTextureCache = textureCache
         
-        let anchorGeometryVertexFunction = defaultLibrary.makeFunction(name: "anchorGeometryVertexTransformForBackdrop")!
-        let anchorGeometryFragmentFunction = defaultLibrary.makeFunction(name: "anchorGeometryFragmentLightingForBackdrop")!
+        let anchorGeometryVertexFunction = defaultLibrary.makeFunction(name: "anchorGeometryVertexTransformForMPSFilter")!
+        let anchorGeometryFragmentFunction = defaultLibrary.makeFunction(name: "anchorGeometryFragmentLightingForMPSFilter")!
         
         // Create a vertex descriptor for our Metal pipeline. Specifies the layout of vertices the
         //   pipeline should expect. The layout below keeps attributes used to calculate vertex shader
@@ -295,13 +350,13 @@ class Renderer {
         // Create a reusable pipeline state for rendering anchor geometry
         let anchorPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         anchorPipelineStateDescriptor.label = "MyAnchorPipeline"
-        anchorPipelineStateDescriptor.sampleCount = renderDestination.sampleCount
+        anchorPipelineStateDescriptor.sampleCount = Constants.SampleCount
         anchorPipelineStateDescriptor.vertexFunction = anchorGeometryVertexFunction
         anchorPipelineStateDescriptor.fragmentFunction = anchorGeometryFragmentFunction
         anchorPipelineStateDescriptor.vertexDescriptor = geometryVertexDescriptor
-        anchorPipelineStateDescriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
-        anchorPipelineStateDescriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
-        anchorPipelineStateDescriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        anchorPipelineStateDescriptor.colorAttachments[0].pixelFormat = Constants.ColorPixelFormat
+        anchorPipelineStateDescriptor.depthAttachmentPixelFormat = Constants.DepthStencilPixelFormat
+        anchorPipelineStateDescriptor.stencilAttachmentPixelFormat = Constants.DepthStencilPixelFormat
         
         do {
             try anchorPipelineState = device.makeRenderPipelineState(descriptor: anchorPipelineStateDescriptor)
@@ -321,18 +376,6 @@ class Renderer {
     func loadAssets() {
         // Create and load our assets into Metal objects including meshes and textures
         
-        // Load texture for the model
-        let loader = MTKTextureLoader(device: device)
-        guard let texUrl = Bundle.main.url(forResource: "GameTex", withExtension: "png") else { fatalError("Failed to find model file.") }
-        
-        do {
-            var modelTex: MTLTexture
-            try modelTex = loader.newTexture(URL: texUrl, options: [.origin: MTKTextureLoader.Origin.flippedVertically, .SRGB: false])
-            anchorTexture = modelTex
-        } catch let error {
-            print(error)
-        }
-        
         // Create a MetalKit mesh buffer allocator so that ModelIO will load mesh data directly into
         //   Metal buffers accessible by the GPU
         let metalAllocator = MTKMeshBufferAllocator(device: device)
@@ -346,23 +389,24 @@ class Renderer {
         (vertexDescriptor.attributes[Int(kVertexAttributeTexcoord.rawValue)] as! MDLVertexAttribute).name = MDLVertexAttributeTextureCoordinate
         (vertexDescriptor.attributes[Int(kVertexAttributeNormal.rawValue)] as! MDLVertexAttribute).name   = MDLVertexAttributeNormal
         
-        // Load the .OBJ file
-        guard let url = Bundle.main.url(forResource: "Game", withExtension: "obj") else { fatalError("Failed to find model file.") }
-        
-        let asset = MDLAsset(url: url, vertexDescriptor: vertexDescriptor, bufferAllocator: metalAllocator)
-        guard let object = asset.object(at: 0) as? MDLMesh else { fatalError("Failed to get mesh from asset.") }
-        
         // Use ModelIO to create a box mesh as our object
-//        let mesh = MDLMesh(boxWithExtent: vector3(0.075, 0.075, 0.075), segments: vector3(1, 1, 1), inwardNormals: false, geometryType: .triangles, allocator: metalAllocator)
-        let mesh = object
+        let instanceMeshModel = MDLMesh.newCapsule(withHeight: 0.1, radii: float2(0.05, 0.05), radialSegments: 20, verticalSegments: 10, hemisphereSegments: 10, geometryType: .triangles, inwardNormals: false, allocator: metalAllocator)
         
         // Perform the format/relayout of mesh vertices by setting the new vertex descriptor in our
         //   Model IO mesh
-        mesh.vertexDescriptor = vertexDescriptor
+        instanceMeshModel.vertexDescriptor = vertexDescriptor
+        
+        // Use ModelIO to create a box mesh as our object
+        let planeMeshModel = MDLMesh(planeWithExtent: float3(1.0, 1.0, 1.0), segments: uint2(30, 30), geometryType: .lines, allocator: metalAllocator)
+        
+        // Perform the format/relayout of mesh vertices by setting the new vertex descriptor in our
+        // Model IO mesh
+        planeMeshModel.vertexDescriptor = vertexDescriptor
         
         // Create a MetalKit mesh (and submeshes) backed by Metal buffers
         do {
-            try cubeMesh = MTKMesh(mesh: mesh, device: device)
+            try instanceMesh = MTKMesh(mesh: instanceMeshModel, device: device)
+            try planeMesh = MTKMesh(mesh: planeMeshModel, device: device)
         } catch let error {
             print("Error creating MetalKit mesh, error \(error)")
         }
@@ -376,20 +420,23 @@ class Renderer {
         
         sharedUniformBufferOffset = kAlignedSharedUniformsSize * uniformBufferIndex
         anchorUniformBufferOffset = kAlignedInstanceUniformsSize * uniformBufferIndex
+        planeAnchorUniformBufferOffset = kAlignedInstanceUniformsSize * uniformBufferIndex
         
         sharedUniformBufferAddress = sharedUniformBuffer.contents().advanced(by: sharedUniformBufferOffset)
         anchorUniformBufferAddress = anchorUniformBuffer.contents().advanced(by: anchorUniformBufferOffset)
+        planeAnchorUniformBufferAddress = planeAnchorUniformBuffer.contents().advanced(by: planeAnchorUniformBufferOffset)
     }
     
-    func updateGameState() -> Bool {
+    func updateGameState() {
         // Update any game state
         
         guard let currentFrame = session.currentFrame else {
-            return false
+            return
         }
         
         updateSharedUniforms(frame: currentFrame)
         updateAnchors(frame: currentFrame)
+        updatePlaneAnchors(frame: currentFrame)
         updateCapturedImageTextures(frame: currentFrame)
         
         if viewportSizeDidChange {
@@ -397,8 +444,6 @@ class Renderer {
             
             updateImagePlane(frame: currentFrame)
         }
-        
-        return currentFrame.capturedDepthData != nil
     }
     
     func updateSharedUniforms(frame: ARFrame) {
@@ -406,9 +451,9 @@ class Renderer {
         
         let uniforms = sharedUniformBufferAddress.assumingMemoryBound(to: SharedUniforms.self)
         
-        uniforms.pointee.viewMatrix = frame.camera.viewMatrix(for: .landscapeRight)
-        uniforms.pointee.projectionMatrix = frame.camera.projectionMatrix(for: .landscapeRight, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
-
+        uniforms.pointee.viewMatrix = frame.camera.viewMatrix(for: .portrait)
+        uniforms.pointee.projectionMatrix = frame.camera.projectionMatrix(for: .portrait, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
+        
         // Set up lighting for the scene using the ambient intensity if provided
         var ambientIntensity: Float = 1.0
         
@@ -424,107 +469,75 @@ class Renderer {
         uniforms.pointee.directionalLightDirection = directionalLightDirection
         
         let directionalLightColor: vector_float3 = vector3(0.6, 0.6, 0.6)
-//        uniforms.pointee.directionalLightColor = directionalLightColor * ambientIntensity
-        uniforms.pointee.directionalLightColor = directionalLightColor
+        uniforms.pointee.directionalLightColor = directionalLightColor * ambientIntensity
         
-//        uniforms.pointee.materialShininess = 30
-        uniforms.pointee.materialShininess = 0
+        uniforms.pointee.materialShininess = 30
     }
     
     func updateAnchors(frame: ARFrame) {
         
-//        let anchors: [ARAnchor] = frame.anchors.filter { !$0.isKind(of: ARPlaneAnchor.self) }
+        let anchors: [ARAnchor] = frame.anchors.filter { !$0.isKind(of: ARPlaneAnchor.self) }
         
         // Update the anchor uniform buffer with transforms of the current frame's anchors
-//        anchorInstanceCount = min(frame.anchors.count, kMaxAnchorInstanceCount)
-        anchorInstanceCount = min(frame.anchors.count, kMaxAnchorInstanceCount)
+        anchorInstanceCount = min(anchors.count, kMaxAnchorInstanceCount)
         
         var anchorOffset: Int = 0
         if anchorInstanceCount == kMaxAnchorInstanceCount {
-            anchorOffset = max(frame.anchors.count - kMaxAnchorInstanceCount, 0)
-//            anchorOffset = max(anchors.count - kMaxAnchorInstanceCount, 0)
+            anchorOffset = max(anchors.count - kMaxAnchorInstanceCount, 0)
         }
         
         for index in 0..<anchorInstanceCount {
-            let anchor = frame.anchors[index + anchorOffset]
+            let anchor = anchors[index + anchorOffset]
             
             // Flip Z axis to convert geometry from right handed to left handed
             var coordinateSpaceTransform = matrix_identity_float4x4
             coordinateSpaceTransform.columns.2.z = -1.0
             
-            // 0th index is the face. Use the z distance for the backdrop
-            if index == 0 {
-                
-                var behindDist: Float = 0.15
-                
-                // Calculate the eye-depth of the anchor
-                let uniforms = sharedUniformBufferAddress.assumingMemoryBound(to: SharedUniforms.self)
-                let viewMatrix = frame.camera.viewMatrix(for: .landscapeRight)
-                let upwardsCam = viewMatrix[1, 2]
-                let camHeight = viewMatrix[3, 1]
-                let headHeight = anchor.transform[3, 1]
-                if upwardsCam > 0.33 && camHeight - headHeight > 0.1 {
-                    behindDist = 1.0
-                }
-                
-                let modelMatrix = anchor.transform
-                let modelViewMatrix = viewMatrix * modelMatrix
-                uniforms.pointee.cutoffDistance = -modelViewMatrix[3, 2] + behindDist
-            }
-            
-//            let modelMatrix = simd_mul(anchor.transform, coordinateSpaceTransform)
-            let modelMatrix = simd_mul(matrix_identity_float4x4, coordinateSpaceTransform)
+            let modelMatrix = simd_mul(anchor.transform, coordinateSpaceTransform)
             
             let anchorUniforms = anchorUniformBufferAddress.assumingMemoryBound(to: InstanceUniforms.self).advanced(by: index)
             anchorUniforms.pointee.modelMatrix = modelMatrix
         }
     }
     
-//    func updatePlaneAnchors(frame: ARFrame) {
-//
-//        let anchors: [ARPlaneAnchor] = frame.anchors.filter ({ $0.isKind(of: ARPlaneAnchor.self) }) as! [ARPlaneAnchor]
-//
-//        // Update the anchor uniform buffer with transforms of the current frame's anchors
-//        planeAnchorInstanceCount = min(anchors.count, kMaxPlaneAnchorInstanceCount)
-//
-//        var anchorOffset: Int = 0
-//        if planeAnchorInstanceCount == kMaxPlaneAnchorInstanceCount {
-//            anchorOffset = max(anchors.count - kMaxPlaneAnchorInstanceCount)
-//        }
-//
-//        for index in 0..<planeAnchorInstanceCount {
-//            let anchor = anchors[index + anchorOffset]
-//
-//            // Flip Z axis to convert geometry from right handed to left handed
-//            var coordinateSpaceTransform = matrix_identity_float4x4
-//            coordinateSpaceTransform.columns.2.z = -1.0
-//
-//            let rotation = matrix4x4_rotation(radians: float.pi/2.0, axis: float3(0.0, 0.0, 1.0))
-//            let modelMatrix = simd_mul(anchor.transform, simd_mul(rotation, coordinateSpaceTransform))
-//
-//            let anchorUniforms = planeAnchorUniformBufferAddress.assumingMemoryBound(to: InstanceUniforms.self).advanced(by: index)
-//            anchorUniforms.pointee.modelMatrix = modelMatrix
-//        }
-//    }
+    func updatePlaneAnchors(frame: ARFrame) {
+
+        let anchors: [ARPlaneAnchor] = frame.anchors.filter ({ $0.isKind(of: ARPlaneAnchor.self) }) as! [ARPlaneAnchor]
+
+        // Update the anchor uniform buffer with transforms of the current frame's anchors
+        planeAnchorInstanceCount = min(anchors.count, kMaxPlaneAnchorInstanceCount)
+
+        var anchorOffset: Int = 0
+        if planeAnchorInstanceCount == kMaxPlaneAnchorInstanceCount {
+            anchorOffset = max(anchors.count, kMaxPlaneAnchorInstanceCount)
+        }
+
+        for index in 0..<planeAnchorInstanceCount {
+            let anchor = anchors[index + anchorOffset]
+
+            // Flip Z axis to convert geometry from right handed to left handed
+            var coordinateSpaceTransform = matrix_identity_float4x4
+            coordinateSpaceTransform.columns.2.z = -1.0
+
+            let rotation = matrix4x4_rotation(radians: float.pi/2.0, axis: float3(0.0, 0.0, 1.0))
+            let modelMatrix = simd_mul(anchor.transform, simd_mul(rotation, coordinateSpaceTransform))
+
+            let anchorUniforms = planeAnchorUniformBufferAddress.assumingMemoryBound(to: InstanceUniforms.self).advanced(by: index)
+            anchorUniforms.pointee.modelMatrix = modelMatrix
+        }
+    }
     
     func updateCapturedImageTextures(frame: ARFrame) {
         // Create two textures (Y and CbCr) from the provided frame's captured image
         let pixelBuffer = frame.capturedImage
-        let depthData = frame.capturedDepthData
         
         if (CVPixelBufferGetPlaneCount(pixelBuffer) < 2) {
             return
         }
         
-        if depthData != nil {
-            
-            let depthBuffer = depthData!.depthDataMap
-            
-            capturedImageTextureDepth = createTexture(fromPixelBuffer: depthBuffer, pixelFormat: .r32Float, planeIndex: 0)
-            
-            capturedImageTextureY = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.r8Unorm, planeIndex:0)
-            capturedImageTextureCbCr = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.rg8Unorm, planeIndex:1)
-        }
+        
+        capturedImageTextureY = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.r8Unorm, planeIndex:0)
+        capturedImageTextureCbCr = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.rg8Unorm, planeIndex:1)
     }
     
     func createTexture(fromPixelBuffer pixelBuffer: CVPixelBuffer, pixelFormat: MTLPixelFormat, planeIndex: Int) -> CVMetalTexture? {
@@ -544,7 +557,7 @@ class Renderer {
     func updateImagePlane(frame: ARFrame) {
         // Update the texture coordinates of our image plane to aspect fill the viewport
         let displayToCameraTransform = frame.displayTransform(for: .portrait, viewportSize: viewportSize).inverted()
-
+        
         let vertexData = imagePlaneVertexBuffer.contents().assumingMemoryBound(to: Float.self)
         for index in 0...3 {
             let textureCoordIndex = 4 * index + 2
@@ -556,7 +569,7 @@ class Renderer {
     }
     
     func drawCapturedImage(renderEncoder: MTLRenderCommandEncoder) {
-        guard let textureY = capturedImageTextureY, let textureCbCr = capturedImageTextureCbCr, let textureDepth = capturedImageTextureDepth else {
+        guard let textureY = capturedImageTextureY, let textureCbCr = capturedImageTextureCbCr else {
             return
         }
         
@@ -574,8 +587,6 @@ class Renderer {
         // Set any textures read/sampled from our render pipeline
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureIndexY.rawValue))
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureIndexCbCr.rawValue))
-        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureDepth), index: Int(kTextureIndexDepth.rawValue))
-        renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
         
         // Draw each submesh of our mesh
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
@@ -584,7 +595,7 @@ class Renderer {
     }
     
     func drawAnchorGeometry(renderEncoder: MTLRenderCommandEncoder) {
-        guard anchorInstanceCount > 0, let textureColor = anchorTexture else {
+        guard anchorInstanceCount > 0 else {
             return
         }
         
@@ -602,72 +613,48 @@ class Renderer {
         renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
         
         // Set mesh's vertex buffers
-        for bufferIndex in 0..<cubeMesh.vertexBuffers.count {   // cubeMesh.vertexBuffers.count
-            let vertexBuffer = cubeMesh.vertexBuffers[bufferIndex]
+        for bufferIndex in 0..<instanceMesh.vertexBuffers.count {   // cubeMesh.vertexBuffers.count
+            let vertexBuffer = instanceMesh.vertexBuffers[bufferIndex]
             renderEncoder.setVertexBuffer(vertexBuffer.buffer, offset: vertexBuffer.offset, index:bufferIndex)
         }
         
         // Draw each submesh of our mesh
-        for submesh in cubeMesh.submeshes {
+        for submesh in instanceMesh.submeshes {
             renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset, instanceCount: anchorInstanceCount)
         }
         
         renderEncoder.popDebugGroup()
     }
     
-//    func drawPlaneAnchorGeometry(renderEncoder: MTLRenderCommandEncoder) {
-//        guard planeAnchorInstanceCount > 0 else {
-//            return
-//        }
-//
-//        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
-//        renderEncoder.pushDebugGroup("DrawPlaneAnchors")
-//
-//        // Set render command encoder state
-//        renderEncoder.setCullMode(.back)
-//        renderEncoder.setRenderPipelineState(anchorPipelineState)
-//        renderEncoder.setDepthStencilState(anchorDepthState)
-//
-//        // Set any buffers fed into our render pipeline
-//        renderEncoder.setVertexBuffer(planeAnchorUniformBuffer, offset: planeAnchorUniformBufferOffset, index: Int(kBufferIndexInstanceUniforms.rawValue))
-//        renderEncoder.setVertexBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
-//        renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
-//
-//        // Set mesh's vertex buffers
-//        for bufferIndex in 0..<planeMesh.vertexBuffers.count {   // cubeMesh.vertexBuffers.count
-//            let vertexBuffer = planeMesh.vertexBuffers[bufferIndex]
-//            renderEncoder.setVertexBuffer(vertexBuffer.buffer, offset: vertexBuffer.offset, index:bufferIndex)
-//        }
-//
-//        // Draw each submesh of our mesh
-//        for submesh in planeMesh.submeshes {
-//            renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset, instanceCount: anchorInstanceCount)
-//        }
-//
-//        renderEncoder.popDebugGroup()
-//    }
-    
-    func pixelBuffer(forImage image: CGImage) -> CVPixelBuffer? {
-        
-        let frameSize = CGSize(width: image.width, height: image.height)
-        
-        var pixelBuffer: CVPixelBuffer? = nil
-        let status = CVPixelBufferCreate(kCFAllocatorDefault, Int(frameSize.width), Int(frameSize.height), kCVPixelFormatType_32BGRA, nil, &pixelBuffer)
-        
-        if status != kCVReturnSuccess {
-            return nil
+    func drawPlaneAnchorGeometry(renderEncoder: MTLRenderCommandEncoder) {
+        guard planeAnchorInstanceCount > 0 else {
+            return
         }
-        
-        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags.init(rawValue: 0))
-        let data = CVPixelBufferGetBaseAddress(pixelBuffer!)
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
-        let context = CGContext(data: data, width: Int(frameSize.width), height: Int(frameSize.height), bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: bitmapInfo.rawValue)
-        
-        context?.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
-        
-        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
-        
-        return pixelBuffer
+
+        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
+        renderEncoder.pushDebugGroup("DrawPlaneAnchors")
+
+        // Set render command encoder state
+        renderEncoder.setCullMode(.back)
+        renderEncoder.setRenderPipelineState(anchorPipelineState)
+        renderEncoder.setDepthStencilState(anchorDepthState)
+
+        // Set any buffers fed into our render pipeline
+        renderEncoder.setVertexBuffer(planeAnchorUniformBuffer, offset: planeAnchorUniformBufferOffset, index: Int(kBufferIndexInstanceUniforms.rawValue))
+        renderEncoder.setVertexBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
+        renderEncoder.setFragmentBuffer(sharedUniformBuffer, offset: sharedUniformBufferOffset, index: Int(kBufferIndexSharedUniforms.rawValue))
+
+        // Set mesh's vertex buffers
+        for bufferIndex in 0..<planeMesh.vertexBuffers.count {   // cubeMesh.vertexBuffers.count
+            let vertexBuffer = planeMesh.vertexBuffers[bufferIndex]
+            renderEncoder.setVertexBuffer(vertexBuffer.buffer, offset: vertexBuffer.offset, index:bufferIndex)
+        }
+
+        // Draw each submesh of our mesh
+        for submesh in planeMesh.submeshes {
+            renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset, instanceCount: anchorInstanceCount)
+        }
+
+        renderEncoder.popDebugGroup()
     }
 }

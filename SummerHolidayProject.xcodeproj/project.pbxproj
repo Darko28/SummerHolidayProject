@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		A201F4C420EB5FF4000E574A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C320EB5FF4000E574A /* AppDelegate.swift */; };
-		A201F4C620EB5FF4000E574A /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C520EB5FF4000E574A /* Shaders.metal */; };
+		A201F4C620EB5FF4000E574A /* BackdropShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C520EB5FF4000E574A /* BackdropShaders.metal */; };
 		A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C820EB5FF4000E574A /* Renderer.swift */; };
-		A201F4CB20EB5FF4000E574A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4CA20EB5FF4000E574A /* ViewController.swift */; };
+		A201F4CB20EB5FF4000E574A /* BackdropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4CA20EB5FF4000E574A /* BackdropViewController.swift */; };
 		A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A201F4CC20EB5FF4000E574A /* Main.storyboard */; };
 		A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A201F4CF20EB5FF6000E574A /* Assets.xcassets */; };
 		A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A201F4D120EB5FF6000E574A /* LaunchScreen.storyboard */; };
@@ -32,6 +32,16 @@
 		A201F53920ECE91E000E574A /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50620EC01E7000E574A /* NonMaxSuppression.swift */; };
 		A201F53A20ECE91E000E574A /* SRCNNModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50820EC1D60000E574A /* SRCNNModel.swift */; };
 		A201F53E20ECEB28000E574A /* UIImageView+SRCNN.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */; };
+		A259D29020F58F9200D0BAAC /* FilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */; };
+		A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */; };
+		A259D29420F6255500D0BAAC /* CommonStructs.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29320F6255500D0BAAC /* CommonStructs.metal */; };
+		A259D29620F6256800D0BAAC /* MPSFilterShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29520F6256800D0BAAC /* MPSFilterShaders.metal */; };
+		A259D29820F639B000D0BAAC /* CommonShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29720F639B000D0BAAC /* CommonShaders.metal */; };
+		A259D29A20F63D7F00D0BAAC /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29920F63D7F00D0BAAC /* Context.swift */; };
+		A259D29C20F656BB00D0BAAC /* DisplayShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29B20F656BB00D0BAAC /* DisplayShaders.metal */; };
+		A259D29E20F65A2B00D0BAAC /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29D20F65A2B00D0BAAC /* Display.swift */; };
+		A259D2A020F6683F00D0BAAC /* Shutter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29F20F6683F00D0BAAC /* Shutter.swift */; };
+		A259D2A220F6710300D0BAAC /* MPSFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,10 +99,10 @@
 /* Begin PBXFileReference section */
 		A201F4C020EB5FF4000E574A /* SummerHolidayProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SummerHolidayProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A201F4C320EB5FF4000E574A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A201F4C520EB5FF4000E574A /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		A201F4C520EB5FF4000E574A /* BackdropShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BackdropShaders.metal; sourceTree = "<group>"; };
 		A201F4C720EB5FF4000E574A /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
 		A201F4C820EB5FF4000E574A /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		A201F4CA20EB5FF4000E574A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A201F4CA20EB5FF4000E574A /* BackdropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackdropViewController.swift; sourceTree = "<group>"; };
 		A201F4CD20EB5FF4000E574A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A201F4CF20EB5FF6000E574A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A201F4D220EB5FF6000E574A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -121,6 +131,16 @@
 		A201F52220ECE78E000E574A /* ProjectFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFrameworkTests.swift; sourceTree = "<group>"; };
 		A201F52420ECE78E000E574A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+SRCNN.swift"; sourceTree = "<group>"; };
+		A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRenderer.swift; sourceTree = "<group>"; };
+		A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixOperations.swift; sourceTree = "<group>"; };
+		A259D29320F6255500D0BAAC /* CommonStructs.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CommonStructs.metal; sourceTree = "<group>"; };
+		A259D29520F6256800D0BAAC /* MPSFilterShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MPSFilterShaders.metal; sourceTree = "<group>"; };
+		A259D29720F639B000D0BAAC /* CommonShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CommonShaders.metal; sourceTree = "<group>"; };
+		A259D29920F63D7F00D0BAAC /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		A259D29B20F656BB00D0BAAC /* DisplayShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DisplayShaders.metal; sourceTree = "<group>"; };
+		A259D29D20F65A2B00D0BAAC /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
+		A259D29F20F6683F00D0BAAC /* Shutter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shutter.swift; sourceTree = "<group>"; };
+		A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPSFilterViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,9 +188,9 @@
 			isa = PBXGroup;
 			children = (
 				A201F4C220EB5FF4000E574A /* SummerHolidayProject */,
+				A201F51420ECE78E000E574A /* ProjectFramework */,
 				A201F4DD20EB5FF6000E574A /* SummerHolidayProjectTests */,
 				A201F4E820EB5FF6000E574A /* SummerHolidayProjectUITests */,
-				A201F51420ECE78E000E574A /* ProjectFramework */,
 				A201F52120ECE78E000E574A /* ProjectFrameworkTests */,
 				A201F4C120EB5FF4000E574A /* Products */,
 			);
@@ -191,16 +211,21 @@
 		A201F4C220EB5FF4000E574A /* SummerHolidayProject */ = {
 			isa = PBXGroup;
 			children = (
+				A259D28E20F58F5F00D0BAAC /* MPSFilter */,
 				A28FEF9E20F4EDD200F047D9 /* Backdrop */,
 				A201F4F720EB67B0000E574A /* CoreMLUtils */,
+				A201F4CA20EB5FF4000E574A /* BackdropViewController.swift */,
+				A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */,
+				A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */,
 				A201F4C320EB5FF4000E574A /* AppDelegate.swift */,
+				A259D29320F6255500D0BAAC /* CommonStructs.metal */,
+				A259D29720F639B000D0BAAC /* CommonShaders.metal */,
+				A201F4D520EB5FF6000E574A /* SummerHolidayProject-Bridging-Header.h */,
 				A201F4C720EB5FF4000E574A /* ShaderTypes.h */,
-				A201F4CA20EB5FF4000E574A /* ViewController.swift */,
 				A201F4CC20EB5FF4000E574A /* Main.storyboard */,
-				A201F4CF20EB5FF6000E574A /* Assets.xcassets */,
 				A201F4D120EB5FF6000E574A /* LaunchScreen.storyboard */,
 				A201F4D420EB5FF6000E574A /* Info.plist */,
-				A201F4D520EB5FF6000E574A /* SummerHolidayProject-Bridging-Header.h */,
+				A201F4CF20EB5FF6000E574A /* Assets.xcassets */,
 			);
 			path = SummerHolidayProject;
 			sourceTree = "<group>";
@@ -259,10 +284,23 @@
 			path = ProjectFrameworkTests;
 			sourceTree = "<group>";
 		};
+		A259D28E20F58F5F00D0BAAC /* MPSFilter */ = {
+			isa = PBXGroup;
+			children = (
+				A259D29F20F6683F00D0BAAC /* Shutter.swift */,
+				A259D29920F63D7F00D0BAAC /* Context.swift */,
+				A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */,
+				A259D29520F6256800D0BAAC /* MPSFilterShaders.metal */,
+				A259D29D20F65A2B00D0BAAC /* Display.swift */,
+				A259D29B20F656BB00D0BAAC /* DisplayShaders.metal */,
+			);
+			path = MPSFilter;
+			sourceTree = "<group>";
+		};
 		A28FEF9E20F4EDD200F047D9 /* Backdrop */ = {
 			isa = PBXGroup;
 			children = (
-				A201F4C520EB5FF4000E574A /* Shaders.metal */,
+				A201F4C520EB5FF4000E574A /* BackdropShaders.metal */,
 				A201F4C820EB5FF4000E574A /* Renderer.swift */,
 			);
 			path = Backdrop;
@@ -472,10 +510,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A201F4CB20EB5FF4000E574A /* ViewController.swift in Sources */,
+				A201F4CB20EB5FF4000E574A /* BackdropViewController.swift in Sources */,
 				A201F4C420EB5FF4000E574A /* AppDelegate.swift in Sources */,
-				A201F4C620EB5FF4000E574A /* Shaders.metal in Sources */,
+				A259D29820F639B000D0BAAC /* CommonShaders.metal in Sources */,
+				A259D2A020F6683F00D0BAAC /* Shutter.swift in Sources */,
+				A259D29A20F63D7F00D0BAAC /* Context.swift in Sources */,
+				A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */,
+				A201F4C620EB5FF4000E574A /* BackdropShaders.metal in Sources */,
+				A259D29C20F656BB00D0BAAC /* DisplayShaders.metal in Sources */,
+				A259D29420F6255500D0BAAC /* CommonStructs.metal in Sources */,
+				A259D29020F58F9200D0BAAC /* FilterRenderer.swift in Sources */,
 				A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */,
+				A259D29E20F65A2B00D0BAAC /* Display.swift in Sources */,
+				A259D29620F6256800D0BAAC /* MPSFilterShaders.metal in Sources */,
+				A259D2A220F6710300D0BAAC /* MPSFilterViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

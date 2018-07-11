@@ -1,8 +1,8 @@
 //
-//  Shaders.metal
+//  MPSFilterShaders.metal
 //  SummerHolidayProject
 //
-//  Created by Darko on 2018/7/3.
+//  Created by Darko on 2018/7/11.
 //  Copyright © 2018年 Darko. All rights reserved.
 //
 
@@ -11,89 +11,51 @@
 
 // Include header shared between this Metal shader code and C code executing Metal API commands
 #import "../ShaderTypes.h"
+#import "../CommonStructs.metal"
 
 using namespace metal;
 
-typedef struct {
-    float2 position [[attribute(kVertexAttributePosition)]];
-    float2 texCoord [[attribute(kVertexAttributeTexcoord)]];
-} ImageVertex;
 
-
+// `MPSFilter`
 typedef struct {
     float4 position [[position]];
-    float2 texCoord;
-} ImageColorInOut;
+    float4 color;
+    half3  eyePosition;
+    half3  normal;
+} ColorInOutForMPSFilter;
 
 
-// Captured image vertex function
-vertex ImageColorInOut capturedImageVertexTransform(ImageVertex in [[stage_in]]) {
-    ImageColorInOut out;
-    
-    // Pass through the image vertex's position
-    out.position = float4(in.position, 0.0, 1.0);
-    
-    // Pass through the texture coordinate
-    out.texCoord = in.texCoord;
-    
-    return out;
-}
-
-// Captured image fragment function
-fragment float4 capturedImageFragmentShader(ImageColorInOut in [[stage_in]],
-                                            texture2d<float, access::sample> capturedImageTextureY [[ texture(kTextureIndexY) ]],
-                                            texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(kTextureIndexCbCr) ]],
-                                            texture2d<float, access::sample> capturedImageTextureDepth [[ texture(kTextureIndexDepth) ]],
-                                            constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]]) {
+// Captured image fragment function for `MPSFilter`
+fragment float4 capturedImageFragmentShaderForMPSFiler(ImageColorInOut in [[stage_in]],
+                                             texture2d<float, access::sample> capturedImageTextureY [[ texture(kTextureIndexY) ]],
+                                             texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(kTextureIndexCbCr) ]]) {
     
     constexpr sampler colorSampler(mip_filter::linear,
                                    mag_filter::linear,
                                    min_filter::linear);
     
     const float4x4 ycbcrToRGBTransform = float4x4(
-        float4(+1.0000f, +1.0000f, +1.0000f, +0.0000f),
-        float4(+0.0000f, -0.3441f, +1.7720f, +0.0000f),
-        float4(+1.4020f, -0.7141f, +0.0000f, +0.0000f),
-        float4(-0.7010f, +0.5291f, -0.8860f, +1.0000f)
-    );
+                                                  float4(+1.0000f, +1.0000f, +1.0000f, +0.0000f),
+                                                  float4(+0.0000f, -0.3441f, +1.7720f, +0.0000f),
+                                                  float4(+1.4020f, -0.7141f, +0.0000f, +0.0000f),
+                                                  float4(-0.7010f, +0.5291f, -0.8860f, +1.0000f)
+                                                  );
     
     // Sample Y and CbCr textures to get the YCbCr color at the given texture coordinate
     float4 ycbcr = float4(capturedImageTextureY.sample(colorSampler, in.texCoord).r,
                           capturedImageTextureCbCr.sample(colorSampler, in.texCoord).rg, 1.0);
-    float depth = capturedImageTextureDepth.sample(colorSampler, in.texCoord).r;
     
     // Return converted RGB color
-    if (depth < uniforms.cutoffDistance) {
-        return ycbcrToRGBTransform * ycbcr;
-    } else {
-        discard_fragment();
-    }
+    return ycbcrToRGBTransform * ycbcr;
 }
 
-
-typedef struct {
-    float3 position [[attribute(kVertexAttributePosition)]];
-    float2 texCoord [[attribute(kVertexAttributeTexcoord)]];
-    half3 normal    [[attribute(kVertexAttributeNormal)]];
-} Vertex;
-
-
-typedef struct {
-    float4 position [[position]];
-    float4 color;
-    half3  eyePosition;
-    half3  normal;
-    float2 texCoord [[attribute(kVertexAttributeTexcoord)]];
-} ColorInOut;
-
-
-// Anchor geometry vertex function
-vertex ColorInOut anchorGeometryVertexTransform(Vertex in [[stage_in]],
-                                                constant SharedUniforms &sharedUniforms [[ buffer(kBufferIndexSharedUniforms) ]],
-                                                constant InstanceUniforms *instanceUniforms [[ buffer(kBufferIndexInstanceUniforms) ]],
-                                                ushort vid [[vertex_id]],
-                                                ushort iid [[instance_id]]) {
-    ColorInOut out;
+// Anchor geometry vertex function for `MPSFilter`
+vertex ColorInOutForMPSFilter anchorGeometryVertexTransformForMPSFilter(Vertex in [[stage_in]],
+                                                 constant SharedUniforms &sharedUniforms [[ buffer(kBufferIndexSharedUniforms) ]],
+                                                 constant InstanceUniforms *instanceUniforms [[ buffer(kBufferIndexInstanceUniforms) ]],
+                                                 ushort vid [[vertex_id]],
+                                                 ushort iid [[instance_id]]) {
+    ColorInOutForMPSFilter out;
     
     // Make position a float4 to perform 4x4 matrix math on it
     float4 position = float4(in.position, 1.0);
@@ -106,12 +68,13 @@ vertex ColorInOut anchorGeometryVertexTransform(Vertex in [[stage_in]],
     
     // Color each face a different color
     ushort colorID = vid / 4 % 6;
-    out.color = colorID == 0 ? float4(0.0, 1.0, 0.0, 1.0) // Right face
-              : colorID == 1 ? float4(1.0, 0.0, 0.0, 1.0) // Left face
-              : colorID == 2 ? float4(0.0, 0.0, 1.0, 1.0) // Top face
-              : colorID == 3 ? float4(1.0, 0.5, 0.0, 1.0) // Bottom face
-              : colorID == 4 ? float4(1.0, 1.0, 0.0, 1.0) // Back face
-              : float4(1.0, 1.0, 1.0, 1.0); // Front face
+    //    out.color = colorID == 0 ? float4(0.0, 1.0, 0.0, 1.0) // Right face
+    //    : colorID == 1 ? float4(1.0, 0.0, 0.0, 1.0) // Left face
+    //    : colorID == 2 ? float4(0.0, 0.0, 1.0, 1.0) // Top face
+    //    : colorID == 3 ? float4(1.0, 0.5, 0.0, 1.0) // Bottom face
+    //    : colorID == 4 ? float4(1.0, 1.0, 0.0, 1.0) // Back face
+    //    : float4(1.0, 1.0, 1.0, 1.0); // Front face
+    out.color = float4(1.0, 1.0, 1.0, 1.0);
     
     // Calculate the positon of our vertex in eye space
     out.eyePosition = half3((modelViewMatrix * position).xyz);
@@ -119,14 +82,12 @@ vertex ColorInOut anchorGeometryVertexTransform(Vertex in [[stage_in]],
     // Rotate our normals to world coordinates
     float4 normal = modelMatrix * float4(in.normal.x, in.normal.y, in.normal.z, 0.0f);
     out.normal = normalize(half3(normal.xyz));
-    out.texCoord = in.texCoord;
     
     return out;
 }
 
-// Anchor geometry fragment function
-fragment float4 anchorGeometryFragmentLighting(ColorInOut in [[stage_in]],
-                                               texture2d<float, access::sample> diffuseTexture [[ texture(kTextureIndexColor) ]],
+// Anchor geometry fragment function for `MPSFilter`
+fragment float4 anchorGeometryFragmentLightingForMPSFilter(ColorInOutForMPSFilter in [[stage_in]],
                                                constant SharedUniforms &uniforms [[ buffer(kBufferIndexSharedUniforms) ]]) {
     
     float3 normal = float3(in.normal);
@@ -166,17 +127,12 @@ fragment float4 anchorGeometryFragmentLighting(ColorInOut in [[stage_in]],
     
     // Now that we have the contributions our light sources in the scene, we sum them together
     // to get the fragment's lighting value
-//    float3 lightContributions = ambientContribution + directionalContribution;
+    //    float3 lightContributions = ambientContribution + directionalContribution;
     float3 lightContributions = ambientContribution + directionalContribution;
     
     // We compute the final color by multiplying the sample from our color maps by the fragment's
     // lighting value
-//    float3 color = in.color.rgb * lightContributions;
-    constexpr sampler colorSampler(mip_filter::linear,
-                                   mag_filter::linear,
-                                   min_filter::linear);
-    float4 diffColor = diffuseTexture.sample(colorSampler, in.texCoord);
-    float3 color = diffColor.rgb;   // in.color.rgb; // * lightContributions;
+    float3 color = in.color.rgb * lightContributions;
     
     // We use the color we just computed and the alpha channel of our
     // colorMap for this fragment's alpha value
