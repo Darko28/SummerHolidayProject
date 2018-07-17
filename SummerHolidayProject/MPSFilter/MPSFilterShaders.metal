@@ -26,7 +26,7 @@ typedef struct {
 
 
 // Captured image fragment function for `MPSFilter`
-fragment float4 capturedImageFragmentShaderForMPSFiler(ImageColorInOut in [[stage_in]],
+fragment float4 capturedImageFragmentShaderForMPSFilter(ImageColorInOut in [[stage_in]],
                                              texture2d<float, access::sample> capturedImageTextureY [[ texture(kTextureIndexY) ]],
                                              texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(kTextureIndexCbCr) ]]) {
     

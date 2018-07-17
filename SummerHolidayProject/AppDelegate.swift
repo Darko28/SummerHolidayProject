@@ -7,16 +7,32 @@
 //
 
 import UIKit
+import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let locationManager = CLLocationManager()
+    var one_time_execution = false
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        registerLocationManager()
+        GMSServices.provideAPIKey("")
+        GMSPlacesClient.provideAPIKey("")
         return true
+    }
+    
+    private func registerLocationManager() {
+        if CLLocationManager.authorizationStatus != .authorizedWhenInUse {
+            locationManager.requestWhenInUseAuthorization()
+        }
+        locationManager.startUpdatingLocation()
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.desiredAccuracy = kCLLocationAccuraryBestForNavigation
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

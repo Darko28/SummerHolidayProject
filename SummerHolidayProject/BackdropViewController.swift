@@ -17,18 +17,6 @@ extension MTKView : RenderDestinationProvider {
 
 class BackdropViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
     
-    @IBOutlet weak var inputImageView: UIImageView!
-    
-    let input = UIImage(named: "sample.png")!
-    
-    @IBAction func setSRImageButtionDidTap(_ sender: Any) {
-        inputImageView.setSRImage(image: input)
-    }
-    
-    @IBAction func resetButtionDidTap(_ sender: Any) {
-        inputImageView.image = input
-    }
-    
     var session: ARSession!
     var renderer: Renderer!
     
