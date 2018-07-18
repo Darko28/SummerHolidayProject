@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9IO-9R-hHx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bH6-cb-x0x">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -51,6 +51,77 @@
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.74384236453201"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="Zs3-vl-cFq">
+            <objects>
+                <viewController id="1Mu-q9-agf" customClass="MapViewController" customModule="SummerHolidayProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Kd2-Dh-kRH">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="SLd-Ow-Q7c">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="1Mu-q9-agf" id="HVZ-vc-47H"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="PMe-uF-N4b"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="vNd-tl-KkL">
+                        <barButtonItem key="leftBarButtonItem" title="Clean Map" id="fjZ-gY-uSi">
+                            <connections>
+                                <action selector="clearGoogleMap:" destination="1Mu-q9-agf" id="20y-I2-RPc"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="ARView" id="flE-CB-KnE">
+                            <connections>
+                                <action selector="openARView:" destination="1Mu-q9-agf" id="8VJ-g0-j6n"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="appleMap" destination="SLd-Ow-Q7c" id="n7u-Cb-K7F"/>
+                        <outlet property="googleMapCleanOutlet" destination="fjZ-gY-uSi" id="ggB-aq-drl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rea-6V-fqz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1157.9710144927537" y="905.70652173913049"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="PhC-Yx-ERv">
+            <objects>
+                <viewController id="axy-vP-Fvf" customClass="ARMapViewController" customModule="SummerHolidayProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0My-Q3-Ppl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XYN-PE-CGH">
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </arscnView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="PXd-jj-SKP"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="eVr-zf-JvR">
+                        <barButtonItem key="rightBarButtonItem" title="Dismiss" id="ztG-UU-Gu3">
+                            <connections>
+                                <action selector="dismiss:" destination="axy-vP-Fvf" id="UBu-FI-M9K"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="sceneView" destination="XYN-PE-CGH" id="t7L-cB-Zb4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="s7o-Zv-iLy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3137.68115942029" y="905.70652173913049"/>
+        </scene>
         <!--Backdrop View Controller-->
         <scene sceneID="uJC-Lp-NfZ">
             <objects>
@@ -63,7 +134,43 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i6Q-Uw-5DY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="981" y="110"/>
+            <point key="canvasLocation" x="980" y="134"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="1GM-FI-sm4">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bH6-cb-x0x" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bfZ-In-yjP">
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="1Mu-q9-agf" kind="relationship" relationship="rootViewController" id="psF-3V-j1D"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xA6-J4-xMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250.72463768115944" y="905.70652173913049"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="PME-mK-TCD">
+            <objects>
+                <navigationController storyboardIdentifier="ARMapViewController" automaticallyAdjustsScrollViewInsets="NO" id="lLy-6F-Vnp" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="BhV-Hv-cpK">
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="axy-vP-Fvf" kind="relationship" relationship="rootViewController" id="pmw-Ka-V0w"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wYP-jQ-suh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2230" y="906"/>
         </scene>
     </scenes>
 </document>

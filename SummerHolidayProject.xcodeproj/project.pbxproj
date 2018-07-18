@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		126976BB0296E38FBDDDBAB0 /* Pods_SummerHolidayProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F347A3E202B6DD0BCBE6F2 /* Pods_SummerHolidayProject.framework */; };
 		A201F4C420EB5FF4000E574A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C320EB5FF4000E574A /* AppDelegate.swift */; };
 		A201F4C620EB5FF4000E574A /* BackdropShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C520EB5FF4000E574A /* BackdropShaders.metal */; };
 		A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F4C820EB5FF4000E574A /* Renderer.swift */; };
@@ -110,6 +111,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		39F347A3E202B6DD0BCBE6F2 /* Pods_SummerHolidayProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SummerHolidayProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CE363E14995CD77094F135D /* Pods-SummerHolidayProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SummerHolidayProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SummerHolidayProject/Pods-SummerHolidayProject.debug.xcconfig"; sourceTree = "<group>"; };
 		A201F4C020EB5FF4000E574A /* SummerHolidayProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SummerHolidayProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A201F4C320EB5FF4000E574A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A201F4C520EB5FF4000E574A /* BackdropShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BackdropShaders.metal; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 		A2E05EEA20F6E4C300BEC59D /* GameTex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GameTex.png; sourceTree = "<group>"; };
 		A2E05EEB20F6E4C300BEC59D /* Square.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Square.obj; sourceTree = "<group>"; };
 		A2E05EEF20F91BA300BEC59D /* NetworkReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReachability.swift; sourceTree = "<group>"; };
+		B0DE94C032D9F857D2CD9F5F /* Pods-SummerHolidayProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SummerHolidayProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-SummerHolidayProject/Pods-SummerHolidayProject.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +179,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A201F52820ECE78E000E574A /* ProjectFramework.framework in Frameworks */,
+				126976BB0296E38FBDDDBAB0 /* Pods_SummerHolidayProject.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,6 +215,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A17247145E75D83B1509CA3D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9CE363E14995CD77094F135D /* Pods-SummerHolidayProject.debug.xcconfig */,
+				B0DE94C032D9F857D2CD9F5F /* Pods-SummerHolidayProject.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		A201F4B720EB5FF4000E574A = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +233,8 @@
 				A201F4E820EB5FF6000E574A /* SummerHolidayProjectUITests */,
 				A201F52120ECE78E000E574A /* ProjectFrameworkTests */,
 				A201F4C120EB5FF4000E574A /* Products */,
+				A17247145E75D83B1509CA3D /* Pods */,
+				E8D9FEF03A3C4ABC379784A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -353,6 +369,14 @@
 			path = ARMap;
 			sourceTree = "<group>";
 		};
+		E8D9FEF03A3C4ABC379784A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39F347A3E202B6DD0BCBE6F2 /* Pods_SummerHolidayProject.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -371,10 +395,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A201F4EE20EB5FF6000E574A /* Build configuration list for PBXNativeTarget "SummerHolidayProject" */;
 			buildPhases = (
+				E50FF9EF149AB1FA2C4DAFF8 /* [CP] Check Pods Manifest.lock */,
 				A201F4BC20EB5FF4000E574A /* Sources */,
 				A201F4BD20EB5FF4000E574A /* Frameworks */,
 				A201F4BE20EB5FF4000E574A /* Resources */,
 				A201F52920ECE78E000E574A /* Embed Frameworks */,
+				BFB6FAAA046935BB0032224D /* [CP] Embed Pods Frameworks */,
+				22B09A283E4AA6D19A92E2F4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -554,6 +581,67 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		22B09A283E4AA6D19A92E2F4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SummerHolidayProject/Pods-SummerHolidayProject-resources.sh",
+				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SummerHolidayProject/Pods-SummerHolidayProject-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BFB6FAAA046935BB0032224D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SummerHolidayProject/Pods-SummerHolidayProject-frameworks.sh",
+				"${PODS_ROOT}/DJI-SDK-iOS/iOS_Mobile_SDK/DJISDK.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DJISDK.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SummerHolidayProject/Pods-SummerHolidayProject-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E50FF9EF149AB1FA2C4DAFF8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SummerHolidayProject-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A201F4BC20EB5FF4000E574A /* Sources */ = {
@@ -795,11 +883,13 @@
 		};
 		A201F4EF20EB5FF6000E574A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CE363E14995CD77094F135D /* Pods-SummerHolidayProject.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HCYK33GWAM;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SummerHolidayProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -815,11 +905,13 @@
 		};
 		A201F4F020EB5FF6000E574A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0DE94C032D9F857D2CD9F5F /* Pods-SummerHolidayProject.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HCYK33GWAM;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SummerHolidayProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -23,7 +23,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var googleMapCleanOutlet: UIBarButtonItem!
     
     let defaultZoomLabel: Float = 19.0
-    let polylineStokeWidth: CGFloat = 5.0
+    let polylineStrokeWidth: CGFloat = 5.0
     
     private var mapView: GMSMapView!
     private var userLocationMarker: GMSMarker!
@@ -110,7 +110,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBAction func openARView(_ sender: UIBarButtonItem) {
         if let arVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? UINavigationController {
-            if let vc = arVC.visibleViewController as? ARViewController {
+            if let vc = arVC.visibleViewController as? ARMapViewController {
                 vc.sectionCoordinates = paths
                 vc.carLocation = destination
             }
@@ -163,14 +163,14 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
     private func createMarker(location: CLLocationCoordinate2D, mapView: GMSMapView, markerTitle: String, snippet: String, image: UIImage? = nil, markerName: String? = nil) -> GMSMarker {
         
         let marker = GMSMarker(position: location)
-        marker.title = marketTitle
+        marker.title = markerTitle
         marker.snippet = snippet
         if let image = image {
             marker.icon = image
             marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
         }
         if let markerName = markerName {
-            maker.userData = markerName
+            marker.userData = markerName
         }
         
         marker.map = mapView
@@ -351,7 +351,7 @@ extension MapViewController: GMSMapViewDelegate {
                         if let dictionary = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
                             if let routesArray = dictionary?["routes"] as? [Any], !routesArray.isEmpty {
                                 if let routeDict = routesArray.first as? [String: Any], !routesArray.isEmpty {
-                                    if let routeOverviewPolyine = routeDict["overview_polyline"] as? [String: Any], !routeOverviewPolyline.isEmpty {
+                                    if let routeOverviewPolyline = routeDict["overview_polyline"] as? [String: Any], !routeOverviewPolyline.isEmpty {
                                         if let points = routeOverviewPolyline["points"] as? String {
                                             if let path = GMSPath(fromEncodedPath: points) {
                                                 polyline = GMSPolyline(path: path)

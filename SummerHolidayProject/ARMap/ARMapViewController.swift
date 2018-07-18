@@ -228,26 +228,26 @@ extension ARMapViewController: ARSCNViewDelegate, ARSessionDelegate {
         return nil
     }
     
-    private func recognizeUsingVision(input: UIImage) {
-        
-        let coreMLModel = Resnet50()
-        let model = try? VNCoreMLModel(for: coreMLModel.model)
-        let request = VNCoreMLRequest(model: model!, completionHandler: myResultsMethod)
-        if let cgImage = input.cgImage {
-            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-            try? handler.perform([request])
-        }
-    }
+//    private func recognizeUsingVision(input: UIImage) {
+//
+//        let coreMLModel = Resnet50()
+//        let model = try? VNCoreMLModel(for: coreMLModel.model)
+//        let request = VNCoreMLRequest(model: model!, completionHandler: myResultsMethod)
+//        if let cgImage = input.cgImage {
+//            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+//            try? handler.perform([request])
+//        }
+//    }
     
-    private func myResultsMethod(request: VNRequest, error: Error?) {
-        
-        guard let results = request.results as? [VNClassificationObservation] else { fatalError("Error in Results") }
-        for classification in results {
-            if classification.confidence > 0.25 {
-                title = classification.identifier
-            }
-        }
-    }
+//    private func myResultsMethod(request: VNRequest, error: Error?) {
+//        
+//        guard let results = request.results as? [VNClassificationObservation] else { fatalError("Error in Results") }
+//        for classification in results {
+//            if classification.confidence > 0.25 {
+//                title = classification.identifier
+//            }
+//        }
+//    }
     
     // MARK: - Hit Test (Scene Understanding)
     

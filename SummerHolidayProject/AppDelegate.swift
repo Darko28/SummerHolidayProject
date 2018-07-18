@@ -27,12 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func registerLocationManager() {
-        if CLLocationManager.authorizationStatus != .authorizedWhenInUse {
+        if CLLocationManager.authorizationStatus() != .authorizedWhenInUse {
             locationManager.requestWhenInUseAuthorization()
         }
         locationManager.startUpdatingLocation()
         locationManager.distanceFilter = kCLDistanceFilterNone
-        locationManager.desiredAccuracy = kCLLocationAccuraryBestForNavigation
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

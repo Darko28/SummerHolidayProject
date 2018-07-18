@@ -20,6 +20,11 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This application will use the camera for Augmented Reality.</string>
 	<key>UILaunchStoryboardName</key>
@@ -36,6 +41,12 @@
 	<true/>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<array>
+		<string>com.dji.video</string>
+		<string>com.dji.protocol</string>
+		<string>com.dji.common</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
