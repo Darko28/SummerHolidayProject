@@ -9,6 +9,7 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
+import MAMapKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

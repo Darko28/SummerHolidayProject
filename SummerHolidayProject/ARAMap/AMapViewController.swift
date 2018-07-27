@@ -1,23 +1,25 @@
 //
-//  MapViewController.swift
+//  AMapViewController.swift
 //  SummerHolidayProject
 //
-//  Created by Darko on 2018/7/17.
+//  Created by Darko on 2018/7/19.
 //  Copyright © 2018年 Darko. All rights reserved.
 //
 
 import UIKit
 import MapKit
+import MAMapKit
+import AMapSearchKit
 import GoogleMaps
 
 
-enum Flow {
-    case createMarkerByLongPressAndShowDirection
-    case createMarkerByServerProvidedLocations
-}
+//enum Flow {
+//    case createMarkerByLongPressAndShowDirection
+//    case createMarkerByServerProvidedLocations
+//}
 
 
-class MapViewController: UIViewController, UIGestureRecognizerDelegate {
+class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var appleMap: MKMapView!
     @IBOutlet weak var googleMapCleanOutlet: UIBarButtonItem!
@@ -26,23 +28,39 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
     let polylineStrokeWidth: CGFloat = 5.0
     
     private var mapView: GMSMapView!
+    private var amapView: MAMapView!
     private var userLocationMarker: GMSMarker!
+    private var userLocationAnnotation: MAAnnotationView!
     private var polyline: GMSPolyline!
+    private var maPolyline: MAPolyline!
     private var dropLocationMarker: GMSMarker!
+    private var dropLocationAnnotation: MAAnnotationView!
     
     private var flow: Flow = .createMarkerByLongPressAndShowDirection
     private var paths: [[(Double, Double)]] = []
+    private var maPaths: [[(Double, Double)]] = []
     private var destination: (Double, Double) = (Double(), Double())
+    private var maDestination: (Double, Double) = (Double(), Double())
+    
+    var search: AMapSearchAPI!
+    var startCoordinate: CLLocationCoordinate2D!
+    var destinationCoordiante: CLLocationCoordinate2D!
+    
+    var naviRoute: MANaviRoute?
+    var route: AMapRoute?
+    var currentSearchType: AMapRoutePlanningType = AMapRoutePlanningType.Drive
+
     
     // MARK: View Controller Life Cycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         appDelegate.locationManager.delegate = self
         registerNotification()
+        initSearch()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,6 +70,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
         reachabilityCheck()
         // handleAppleMap()
         handleGoogleMap()
+        handleAMap()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -76,6 +95,11 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) { [weak self] (notification) in
             self?.reachabilityCheck()
         }
+    }
+    
+    private func initSearch() {
+        search = AMapSearchAPI()
+        search.delegate = self
     }
     
     // MARK: - Apple Map Set up
@@ -151,6 +175,37 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    private func handleAMap() {
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        if let userLocation = appDelegate.locationManager.location?.coordinate {
+            amapSetUp(location: userLocation)
+        } else {
+            amapSetUp(location: CLLocationCoordinate2D(latitude: 12.9716, longitude: 77.5946))
+        }
+        
+        if flow == .createMarkerByLongPressAndShowDirection {
+            if amapView != nil {
+                amapView.delegate = self
+            }
+            title = "Tap On Map"
+        } else if flow == .createMarkerByServerProvidedLocations {
+            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
+            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
+            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "From Location", subtitle: "")
+            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "Cab Location", subtitle: "Waiting...")
+            drawMAPath(map: amapView, pathArray: GPXFile.cherryHillPath)
+        }
+    }
+    
+    private func amapSetUp(location: CLLocationCoordinate2D) {
+        
+        amapView = MAMapView(frame: self.view.bounds)
+        amapView.isUserInteractionEnabled = true
+        amapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        view.addSubview(amapView)
+    }
+    
     private func googleMapSetUp(location: CLLocationCoordinate2D) {
         
         let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: defaultZoomLabel)
@@ -177,6 +232,20 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
         return marker
     }
     
+    private func createMAAnnotation(location: CLLocationCoordinate2D, mapView: MAMapView, annotationTitle: String, subtitle: String, image: UIImage? = nil, annotationName: String? = nil) -> MAAnnotationView {
+        
+        if let reuseIdentifier = annotationName {
+            var annotation: MAAnnotation
+            let annotationView = MAAnnotationView(annotation: annotation, reuseIdentifier: annotationName)
+            
+            
+            if let image = image, let annotationView = annotationView {
+                annotationView.image = image
+                annotationView.calloutOffset = CGPoint(x: 0.5, y: 1.0)
+            }
+        }
+    }
+    
     private func removeMarker(marker: GMSMarker) {
         marker.map = nil
     }
@@ -194,10 +263,22 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate {
         polyline.geodesic = true
         polyline.map = map
     }
+    
+    private func drawMAPath(map: MAMapView, pathArray: [(Double, Double)]) {
+        
+        var path: [CLLocationCoordinate2D]
+        for each in pathArray {
+            path.append(CLLocationCoordinate2D(latitude: each.0, longitude: each.1))
+        }
+        let polyline = MAPolyline(coordinates: &path, count: UInt(path.count))
+        let polyOverlay = MAPolylineRenderer(polyline: polyline!)
+        polyOverlay?.strokeColor = UIColor.blue
+        polyOverlay?.lineWidth = polylineStrokeWidth
+    }
 }
 
 
-extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
+extension AMapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         var annotationView: MKAnnotationView?
@@ -273,7 +354,9 @@ extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
 }
 
 
-extension MapViewController: GMSMapViewDelegate {
+extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchDelegate {
+    
+    
     
     // MARK: - Create marker on long press
     
@@ -347,14 +430,11 @@ extension MapViewController: GMSMapViewDelegate {
                 
                 DispatchQueue.main.async {
                     if error == nil && data != nil {
-                        
                         var polyline: GMSPolyline?
                         if let dictionary = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
-                            
                             if let routesArray = dictionary?["routes"] as? [Any], !routesArray.isEmpty {
                                 if let routeDict = routesArray.first as? [String: Any], !routesArray.isEmpty {
                                     if let routeOverviewPolyline = routeDict["overview_polyline"] as? [String: Any], !routeOverviewPolyline.isEmpty {
-                                        
                                         if let points = routeOverviewPolyline["points"] as? String {
                                             if let path = GMSPath(fromEncodedPath: points) {
                                                 polyline = GMSPolyline(path: path)
@@ -372,5 +452,207 @@ extension MapViewController: GMSMapViewDelegate {
             
             fetchDirection.resume()
         }
+    }
+    
+    
+    func mapView(_ mapView: MAMapView!, didLongPressedAt coordinate: CLLocationCoordinate2D) {
+        
+        self.dropLocationAnnotation = createMAAnnotation(location: coordinate, mapView: self.amapView, annotationTitle: "Destination", subtitle: "", image: UIImage(named: "drop-pin"))
+        
+        reachabilityCheck()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        if let userLocation = appDelegate.locationManager.location?.coordinate {
+            
+            if NetworkReachability.isInternetAvailable() {
+                
+                fetchRoute(source: userLocation, destination: coordinate) { [weak self] (polyline) in
+                    
+                    if let polyline = polyline as? MAPolylineRenderer {
+                        
+                        // Add user location
+                        var path1: [CLLocationCoordinate2D]
+                        var path2: [MAMapPoint]
+                        var wholePath: MAPolyline
+                        if let userLocation = self?.userLocationAnnotation.annotation.coordinate {
+                            path1.append(userLocation)
+                        }
+                        
+                        // add rest of the coordinates
+                        if let polylinePath = self!.maPolyline.points, self!.maPolyline.pointCount > 0 {
+                            for i in 0..<Int(self!.maPolyline.pointCount) {
+//                                path2.append(polylinePath.advanced(by: Int(i)))
+                                let coordinate = MACoordinateForMapPoint(polylinePath[Int(i)])
+                                path1.append(coordinate)
+                            }
+                        }
+                        
+                        wholePath = MAPolyline(coordinates: &path1, count: UInt(path1.count))
+                        
+                        
+                        let updatedPolyline = MAPolylineRenderer(polyline: wholePath)
+                        updatedPolyline?.strokeColor = UIColor.blue
+                        updatedPolyline?.lineWidth = self?.polylineStrokeWidth ?? 5.0
+                        
+                        self?.maPolyline = updatedPolyline
+                        self?.amapView.add(MAPolylineRenderer)
+                        
+                        // update path and destination
+                        self?.maDestination = (coordinate.latitude, coordinate.longitude)
+                        
+                        if let path = updatedPolyline?.polyline.points {
+                            
+                            var polylinePath: [(Double, Double)] = []
+                            for i in 0..<Int(updatedPolyline!.polyline.pointCount) {
+                                let point = path1[i]
+                                polylinePath.append((point.latitude, point.longitude))
+                            }
+                            self?.maPaths = []
+                            self?.maPaths.append(polylinePath)
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    private func fetchMARoute(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D, completionHandler: ((Any) -> ())?) {
+        
+        self.startCoordinate = source
+        self.destinationCoordiante = destination
+        
+        let request = AMapWalkingRouteSearchRequest()
+        request.origin = AMapGeoPoint.location(withLatitude: CGFloat(source.latitude), longitude: CGFloat(source.longitude))
+        request.destination = AMapGeoPoint.location(withLatitude: CGFloat(destination.latitude), longitude: CGFloat(destination.longitude))
+        
+        search.aMapWalkingRouteSearch(request)
+    }
+    
+    // Show current routing plan
+    private func presentCurrentWalkingCourse() {
+        
+        let start = AMapGeoPoint.location(withLatitude: CGFloat(startCoordinate.latitude), longitude: CGFloat(startCoordinate.longitude))
+        let end = AMapGeoPoint.location(withLatitude: CGFloat(destinationCoordiante.latitude), longitude: CGFloat(destinationCoordiante.longitude))
+        
+        if currentSearchType == AMapRoutePlanningType.Bus || currentSearchType == .BusCrossCity {
+            naviRoute = MANaviRoute(transit: route!.transits.first!, startPoint: start!, endPoint: end!)
+        } else {
+            let type = MANaviAnnotationType(rawValue: currentSearchType.rawValue)
+            naviRoute = MANaviRoute(forPath: route!.paths.first!, naviType: type!, showTraffic: true, startPoint: start!, endPoint: end!)
+        }
+        
+        naviRoute!.addToMapView(mapView: amapView)
+        
+        amapView.showOverlays(naviRoute!.routePolylines, edgePadding: UIEdgeInsetsMake(20, 20, 20, 20), animated: true)
+        
+    }
+    
+    // MARK: - AMapSearchDelegate
+    
+    func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
+        let nsErr: NSError? = error as NSError
+        print("Error: \(error) - \(nsErr?.code)")
+    }
+    
+    func onRouteSearchDone(_ request: AMapRouteSearchBaseRequest!, response: AMapRouteSearchResponse!) {
+        
+        amapView.removeAnnotations(amapView.annotations)
+        amapView.removeOverlays(amapView.overlays)
+        
+        self.route = nil
+        if response.count > 0 {
+            self.route = response.route
+            presentCurrentWalkingCourse()
+        }
+    }
+    
+    // MARK: - MAMapViewDelegate
+    
+    func mapView(_ mapView: MAMapView!, rendererFor overlay: MAOverlay!) -> MAOverlayRenderer! {
+        
+        if overlay.isKind(of: LineDashPolyline.self) {
+            
+            let naviPolyline: LineDashPolyline = overlay as! LineDashPolyline
+            let renderer: MAPolylineRenderer = MAPolylineRenderer(overlay: naviPolyline.polyline)
+            renderer.lineWidth = 8.0
+            renderer.strokeColor = UIColor.red
+            renderer.lineDashType = MALineDashType.square
+            
+            return renderer
+        }
+        
+        if overlay.isKind(of: MANaviPolyline.self) {
+            
+            let naviPolyline: MANaviPolyline = overlay as! MANaviPolyline
+            let renderer: MAPolylineRenderer = MAPolylineRenderer(overlay: naviPolyline.polyline)
+            renderer.lineWidth = 8.0
+            
+            if naviPolyline.type == MANaviAnnotationType.Walking {
+                renderer.strokeColor = naviRoute?.walkingColor
+            } else {
+                renderer.strokeColor = naviRoute?.routeColor
+            }
+            
+            return renderer
+        }
+        
+        if overlay.isKind(of: MAMultiPolyline.self) {
+            
+            let renderer: MAMultiColoredPolylineRenderer = MAMultiColoredPolylineRenderer(multiPolyline: overlay as! MAMultiPolyline!)
+            renderer.lineWidth = 8.0
+            renderer.strokeColors = naviRoute?.multiPolylineColors
+            
+            return renderer
+        }
+        
+        return nil
+    }
+    
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+        
+        if annotation.isKind(of: MAPointAnnotation.self) {
+            
+            let pointReuseIdentifier = "pointReuseIdentifier"
+            var annotationView: MAAnnotationView? = amapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIdentifier)
+            
+            if annotationView == nil {
+                annotationView = MAAnnotationView(annotation: annotationView, reuseIdentifier: pointReuseIdentifier)
+                annotationView!.canShowCallout = true
+                annotationView!.isDraggable = false
+            }
+            
+            annotationView!.image = nil
+            
+            if annotation.isKind(of: MANaviAnnotation.self) {
+                
+                let naviAnno = annotation as! MANaviAnnotation
+                
+                switch naviAnno.type! {
+                case MANaviAnnotationType.Drive:
+                    annotationView!.image = UIImage(named: "car")
+                    break
+                case MANaviAnnotationType.Riding:
+                    annotationView!.image = UIImage(named: "ride")
+                    break
+                case MANaviAnnotationType.Walking:
+                    annotationView!.image = UIImage(named: "man")
+                    break
+                case MANaviAnnotationType.Bus:
+                    annotationView!.image = UIImage(named: "bus")
+                    break
+                }
+            } else {
+                if annotation.title == "start" {
+                    annotationView!.image = UIImage(named: "startPoint")
+                } else if annotation.title == "destination" {
+                    annotationView!.image = UIImage(named: "endPoint")
+                }
+            }
+            
+            return annotationView!
+        }
+        
+        return nil
     }
 }

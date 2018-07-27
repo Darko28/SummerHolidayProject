@@ -33,6 +33,11 @@
 		A201F53920ECE91E000E574A /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50620EC01E7000E574A /* NonMaxSuppression.swift */; };
 		A201F53A20ECE91E000E574A /* SRCNNModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F50820EC1D60000E574A /* SRCNNModel.swift */; };
 		A201F53E20ECEB28000E574A /* UIImageView+SRCNN.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */; };
+		A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018221099BC400BADE9C /* MANaviRoute.swift */; };
+		A2520185210AC3B500BADE9C /* MANaviAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */; };
+		A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520186210AC42900BADE9C /* MANaviPolyline.swift */; };
+		A2520189210AD89200BADE9C /* LineDashPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520188210AD89200BADE9C /* LineDashPolyline.swift */; };
+		A252018B210B086500BADE9C /* ARAMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018A210B086500BADE9C /* ARAMapViewController.swift */; };
 		A259D29020F58F9200D0BAAC /* FilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */; };
 		A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */; };
 		A259D29420F6255500D0BAAC /* CommonStructs.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29320F6255500D0BAAC /* CommonStructs.metal */; };
@@ -43,6 +48,7 @@
 		A259D29E20F65A2B00D0BAAC /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29D20F65A2B00D0BAAC /* Display.swift */; };
 		A259D2A020F6683F00D0BAAC /* Shutter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29F20F6683F00D0BAAC /* Shutter.swift */; };
 		A259D2A220F6710300D0BAAC /* MPSFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */; };
+		A25EBB40210048F0009D9091 /* AMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBB3F210048F0009D9091 /* AMapViewController.swift */; };
 		A26EB8E020FE670300CE9A5C /* car_detection_keras_CNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A26EB8DE20FE670300CE9A5C /* car_detection_keras_CNN.mlmodel */; };
 		A26EB8E120FE670300CE9A5C /* car_detection_keras_DNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A26EB8DF20FE670300CE9A5C /* car_detection_keras_DNN.mlmodel */; };
 		A2B842E720FBF0E20036E5C0 /* SceneNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842E620FBF0E20036E5C0 /* SceneNode.swift */; };
@@ -147,6 +153,11 @@
 		A201F52220ECE78E000E574A /* ProjectFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFrameworkTests.swift; sourceTree = "<group>"; };
 		A201F52420ECE78E000E574A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+SRCNN.swift"; sourceTree = "<group>"; };
+		A252018221099BC400BADE9C /* MANaviRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviRoute.swift; sourceTree = "<group>"; };
+		A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviAnnotation.swift; sourceTree = "<group>"; };
+		A2520186210AC42900BADE9C /* MANaviPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviPolyline.swift; sourceTree = "<group>"; };
+		A2520188210AD89200BADE9C /* LineDashPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineDashPolyline.swift; sourceTree = "<group>"; };
+		A252018A210B086500BADE9C /* ARAMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAMapViewController.swift; sourceTree = "<group>"; };
 		A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRenderer.swift; sourceTree = "<group>"; };
 		A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixOperations.swift; sourceTree = "<group>"; };
 		A259D29320F6255500D0BAAC /* CommonStructs.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CommonStructs.metal; sourceTree = "<group>"; };
@@ -157,6 +168,7 @@
 		A259D29D20F65A2B00D0BAAC /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
 		A259D29F20F6683F00D0BAAC /* Shutter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shutter.swift; sourceTree = "<group>"; };
 		A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPSFilterViewController.swift; sourceTree = "<group>"; };
+		A25EBB3F210048F0009D9091 /* AMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AMapViewController.swift; sourceTree = "<group>"; };
 		A26EB8DE20FE670300CE9A5C /* car_detection_keras_CNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = car_detection_keras_CNN.mlmodel; sourceTree = "<group>"; };
 		A26EB8DF20FE670300CE9A5C /* car_detection_keras_DNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = car_detection_keras_DNN.mlmodel; sourceTree = "<group>"; };
 		A2B842E620FBF0E20036E5C0 /* SceneNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneNode.swift; sourceTree = "<group>"; };
@@ -253,6 +265,7 @@
 		A201F4C220EB5FF4000E574A /* SummerHolidayProject */ = {
 			isa = PBXGroup;
 			children = (
+				A25EBB3E20FFD123009D9091 /* ARAMap */,
 				A2E05EE220F6D5A200BEC59D /* ARMap */,
 				A259D28E20F58F5F00D0BAAC /* MPSFilter */,
 				A28FEF9E20F4EDD200F047D9 /* Backdrop */,
@@ -260,6 +273,7 @@
 				A2E05EE320F6E21400BEC59D /* ViewController.swift */,
 				A201F4CA20EB5FF4000E574A /* BackdropViewController.swift */,
 				A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */,
+				A2E05EEF20F91BA300BEC59D /* NetworkReachability.swift */,
 				A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */,
 				A259D29320F6255500D0BAAC /* CommonStructs.metal */,
 				A259D29720F639B000D0BAAC /* CommonShaders.metal */,
@@ -341,6 +355,19 @@
 			path = MPSFilter;
 			sourceTree = "<group>";
 		};
+		A25EBB3E20FFD123009D9091 /* ARAMap */ = {
+			isa = PBXGroup;
+			children = (
+				A25EBB3F210048F0009D9091 /* AMapViewController.swift */,
+				A252018221099BC400BADE9C /* MANaviRoute.swift */,
+				A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */,
+				A2520186210AC42900BADE9C /* MANaviPolyline.swift */,
+				A2520188210AD89200BADE9C /* LineDashPolyline.swift */,
+				A252018A210B086500BADE9C /* ARAMapViewController.swift */,
+			);
+			path = ARAMap;
+			sourceTree = "<group>";
+		};
 		A28FEF9E20F4EDD200F047D9 /* Backdrop */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,7 +386,6 @@
 				A26EB8DE20FE670300CE9A5C /* car_detection_keras_CNN.mlmodel */,
 				A26EB8DF20FE670300CE9A5C /* car_detection_keras_DNN.mlmodel */,
 				A2B842F020FE54A60036E5C0 /* GPXFile.swift */,
-				A2E05EEF20F91BA300BEC59D /* NetworkReachability.swift */,
 				A2B842EA20FCF8830036E5C0 /* ImagePreProcessing.swift */,
 				A2B842E820FCEC650036E5C0 /* Classification.swift */,
 				A2B842E620FBF0E20036E5C0 /* SceneNode.swift */,
@@ -655,6 +681,7 @@
 				A2B842ED20FD1E220036E5C0 /* MapViewController.swift in Sources */,
 				A259D29820F639B000D0BAAC /* CommonShaders.metal in Sources */,
 				A259D2A020F6683F00D0BAAC /* Shutter.swift in Sources */,
+				A2520185210AC3B500BADE9C /* MANaviAnnotation.swift in Sources */,
 				A26EB8E120FE670300CE9A5C /* car_detection_keras_DNN.mlmodel in Sources */,
 				A259D29A20F63D7F00D0BAAC /* Context.swift in Sources */,
 				A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */,
@@ -665,12 +692,17 @@
 				A2B842E920FCEC650036E5C0 /* Classification.swift in Sources */,
 				A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */,
 				A259D29E20F65A2B00D0BAAC /* Display.swift in Sources */,
+				A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */,
+				A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */,
+				A25EBB40210048F0009D9091 /* AMapViewController.swift in Sources */,
 				A2B842EF20FDA8FC0036E5C0 /* ARMapViewController.swift in Sources */,
 				A2B842E720FBF0E20036E5C0 /* SceneNode.swift in Sources */,
 				A259D29620F6256800D0BAAC /* MPSFilterShaders.metal in Sources */,
 				A259D2A220F6710300D0BAAC /* MPSFilterViewController.swift in Sources */,
 				A2E05EF020F91BA300BEC59D /* NetworkReachability.swift in Sources */,
+				A252018B210B086500BADE9C /* ARAMapViewController.swift in Sources */,
 				A2B842EB20FCF8830036E5C0 /* ImagePreProcessing.swift in Sources */,
+				A2520189210AD89200BADE9C /* LineDashPolyline.swift in Sources */,
 				A2B842F120FE54A60036E5C0 /* GPXFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

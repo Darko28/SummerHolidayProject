@@ -48,7 +48,7 @@ class ImageClassification {
                 print(outputs)
                 var outputArray = [Double]()
                 for i in 0..<classes {
-                    outputArray.append(Double(truncating: outputs[1]))
+                    outputArray.append(Double(truncating: outputs[i]))
                 }
                 
                 return outputArray[0] > outputArray[1] ? .CAR : .NON_CAR
@@ -69,7 +69,7 @@ class ImageClassification {
                 print(outputs)
                 var outputArray = [Double]()
                 for i in 0..<classes {
-                    outputArray.append(Double(truncating: outputs[1]))
+                    outputArray.append(Double(truncating: outputs[i]))
                 }
                 
                 return outputArray[0] > outputArray[1] ? .CAR : .NON_CAR

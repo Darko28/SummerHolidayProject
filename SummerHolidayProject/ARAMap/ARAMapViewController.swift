@@ -1,9 +1,9 @@
 //
-//  ARMapViewController.swift
+//  ARAMapViewController.swift
 //  SummerHolidayProject
 //
-//  Created by Darko on 2018/7/17.
-//  Copyright © 2018年 Darko. All rights reserved.
+//  Created by Darko on 2018/7/27.
+//  Copyright © 2018 Darko. All rights reserved.
 //
 
 import UIKit
@@ -14,12 +14,12 @@ import Vision
 
 /*
  AR contains:   1. Tracking (World Tracking - ARAnchor)
-                2. Scene Understanding [a. Plane Detection (ARPlaneAnchor) b. Hit Testing (placing object) c. Light Estimation]
-                3. Rendering (SCNNode -> ARAnchor)
+ 2. Scene Understanding [a. Plane Detection (ARPlaneAnchor) b. Hit Testing (placing object) c. Light Estimation]
+ 3. Rendering (SCNNode -> ARAnchor)
  */
 
 @available(iOS 11.0, *)
-class ARMapViewController: UIViewController {
+class ARAMapViewController: UIViewController {
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -39,10 +39,10 @@ class ARMapViewController: UIViewController {
     private var timer: Timer?
     
     // MARK: - View Controller Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         sceneView.delegate = self   // ARSCNViewDelegate
         sceneView.session.delegate = self   // ARSessionDelegate
@@ -54,8 +54,8 @@ class ARMapViewController: UIViewController {
         super.viewWillAppear(animated)
         
         let configuration = ARWorldTrackingConfiguration()
-//        configuration.planeDetection = .horizontal  // Plane Detection
-//        configuration.isLightEstimationEnabled = true   // Light estimation
+        //        configuration.planeDetection = .horizontal  // Plane Detection
+        //        configuration.isLightEstimationEnabled = true   // Light estimation
         configuration.worldAlignment = .gravityAndHeading
         sceneView.session.run(configuration)
     }
@@ -112,7 +112,7 @@ class ARMapViewController: UIViewController {
         basicAnimation.duration = 1.0
         basicAnimation.fromValue = 1.0
         basicAnimation.toValue = 0.0
-//        node.addAnimation(basicAnimation, forKey: "Change Visibility")
+        //        node.addAnimation(basicAnimation, forKey: "Change Visibility")
     }
     
     // Add audio player
@@ -140,7 +140,7 @@ class ARMapViewController: UIViewController {
 }
 
 
-extension ARMapViewController: CAAnimationDelegate {
+extension ARAMapViewController: CAAnimationDelegate {
     
     func animationDidStart(_ anim: CAAnimation) {
         
@@ -149,7 +149,7 @@ extension ARMapViewController: CAAnimationDelegate {
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if let node = tappedNode {
             print("Tapped Node: \(node)")
-//            node.geometry?.firstMaterial?.diffuse.contents = UIColor.getRandomColor()
+            //            node.geometry?.firstMaterial?.diffuse.contents = UIColor.getRandomColor()
         }
     }
 }
@@ -157,7 +157,7 @@ extension ARMapViewController: CAAnimationDelegate {
 
 // MARK: - Tracking
 
-extension ARMapViewController: ARSCNViewDelegate, ARSessionDelegate {
+extension ARAMapViewController: ARSCNViewDelegate, ARSessionDelegate {
     
     // MARK: - ARSessionDelegate
     
@@ -228,26 +228,26 @@ extension ARMapViewController: ARSCNViewDelegate, ARSessionDelegate {
         return nil
     }
     
-//    private func recognizeUsingVision(input: UIImage) {
-//
-//        let coreMLModel = Resnet50()
-//        let model = try? VNCoreMLModel(for: coreMLModel.model)
-//        let request = VNCoreMLRequest(model: model!, completionHandler: myResultsMethod)
-//        if let cgImage = input.cgImage {
-//            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-//            try? handler.perform([request])
-//        }
-//    }
+    //    private func recognizeUsingVision(input: UIImage) {
+    //
+    //        let coreMLModel = Resnet50()
+    //        let model = try? VNCoreMLModel(for: coreMLModel.model)
+    //        let request = VNCoreMLRequest(model: model!, completionHandler: myResultsMethod)
+    //        if let cgImage = input.cgImage {
+    //            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+    //            try? handler.perform([request])
+    //        }
+    //    }
     
-//    private func myResultsMethod(request: VNRequest, error: Error?) {
-//        
-//        guard let results = request.results as? [VNClassificationObservation] else { fatalError("Error in Results") }
-//        for classification in results {
-//            if classification.confidence > 0.25 {
-//                title = classification.identifier
-//            }
-//        }
-//    }
+    //    private func myResultsMethod(request: VNRequest, error: Error?) {
+    //
+    //        guard let results = request.results as? [VNClassificationObservation] else { fatalError("Error in Results") }
+    //        for classification in results {
+    //            if classification.confidence > 0.25 {
+    //                title = classification.identifier
+    //            }
+    //        }
+    //    }
     
     // MARK: - Hit Test (Scene Understanding)
     
@@ -294,7 +294,7 @@ extension ARMapViewController: ARSCNViewDelegate, ARSessionDelegate {
 
 // MARK: - Error Handing (ARSessionObserver)
 
-extension ARMapViewController {
+extension ARAMapViewController {
     
     // While tracking state changes (Not running -> Normal <-> Limited) ARSessionDelegate
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
@@ -347,7 +347,7 @@ extension ARMapViewController {
 }
 
 
-extension ARMapViewController {
+extension ARAMapViewController {
     
     // MARK: - Scene set up
     
