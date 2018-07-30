@@ -45,6 +45,7 @@
 		A252019C210EFB7500BADE9C /* DJIMLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */; };
 		A252019E210F051300BADE9C /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A252019D210F051300BADE9C /* TinyYOLO.mlmodel */; };
 		A25201A0210F054B00BADE9C /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252019F210F054B00BADE9C /* YOLO.swift */; };
+		A25201A2210F27B800BADE9C /* DJIVideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25201A1210F27B800BADE9C /* DJIVideoCapture.swift */; };
 		A259D29020F58F9200D0BAAC /* FilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */; };
 		A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */; };
 		A259D29420F6255500D0BAAC /* CommonStructs.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29320F6255500D0BAAC /* CommonStructs.metal */; };
@@ -186,6 +187,7 @@
 		A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIMLHelpers.swift; sourceTree = "<group>"; };
 		A252019D210F051300BADE9C /* TinyYOLO.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = TinyYOLO.mlmodel; sourceTree = "<group>"; };
 		A252019F210F054B00BADE9C /* YOLO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
+		A25201A1210F27B800BADE9C /* DJIVideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIVideoCapture.swift; sourceTree = "<group>"; };
 		A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRenderer.swift; sourceTree = "<group>"; };
 		A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixOperations.swift; sourceTree = "<group>"; };
 		A259D29320F6255500D0BAAC /* CommonStructs.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CommonStructs.metal; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 				A252019F210F054B00BADE9C /* YOLO.swift */,
 				A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */,
 				A252018D210EDBD400BADE9C /* DJIMLViewController.swift */,
+				A25201A1210F27B800BADE9C /* DJIVideoCapture.swift */,
 			);
 			path = DJIML;
 			sourceTree = "<group>";
@@ -744,6 +747,7 @@
 			files = (
 				A2E05EE820F6E22D00BEC59D /* ViewController.swift in Sources */,
 				A201F4CB20EB5FF4000E574A /* BackdropViewController.swift in Sources */,
+				A25201A2210F27B800BADE9C /* DJIVideoCapture.swift in Sources */,
 				A201F4C420EB5FF4000E574A /* AppDelegate.swift in Sources */,
 				A26EB8E020FE670300CE9A5C /* car_detection_keras_CNN.mlmodel in Sources */,
 				A2B842ED20FD1E220036E5C0 /* MapViewController.swift in Sources */,
