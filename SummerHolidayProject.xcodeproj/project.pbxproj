@@ -38,6 +38,13 @@
 		A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520186210AC42900BADE9C /* MANaviPolyline.swift */; };
 		A2520189210AD89200BADE9C /* LineDashPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520188210AD89200BADE9C /* LineDashPolyline.swift */; };
 		A252018B210B086500BADE9C /* ARAMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018A210B086500BADE9C /* ARAMapViewController.swift */; };
+		A252018E210EDBD400BADE9C /* DJIMLViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018D210EDBD400BADE9C /* DJIMLViewController.swift */; };
+		A2520195210EDD7500BADE9C /* VideoPreviewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2520194210EDD3600BADE9C /* VideoPreviewer.framework */; };
+		A2520196210EDD7500BADE9C /* VideoPreviewer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2520194210EDD3600BADE9C /* VideoPreviewer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A252019A210EF61E00BADE9C /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520199210EF61E00BADE9C /* BoundingBox.swift */; };
+		A252019C210EFB7500BADE9C /* DJIMLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */; };
+		A252019E210F051300BADE9C /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A252019D210F051300BADE9C /* TinyYOLO.mlmodel */; };
+		A25201A0210F054B00BADE9C /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252019F210F054B00BADE9C /* YOLO.swift */; };
 		A259D29020F58F9200D0BAAC /* FilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */; };
 		A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */; };
 		A259D29420F6255500D0BAAC /* CommonStructs.metal in Sources */ = {isa = PBXBuildFile; fileRef = A259D29320F6255500D0BAAC /* CommonStructs.metal */; };
@@ -100,6 +107,20 @@
 			remoteGlobalIDString = A201F51220ECE78E000E574A;
 			remoteInfo = ProjectFramework;
 		};
+		A2520193210EDD3600BADE9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A252018F210EDD3600BADE9C /* VideoPreviewer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 02A543FD1C3C51CB0083C11B;
+			remoteInfo = VideoPreviewer;
+		};
+		A2520197210EDD7500BADE9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A252018F210EDD3600BADE9C /* VideoPreviewer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 02A543FC1C3C51CB0083C11B;
+			remoteInfo = VideoPreviewer;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -109,6 +130,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				A2520196210EDD7500BADE9C /* VideoPreviewer.framework in Embed Frameworks */,
 				A201F52A20ECE78E000E574A /* ProjectFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -158,6 +180,12 @@
 		A2520186210AC42900BADE9C /* MANaviPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviPolyline.swift; sourceTree = "<group>"; };
 		A2520188210AD89200BADE9C /* LineDashPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineDashPolyline.swift; sourceTree = "<group>"; };
 		A252018A210B086500BADE9C /* ARAMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAMapViewController.swift; sourceTree = "<group>"; };
+		A252018D210EDBD400BADE9C /* DJIMLViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIMLViewController.swift; sourceTree = "<group>"; };
+		A252018F210EDD3600BADE9C /* VideoPreviewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VideoPreviewer.xcodeproj; path = VideoPreviewer/VideoPreviewer.xcodeproj; sourceTree = "<group>"; };
+		A2520199210EF61E00BADE9C /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIMLHelpers.swift; sourceTree = "<group>"; };
+		A252019D210F051300BADE9C /* TinyYOLO.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = TinyYOLO.mlmodel; sourceTree = "<group>"; };
+		A252019F210F054B00BADE9C /* YOLO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
 		A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRenderer.swift; sourceTree = "<group>"; };
 		A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixOperations.swift; sourceTree = "<group>"; };
 		A259D29320F6255500D0BAAC /* CommonStructs.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CommonStructs.metal; sourceTree = "<group>"; };
@@ -192,6 +220,7 @@
 			files = (
 				A201F52820ECE78E000E574A /* ProjectFramework.framework in Frameworks */,
 				126976BB0296E38FBDDDBAB0 /* Pods_SummerHolidayProject.framework in Frameworks */,
+				A2520195210EDD7500BADE9C /* VideoPreviewer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +294,7 @@
 		A201F4C220EB5FF4000E574A /* SummerHolidayProject */ = {
 			isa = PBXGroup;
 			children = (
+				A252018C210EDBAA00BADE9C /* DJIML */,
 				A25EBB3E20FFD123009D9091 /* ARAMap */,
 				A2E05EE220F6D5A200BEC59D /* ARMap */,
 				A259D28E20F58F5F00D0BAAC /* MPSFilter */,
@@ -317,6 +347,7 @@
 				A201F50220EBCE10000E574A /* UIImage+CVPixelBuffer.swift */,
 				A201F50420EBFFBC000E574A /* Predictions.swift */,
 				A201F50620EC01E7000E574A /* NonMaxSuppression.swift */,
+				A2520199210EF61E00BADE9C /* BoundingBox.swift */,
 			);
 			path = CoreMLUtils;
 			sourceTree = "<group>";
@@ -342,6 +373,25 @@
 			path = ProjectFrameworkTests;
 			sourceTree = "<group>";
 		};
+		A252018C210EDBAA00BADE9C /* DJIML */ = {
+			isa = PBXGroup;
+			children = (
+				A252019D210F051300BADE9C /* TinyYOLO.mlmodel */,
+				A252019F210F054B00BADE9C /* YOLO.swift */,
+				A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */,
+				A252018D210EDBD400BADE9C /* DJIMLViewController.swift */,
+			);
+			path = DJIML;
+			sourceTree = "<group>";
+		};
+		A2520190210EDD3600BADE9C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2520194210EDD3600BADE9C /* VideoPreviewer.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A259D28E20F58F5F00D0BAAC /* MPSFilter */ = {
 			isa = PBXGroup;
 			children = (
@@ -358,11 +408,11 @@
 		A25EBB3E20FFD123009D9091 /* ARAMap */ = {
 			isa = PBXGroup;
 			children = (
-				A25EBB3F210048F0009D9091 /* AMapViewController.swift */,
-				A252018221099BC400BADE9C /* MANaviRoute.swift */,
 				A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */,
 				A2520186210AC42900BADE9C /* MANaviPolyline.swift */,
 				A2520188210AD89200BADE9C /* LineDashPolyline.swift */,
+				A252018221099BC400BADE9C /* MANaviRoute.swift */,
+				A25EBB3F210048F0009D9091 /* AMapViewController.swift */,
 				A252018A210B086500BADE9C /* ARAMapViewController.swift */,
 			);
 			path = ARAMap;
@@ -398,6 +448,7 @@
 		E8D9FEF03A3C4ABC379784A1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A252018F210EDD3600BADE9C /* VideoPreviewer.xcodeproj */,
 				39F347A3E202B6DD0BCBE6F2 /* Pods_SummerHolidayProject.framework */,
 			);
 			name = Frameworks;
@@ -433,6 +484,7 @@
 			);
 			dependencies = (
 				A201F52720ECE78E000E574A /* PBXTargetDependency */,
+				A2520198210EDD7500BADE9C /* PBXTargetDependency */,
 			);
 			name = SummerHolidayProject;
 			productName = SummerHolidayProject;
@@ -553,6 +605,12 @@
 			mainGroup = A201F4B720EB5FF4000E574A;
 			productRefGroup = A201F4C120EB5FF4000E574A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A2520190210EDD3600BADE9C /* Products */;
+					ProjectRef = A252018F210EDD3600BADE9C /* VideoPreviewer.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				A201F4BF20EB5FF4000E574A /* SummerHolidayProject */,
@@ -563,6 +621,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		A2520194210EDD3600BADE9C /* VideoPreviewer.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = VideoPreviewer.framework;
+			remoteRef = A2520193210EDD3600BADE9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A201F4BE20EB5FF4000E574A /* Resources */ = {
@@ -685,6 +753,7 @@
 				A26EB8E120FE670300CE9A5C /* car_detection_keras_DNN.mlmodel in Sources */,
 				A259D29A20F63D7F00D0BAAC /* Context.swift in Sources */,
 				A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */,
+				A252019A210EF61E00BADE9C /* BoundingBox.swift in Sources */,
 				A201F4C620EB5FF4000E574A /* BackdropShaders.metal in Sources */,
 				A259D29C20F656BB00D0BAAC /* DisplayShaders.metal in Sources */,
 				A259D29420F6255500D0BAAC /* CommonStructs.metal in Sources */,
@@ -692,7 +761,9 @@
 				A2B842E920FCEC650036E5C0 /* Classification.swift in Sources */,
 				A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */,
 				A259D29E20F65A2B00D0BAAC /* Display.swift in Sources */,
+				A252018E210EDBD400BADE9C /* DJIMLViewController.swift in Sources */,
 				A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */,
+				A252019C210EFB7500BADE9C /* DJIMLHelpers.swift in Sources */,
 				A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */,
 				A25EBB40210048F0009D9091 /* AMapViewController.swift in Sources */,
 				A2B842EF20FDA8FC0036E5C0 /* ARMapViewController.swift in Sources */,
@@ -704,6 +775,8 @@
 				A2B842EB20FCF8830036E5C0 /* ImagePreProcessing.swift in Sources */,
 				A2520189210AD89200BADE9C /* LineDashPolyline.swift in Sources */,
 				A2B842F120FE54A60036E5C0 /* GPXFile.swift in Sources */,
+				A25201A0210F054B00BADE9C /* YOLO.swift in Sources */,
+				A252019E210F051300BADE9C /* TinyYOLO.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -776,6 +849,11 @@
 			isa = PBXTargetDependency;
 			target = A201F51220ECE78E000E574A /* ProjectFramework */;
 			targetProxy = A201F52620ECE78E000E574A /* PBXContainerItemProxy */;
+		};
+		A2520198210EDD7500BADE9C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VideoPreviewer;
+			targetProxy = A2520197210EDD7500BADE9C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

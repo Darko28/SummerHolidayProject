@@ -95,7 +95,7 @@ class ARAMapViewController: UIViewController {
     private func handleTouchEvent(node: SCNNode) {
         addAnimation(node: node)
         addAudioFile(node: node)
-        tappedNode = node
+        self.tappedNode = node
     }
     
     // Add Core Animation
