@@ -133,7 +133,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: - Open AR view
     
     @IBAction func openARView(_ sender: UIBarButtonItem) {
-        if let arVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? UINavigationController {
+        if let arVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ARAMapViewController") as? UINavigationController {
             if let vc = arVC.visibleViewController as? ARMapViewController {
                 vc.sectionCoordinates = paths
                 vc.carLocation = destination
@@ -192,8 +192,8 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         } else if flow == .createMarkerByServerProvidedLocations {
             let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
             let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
-            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "From Location", subtitle: "")
-            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "Cab Location", subtitle: "Waiting...")
+//            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "From Location", subtitle: "")
+//            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "Cab Location", subtitle: "Waiting...")
             drawMAPath(map: amapView, pathArray: GPXFile.cherryHillPath)
         }
     }
@@ -232,19 +232,21 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         return marker
     }
     
-    private func createMAAnnotation(location: CLLocationCoordinate2D, mapView: MAMapView, annotationTitle: String, subtitle: String, image: UIImage? = nil, annotationName: String? = nil) -> MAAnnotationView {
-        
-        if let reuseIdentifier = annotationName {
-            var annotation: MAAnnotation
-            let annotationView = MAAnnotationView(annotation: annotation, reuseIdentifier: annotationName)
-            
-            
-            if let image = image, let annotationView = annotationView {
-                annotationView.image = image
-                annotationView.calloutOffset = CGPoint(x: 0.5, y: 1.0)
-            }
-        }
-    }
+//    private func createMAAnnotation(location: CLLocationCoordinate2D, mapView: MAMapView, annotationTitle: String, subtitle: String, image: UIImage? = nil, annotationName: String? = nil) -> MAAnnotationView {
+//
+//        if let reuseIdentifier = annotationName {
+//            let annotation: MAAnnotation
+//            let annotationView = MAAnnotationView(annotation: location, reuseIdentifier: reuseIdentifier)
+//
+//
+//            if let image = image, let annotationView = annotationView {
+//                annotationView.image = image
+//                annotationView.calloutOffset = CGPoint(x: 0.5, y: 1.0)
+//            }
+//
+//            return annotationView
+//        }
+//    }
     
     private func removeMarker(marker: GMSMarker) {
         marker.map = nil
@@ -266,7 +268,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private func drawMAPath(map: MAMapView, pathArray: [(Double, Double)]) {
         
-        var path: [CLLocationCoordinate2D]
+        var path: [CLLocationCoordinate2D] = []
         for each in pathArray {
             path.append(CLLocationCoordinate2D(latitude: each.0, longitude: each.1))
         }
@@ -280,7 +282,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
 
 extension AMapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    @nonobjc func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         var annotationView: MKAnnotationView?
         annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
         annotationView?.canShowCallout = true
@@ -457,7 +459,7 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
     
     func mapView(_ mapView: MAMapView!, didLongPressedAt coordinate: CLLocationCoordinate2D) {
         
-        self.dropLocationAnnotation = createMAAnnotation(location: coordinate, mapView: self.amapView, annotationTitle: "Destination", subtitle: "", image: UIImage(named: "drop-pin"))
+//        self.dropLocationAnnotation = createMAAnnotation(location: coordinate, mapView: self.amapView, annotationTitle: "Destination", subtitle: "", image: UIImage(named: "drop-pin"))
         
         reachabilityCheck()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
@@ -471,7 +473,7 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
                     if let polyline = polyline as? MAPolylineRenderer {
                         
                         // Add user location
-                        var path1: [CLLocationCoordinate2D]
+                        var path1: [CLLocationCoordinate2D] = []
                         var path2: [MAMapPoint]
                         var wholePath: MAPolyline
                         if let userLocation = self?.userLocationAnnotation.annotation.coordinate {
@@ -494,8 +496,8 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
                         updatedPolyline?.strokeColor = UIColor.blue
                         updatedPolyline?.lineWidth = self?.polylineStrokeWidth ?? 5.0
                         
-                        self?.maPolyline = updatedPolyline
-                        self?.amapView.add(MAPolylineRenderer)
+                        self?.maPolyline = updatedPolyline?.polyline
+                        self?.amapView.add(self?.maPolyline)
                         
                         // update path and destination
                         self?.maDestination = (coordinate.latitude, coordinate.longitude)
@@ -536,10 +538,10 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
         let end = AMapGeoPoint.location(withLatitude: CGFloat(destinationCoordiante.latitude), longitude: CGFloat(destinationCoordiante.longitude))
         
         if currentSearchType == AMapRoutePlanningType.Bus || currentSearchType == .BusCrossCity {
-            naviRoute = MANaviRoute(transit: route!.transits.first!, startPoint: start!, endPoint: end!)
+//            naviRoute = MANaviRoute(transit: route!.transits.first!, startPoint: start!, endPoint: end!)
         } else {
             let type = MANaviAnnotationType(rawValue: currentSearchType.rawValue)
-            naviRoute = MANaviRoute(forPath: route!.paths.first!, naviType: type!, showTraffic: true, startPoint: start!, endPoint: end!)
+            naviRoute = MANaviRoute(for: route!.paths.first!, naviType: type!, showTraffic: true, startPoint: start!, endPoint: end!)
         }
         
         naviRoute!.addToMapView(mapView: amapView)
@@ -569,7 +571,7 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
     
     // MARK: - MAMapViewDelegate
     
-    func mapView(_ mapView: MAMapView!, rendererFor overlay: MAOverlay!) -> MAOverlayRenderer! {
+    @nonobjc func mapView(_ mapView: MAMapView!, rendererFor overlay: MAOverlay!) -> MAOverlayRenderer! {
         
         if overlay.isKind(of: LineDashPolyline.self) {
             
@@ -609,7 +611,7 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
         return nil
     }
     
-    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+    @nonobjc func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
         
         if annotation.isKind(of: MAPointAnnotation.self) {
             
@@ -617,7 +619,7 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
             var annotationView: MAAnnotationView? = amapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIdentifier)
             
             if annotationView == nil {
-                annotationView = MAAnnotationView(annotation: annotationView, reuseIdentifier: pointReuseIdentifier)
+                annotationView = MAAnnotationView(annotation: annotationView?.annotation, reuseIdentifier: pointReuseIdentifier)
                 annotationView!.canShowCallout = true
                 annotationView!.isDraggable = false
             }

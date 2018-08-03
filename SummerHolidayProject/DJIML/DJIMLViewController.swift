@@ -15,9 +15,9 @@ import DJISDK
 import VideoPreviewer
 
 
-class DJIMLViewController: UIViewController, DJISDKManagerDelegate, DJICameraDelegate, DJIVideoFeedListener, DJIBaseProductDelegate, VideoDataProcessDelegate {
+class DJIMLViewController: UIViewController, DJISDKManagerDelegate, DJICameraDelegate, DJIBaseProductDelegate, VideoDataProcessDelegate {
     
-    @IBOutlet weak var fpvPreviewerView: UIView!
+    @IBOutlet weak var fpvPreviewerView: DJIVideoCapture!
     
     @IBOutlet weak var videoPreviewer: UIView!
     @IBOutlet weak var timeLabel: UILabel!
@@ -50,7 +50,7 @@ class DJIMLViewController: UIViewController, DJISDKManagerDelegate, DJICameraDel
     
     private func setupVideoPreviewer() {
         
-        VideoPreviewer.instance()?.setView(self.fpvPreviewerView)
+        VideoPreviewer.instance()?.setView(self.fpvPreviewerView.previewLayer)
         
         if let product = DJISDKManager.product() {
             
@@ -118,19 +118,19 @@ class DJIMLViewController: UIViewController, DJISDKManagerDelegate, DJICameraDel
     
     // MARK: - DJIVideoFeedListener
     
-    func videoFeed(_ videoFeed: DJIVideoFeed, didUpdateVideoData videoData: Data) {
-        
-        var data = videoData.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) -> UInt8 in
-            return pointer.pointee
-        }
-        
-        VideoPreviewer.instance()?.push(&data, length: Int32(videoData.count))
-        
-        
-        let frameBuffer = videoDataProcessor?.getCVImage()
-        let frameImage = UIImage(pixelBuffer: frameBuffer!.takeRetainedValue())
-        print("\(Date())")
-    }
+//    func videoFeed(_ videoFeed: DJIVideoFeed, didUpdateVideoData videoData: Data) {
+//
+//        var data = videoData.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) -> UInt8 in
+//            return pointer.pointee
+//        }
+//
+//        VideoPreviewer.instance()?.push(&data, length: Int32(videoData.count))
+//
+//
+//        let frameBuffer = videoDataProcessor?.getCVImage()
+//        let frameImage = UIImage(pixelBuffer: frameBuffer!.takeRetainedValue())
+//        print("\(Date())")
+//    }
     
     
     // MARK: - DJICameraDelegate
@@ -216,31 +216,52 @@ class DJIMLViewController: UIViewController, DJISDKManagerDelegate, DJICameraDel
         request.imageCropAndScaleOption = .scaleFill
     }
     
+//    func setUpCamera() {
+//
+//        videoCapture = DJIVideoCapture()
+//        videoCapture.delegate = self
+//        videoCapture.fps = 50
+//        videoCapture.setUp(sessionPreset: AVCaptureSession.Preset.vga640x480) { success in
+//
+//            if success {
+//                // Add the video preview into the UI.
+//                if let previewLayer = self.videoCapture.previewLayer {
+//                    self.videoPreviewer.layer.addSublayer(previewLayer)
+//                    self.resizePreviewLayer()
+//                }
+//
+//                // Add the bounding box layers to the UI, on top of the video preview.
+//                for box in self.boundingBoxes {
+//                    box.addToLayer(self.videoPreviewer.layer)
+//                }
+//
+//                // Once everything is set up, we can start capturing live video.
+//                self.videoCapture.start()
+//            }
+//        }
+//    }
+    
     func setUpCamera() {
         
         videoCapture = DJIVideoCapture()
         videoCapture.delegate = self
         videoCapture.fps = 50
-        videoCapture.setUp(sessionPreset: AVCaptureSession.Preset.vga640x480) { success in
-            
-            if success {
-                // Add the video preview into the UI.
-                if let previewLayer = self.videoCapture.previewLayer {
-                    self.videoPreviewer.layer.addSublayer(previewLayer)
-                    self.resizePreviewLayer()
-                }
-                
-                // Add the bounding box layers to the UI, on top of the video preview.
-                for box in self.boundingBoxes {
-                    box.addToLayer(self.videoPreviewer.layer)
-                }
-                
-                // Once everything is set up, we can start capturing live video.
-                self.videoCapture.start()
-            }
+        
+        // Add the video preview into the UI.
+        if let previewLayer = self.videoCapture.previewLayer {
+            self.videoPreviewer.addSubview(previewLayer)
+            self.resizePreviewLayer()
         }
+        
+        // Add the bounding box layers to the UI, on top of the video preview.
+        for box in self.boundingBoxes {
+            box.addToLayer(self.videoPreviewer.layer)
+        }
+        
+//        // Once everything is set up, we can start capturing live video.
+//        self.videoCapture.start()
     }
-    
+
     // MARK: - UI stuff
     
     override func viewWillLayoutSubviews() {
@@ -399,7 +420,7 @@ class DJIMLViewController: UIViewController, DJISDKManagerDelegate, DJICameraDel
 
 extension DJIMLViewController: DJIVideoCaptureDelegate {
     
-    func videoCapture(_ capture: DJIVideoCapture, didCaptureVideoFrame pixelBuffer: CVPixelBuffer?, timestamp: CMTime) {
+    func videoCapture(_ capture: DJIVideoCapture, didCaptureDJIVideoFrame pixelBuffer: CVPixelBuffer?) {
         
         // For debugging.
 //        predict(image: UIImage(named: "dog")!); return
@@ -420,3 +441,40 @@ extension DJIMLViewController: DJIVideoCaptureDelegate {
         }
     }
 }
+
+
+extension DJIMLViewController: DJIVideoFeedListener {
+    
+    public func videoFeed(_ videoFeed: DJIVideoFeed, didUpdateVideoData videoData: Data) {
+        
+        let videoBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: (videoData as NSData).length)
+        (videoData as NSData).getBytes(videoBuffer, length: (videoData as NSData).length)
+        VideoPreviewer.instance()?.push(videoBuffer, length: Int32((videoData as NSData).length))
+        
+        /*
+         Because lowering the capture device's FPS looks ugly in the preview,
+         we capture at full speed but only call the delegate at its desired framerate.
+         */
+        
+        let frameBuffer = videoDataProcessor?.getCVImage()
+        let frameImage = UIImage(pixelBuffer: frameBuffer!.takeRetainedValue())
+        
+        fpvPreviewerView.delegate?.videoCapture(self.fpvPreviewerView, didCaptureDJIVideoFrame: frameBuffer!.takeRetainedValue())
+        
+        semaphore.wait()
+        
+        if let pixelBuffer = frameBuffer?.takeRetainedValue() {
+            
+            /*
+             For better throughput, perform the prediction on a background queue
+             instead of on the VideoCapture queue. We use the semaphore to block
+             the capture queue and drop frames when CoreML can't keep up.
+             */
+            DispatchQueue.global().async {
+                //                self.predict(pixelBuffer: pixelBuffer)
+                self.predictUsingVision(pixelBuffer: pixelBuffer)
+            }
+        }
+    }
+}
+

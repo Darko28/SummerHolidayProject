@@ -11,6 +11,9 @@ import MAMapKit
 import AMapSearchKit
 
 
+let kMANaviRouteReplenishPolylineFilter = 5.0
+
+
 enum MANaviAnnotationType: Int {
     case Drive = 0
     case Walking = 1
@@ -47,34 +50,38 @@ class MANaviRoute: NSObject {
 //        }
 //    }
     
-    var routePolylines: [MANaviPolyline]
-    var naviAnnotations: [MANaviAnnotation]
+    var routePolylines: [MANaviPolyline] = []
+    var naviAnnotations: [MANaviAnnotation] = []
     
     var routeColor: UIColor
     var walkingColor: UIColor
-    var multiPolylineColors: [UIColor]
+    var multiPolylineColors: [UIColor] = []
     
     var mapView: MAMapView!
     var trafficColors: [[UIColor]]
     
+    var polylines: [MAPolyline] = []
+    
     
     override init() {
-        super.init()
+//        super.init()
         
         self.annotationVisible = true
         self.routeColor = UIColor.blue
         self.walkingColor = UIColor.cyan
         self.trafficColors = [[UIColor.green], [UIColor.green], [UIColor.yellow], [UIColor.red]]
-        
+        super.init()
     }
     
-    init(transit: AMapTransit, startPoint start: AMapGeoPoint, endPoint end: AMapGeoPoint) {
-        
-    }
+//    init(transit: AMapTransit, startPoint start: AMapGeoPoint, endPoint end: AMapGeoPoint) {
+//
+//    }
     
-    init(for path: AMapPath, naviType type: MANaviAnnotationType, showTraffic: Bool, startPoint start: AMapGeoPoint, endPoint end: AMapGeoPoint) {
+    convenience init(for path: AMapPath, naviType type: MANaviAnnotationType, showTraffic: Bool, startPoint start: AMapGeoPoint, endPoint end: AMapGeoPoint) {
         
-        var polylines: [MAPolyline] = []
+        self.init()
+        
+        //        var polylines: [MAPolyline] = []
         var naviAnnotations: [MANaviAnnotation] = []
         
         if (showTraffic && (type == MANaviAnnotationType.Drive)) {
@@ -83,17 +90,17 @@ class MANaviRoute: NSObject {
             
             for i in 0..<path.steps.count {
                 
-                var step = path.steps[i]
-                var stepPolyline: MAPolyline? = MANaviRoute.polylineForStep(step: step)
+                let step = path.steps[i]
+                let stepPolyline: MAPolyline? = polylineForStep(step: step)
                 
                 if (stepPolyline != nil) {
-                    var naviPolyline: MANaviPolyline = MANaviPolyline(polyline: stepPolyline!)
+                    let naviPolyline: MANaviPolyline = MANaviPolyline(polyline: stepPolyline!)
                     naviPolyline.type = type
                     
                     polylines.append(naviPolyline)
                     
                     if (i > 0) {
-                        var annotation: MANaviAnnotation = MANaviAnnotation()
+                        let annotation: MANaviAnnotation = MANaviAnnotation()
                         annotation.coordinate = MACoordinateForMapPoint(stepPolyline!.points[0])
                         annotation.type = type
                         annotation.title = step.instruction
@@ -102,29 +109,29 @@ class MANaviRoute: NSObject {
                     
                     if i > 0 {
                         // fullfill the space between step and step
-                        MANaviRoute.replenishPolylinesForPathWith(stepPolyline: stepPolyline!, lastPolyline: MANaviRoute.polylineForStep(step: path.steps[i-1])!, polylines: (polylines as! [LineDashPolyline]))
+                        replenishPolylinesForPathWith(stepPolyline: stepPolyline!, lastPolyline: polylineForStep(step: path.steps[i-1])!, polylines: (polylines as! [LineDashPolyline]))
                     }
                 }
             }
         }
         
-        MANaviRoute.replenishPolylinesForStartPoint(start: start, endPoint: end, polylines: &(polylines as! [MANaviPolyline]))
+        replenishPolylinesForStartPoint(start: start, endPoint: end, polylines: polylines as! [MANaviPolyline])
         
         self.routePolylines = polylines as! [MANaviPolyline]
         self.naviAnnotations = naviAnnotations
     }
+
+//    init(polylines: [MAPolyline], andAnnotations annotations: [MAAnnotation]) {
+//
+//    }
     
-    init(polylines: [MAPolyline], andAnnotations annotations: [MAAnnotation]) {
-        
-    }
-    
-    class func polylineForStep(step: AMapStep?) -> MAPolyline? {
+    func polylineForStep(step: AMapStep?) -> MAPolyline? {
         
         if step == nil {
             return nil
         }
         
-        return self.polylineForCoordinateString(coodinateString: step!.polyline)
+        return MANaviRoute.polylineForCoordinateString(coodinateString: step!.polyline)
     }
     
     class func polylineForCoordinateString(coodinateString: String) -> MAPolyline? {
@@ -220,7 +227,7 @@ class MANaviRoute: NSObject {
 //    }
     
     /// replenish the space between the start point and the end point
-    class func replenishPolylinesForStartPoint(start: AMapGeoPoint?, endPoint end: AMapGeoPoint?, polylines: inout [MANaviPolyline]) {
+    func replenishPolylinesForStartPoint(start: AMapGeoPoint?, endPoint end: AMapGeoPoint?, polylines: [MANaviPolyline]) {
         
         if polylines.count < 1 {
             return
@@ -231,16 +238,16 @@ class MANaviRoute: NSObject {
         
         if start != nil {
             
-            var startCoord1 = CLLocationCoordinate2DMake(CLLocationDegrees(start!.latitude), CLLocationDegrees(start!.longitude))
+            let startCoord1 = CLLocationCoordinate2DMake(CLLocationDegrees(start!.latitude), CLLocationDegrees(start!.longitude))
             var endCoord1 = startCoord1
             
-            var naviPolyline = polylines.first
+            let naviPolyline = polylines.first
             var polyline: MAPolyline?
             
             if naviPolyline!.isKind(of: MANaviPolyline.self) {
                 polyline = naviPolyline!.polyline
             } else if naviPolyline!.isKind(of: MAPolyline.self) {
-                polyline = naviPolyline as? MAPolyline
+                polyline = naviPolyline
             }
             
             if polyline != nil {
@@ -251,16 +258,16 @@ class MANaviRoute: NSObject {
         
         if end != nil {
             
-            var startCoord2: CLLocationCoordinate2D
-            var endCoord2: CLLocationCoordinate2D
+            var startCoord2: CLLocationCoordinate2D = CLLocationCoordinate2D()
+            var endCoord2: CLLocationCoordinate2D = CLLocationCoordinate2D()
             
-            var naviPolyline = polylines.last
+            let naviPolyline = polylines.last
             var polyline: MAPolyline?
             
             if naviPolyline!.isKind(of: MANaviPolyline.self) {
                 polyline = naviPolyline!.polyline
             } else if naviPolyline!.isKind(of: MAPolyline.self) {
-                polyline = naviPolyline as! MAPolyline
+                polyline = naviPolyline
             }
             
             if polyline != nil {
@@ -272,27 +279,27 @@ class MANaviRoute: NSObject {
         }
         
         if startDashPolyline != nil {
-            polylines.append(startDashPolyline)
+            self.polylines.append(startDashPolyline!)
         }
         if endDashPolyline != nil {
-            polylines.append(endDashPolyline)
+            self.polylines.append(endDashPolyline!)
         }
     }
     
-    class func replenishPolylineWithStart(startCoord: CLLocationCoordinate2D, end endCoord: CLLocationCoordinate2D) -> LineDashPolyline? {
+    func replenishPolylineWithStart(startCoord: CLLocationCoordinate2D, end endCoord: CLLocationCoordinate2D) -> LineDashPolyline? {
         
         if (!CLLocationCoordinate2DIsValid(startCoord) || !CLLocationCoordinate2DIsValid(endCoord)) {
             return nil
         }
         
-        var distance: Double = MAMetersBetweenMapPoints(MAMapPointForCoordinate(startCoord), MAMapPointForCoordinate(endCoord))
+        let distance: Double = MAMetersBetweenMapPoints(MAMapPointForCoordinate(startCoord), MAMapPointForCoordinate(endCoord))
         
         var dashPolyline: LineDashPolyline?
         
         // Filter beforehand, if the distance is small then do not need to add dash line
         if distance > kMANaviRouteReplenishPolylineFilter {
             
-            var points: [CLLocationCoordinate2D]
+            var points: [CLLocationCoordinate2D] = []
             points[0] = startCoord
             points[1] = endCoord
             
@@ -303,10 +310,10 @@ class MANaviRoute: NSObject {
         return dashPolyline
     }
     
-    class func replenishPolylinesForPathWith(stepPolyline: MAPolyline, lastPolyline: MAPolyline, polylines: inout [LineDashPolyline]) {
+    func replenishPolylinesForPathWith(stepPolyline: MAPolyline, lastPolyline: MAPolyline, polylines: [LineDashPolyline]) {
         
-        var startCoord: CLLocationCoordinate2D
-        var endCoord: CLLocationCoordinate2D
+        var startCoord: CLLocationCoordinate2D = CLLocationCoordinate2D()
+        var endCoord: CLLocationCoordinate2D = CLLocationCoordinate2D()
         
         stepPolyline.getCoordinates(&endCoord, range: NSMakeRange(0, 1))
         lastPolyline.getCoordinates(&startCoord, range: NSMakeRange(Int(lastPolyline.pointCount) - 1, 1))
@@ -315,7 +322,7 @@ class MANaviRoute: NSObject {
             
             let dashPolyline: LineDashPolyline? = self.replenishPolylineWithStart(startCoord: startCoord, end: endCoord)
             if dashPolyline != nil {
-                polylines.append(dashPolyline!)
+                self.polylines.append(dashPolyline!)
             }
         }
     }

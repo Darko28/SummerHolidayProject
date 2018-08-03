@@ -10,15 +10,15 @@ import Foundation
 import MAMapKit
 
 
-class LineDashPolyline: MAPolyline, MAOverlay {
+class LineDashPolyline: MAPolyline {
     
-    lazy var coordinate: CLLocationCoordinate2D = {
-        return self.polyline.coordinate
-    }()
-    
-    lazy var boundingMapRect: MAMapRect = {
-        return self.polyline.boundingMapRect
-    }()
+//    lazy var coordinate: CLLocationCoordinate2D = {
+//        return self.polyline.coordinate
+//    }()
+//    
+//    lazy var boundingMapRect: MAMapRect = {
+//        return self.polyline.boundingMapRect
+//    }()
     
     var polyline: MAPolyline
     

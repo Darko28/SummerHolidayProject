@@ -1,0 +1,47 @@
+PODS:
+  - AMap3DMap (6.3.0):
+    - AMapFoundation (~> 1.5)
+  - AMapFoundation (1.5.3)
+  - AMapLocation (2.6.0):
+    - AMapFoundation (~> 1.4)
+  - AMapSearch (6.1.1):
+    - AMapFoundation (~> 1.4)
+  - DJI-SDK-iOS (4.6.1)
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
+  - GooglePlaces (2.7.0):
+    - GoogleMaps/Base (= 2.7.0)
+
+DEPENDENCIES:
+  - AMap3DMap
+  - AMapLocation
+  - AMapSearch
+  - DJI-SDK-iOS (~> 4.6.1)
+  - GoogleMaps
+  - GooglePlaces
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AMap3DMap
+    - AMapFoundation
+    - AMapLocation
+    - AMapSearch
+    - DJI-SDK-iOS
+    - GoogleMaps
+    - GooglePlaces
+
+SPEC CHECKSUMS:
+  AMap3DMap: 1bb48f98ecb46682f145881692e7b06adcd06a93
+  AMapFoundation: 58f883c80754c659cf626deb3150936bfe8f1772
+  AMapLocation: 55116a2c8956eab7550cbb56e989aa5cdcc424e3
+  AMapSearch: 3dcbf85c403a2a0fe0eda5318caabc272b31f5e1
+  DJI-SDK-iOS: 46984cbc26e9e2fc268d665f18f9b1916bbc171c
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
+  GooglePlaces: 3d06e6c99654545b4738ce49648745779c25f2ef
+
+PODFILE CHECKSUM: b13a775b3470f977b7e6b308b18c367b4f38901d
+
+COCOAPODS: 1.5.3

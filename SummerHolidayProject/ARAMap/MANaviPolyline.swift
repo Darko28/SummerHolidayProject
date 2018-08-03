@@ -10,7 +10,7 @@ import Foundation
 import MAMapKit
 
 
-class MANaviPolyline: MAPolyline, MAOverlay {
+class MANaviPolyline: MAPolyline {
     
     var type: MANaviAnnotationType!
     var polyline: MAPolyline
@@ -18,13 +18,5 @@ class MANaviPolyline: MAPolyline, MAOverlay {
     init(polyline: MAPolyline) {
         self.polyline = polyline
         self.type = MANaviAnnotationType.Drive
-    }
-    
-    lazy var coordinate: CLLocationCoordinate2D = {
-        return polyline.coordinate
-    }()
-    
-    lazy var boundingMapRect: MAMapRect = {
-        return polyline.boundingMapRect
-    }()
+    }    
 }
