@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bH6-cb-x0x">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14306.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bH6-cb-x0x">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14270.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14278.2"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -54,19 +54,10 @@
         <!--Map View Controller-->
         <scene sceneID="Zs3-vl-cFq">
             <objects>
-                <viewController id="1Mu-q9-agf" customClass="MapViewController" customModule="SummerHolidayProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="1Mu-q9-agf" customClass="AMapViewController" customModule="SummerHolidayProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Kd2-Dh-kRH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="SLd-Ow-Q7c">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="1Mu-q9-agf" id="HVZ-vc-47H"/>
-                                </connections>
-                            </mapView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="PMe-uF-N4b"/>
                     </view>
@@ -83,7 +74,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="appleMap" destination="SLd-Ow-Q7c" id="n7u-Cb-K7F"/>
                         <outlet property="googleMapCleanOutlet" destination="fjZ-gY-uSi" id="ggB-aq-drl"/>
                     </connections>
                 </viewController>
@@ -94,7 +84,7 @@
         <!--Map View Controller-->
         <scene sceneID="PhC-Yx-ERv">
             <objects>
-                <viewController id="axy-vP-Fvf" customClass="ARMapViewController" customModule="SummerHolidayProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="axy-vP-Fvf" customClass="ARAMapViewController" customModule="SummerHolidayProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0My-Q3-Ppl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -157,7 +147,7 @@
         <!--Navigation Controller-->
         <scene sceneID="PME-mK-TCD">
             <objects>
-                <navigationController storyboardIdentifier="ARMapViewController" automaticallyAdjustsScrollViewInsets="NO" id="lLy-6F-Vnp" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ARAMapViewController" automaticallyAdjustsScrollViewInsets="NO" id="lLy-6F-Vnp" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="BhV-Hv-cpK">
                         <rect key="frame" x="0.0" y="20" width="414" height="44"/>

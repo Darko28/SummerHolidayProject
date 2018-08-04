@@ -27,13 +27,13 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     let defaultZoomLabel: Float = 19.0
     let polylineStrokeWidth: CGFloat = 5.0
     
-    private var mapView: GMSMapView!
+//    private var mapView: GMSMapView!
     private var amapView: MAMapView!
-    private var userLocationMarker: GMSMarker!
+//    private var userLocationMarker: GMSMarker!
     private var userLocationAnnotation: MAAnnotationView!
-    private var polyline: GMSPolyline!
+//    private var polyline: GMSPolyline!
     private var maPolyline: MAPolyline!
-    private var dropLocationMarker: GMSMarker!
+//    private var dropLocationMarker: GMSMarker!
     private var dropLocationAnnotation: MAAnnotationView!
     
     private var flow: Flow = .createMarkerByLongPressAndShowDirection
@@ -57,6 +57,9 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        
+        AMapServices.shared()?.apiKey = "99d78566e646d2c30d60635ebf9a04b8"
+        
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         appDelegate.locationManager.delegate = self
         registerNotification()
@@ -69,7 +72,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         appDelegate.locationManager.startUpdatingLocation()
         reachabilityCheck()
         // handleAppleMap()
-        handleGoogleMap()
+//        handleGoogleMap()
         handleAMap()
     }
     
@@ -144,36 +147,36 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // MARK: - Google Map Set up
     
-    @IBAction func clearGoogleMap(_ sender: UIBarButtonItem) {
-        polyline?.map = nil
-        dropLocationMarker?.map = nil
-        paths = []
-        destination = (Double(), Double())
-    }
+//    @IBAction func clearGoogleMap(_ sender: UIBarButtonItem) {
+//        polyline?.map = nil
+//        dropLocationMarker?.map = nil
+//        paths = []
+//        destination = (Double(), Double())
+//    }
     
-    private func handleGoogleMap() {
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        if let userLocation = appDelegate.locationManager.location?.coordinate {
-            googleMapSetUp(location: userLocation)
-        } else {
-            googleMapSetUp(location: CLLocationCoordinate2D(latitude: 12.9716, longitude: 77.5946)) // bangalore location
-        }
-        
-        if flow == .createMarkerByLongPressAndShowDirection {
-            if mapView != nil {
-                mapView.delegate = self
-            }
-            title = "Tap On Map"
-        } else if flow == .createMarkerByServerProvidedLocations {
-            
-            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
-            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
-            let _ = createMarker(location: fromLocation, mapView: mapView, markerTitle: "From Location", snippet: "")
-            let _ = createMarker(location: cabLocation, mapView: mapView, markerTitle: "Cab Location", snippet: "Waiting...")
-            drawPath(map: mapView, pathArray: GPXFile.cherryHillPath)
-        }
-    }
+//    private func handleGoogleMap() {
+//
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        if let userLocation = appDelegate.locationManager.location?.coordinate {
+//            googleMapSetUp(location: userLocation)
+//        } else {
+//            googleMapSetUp(location: CLLocationCoordinate2D(latitude: 12.9716, longitude: 77.5946)) // bangalore location
+//        }
+//
+//        if flow == .createMarkerByLongPressAndShowDirection {
+//            if mapView != nil {
+//                mapView.delegate = self
+//            }
+//            title = "Tap On Map"
+//        } else if flow == .createMarkerByServerProvidedLocations {
+//
+//            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
+//            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
+//            let _ = createMarker(location: fromLocation, mapView: mapView, markerTitle: "From Location", snippet: "")
+//            let _ = createMarker(location: cabLocation, mapView: mapView, markerTitle: "Cab Location", snippet: "Waiting...")
+//            drawPath(map: mapView, pathArray: GPXFile.cherryHillPath)
+//        }
+//    }
     
     private func handleAMap() {
         
@@ -206,31 +209,31 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         view.addSubview(amapView)
     }
     
-    private func googleMapSetUp(location: CLLocationCoordinate2D) {
-        
-        let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: defaultZoomLabel)
-        mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
-        mapView.isUserInteractionEnabled = true
-        mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        view.addSubview(mapView)
-    }
+//    private func googleMapSetUp(location: CLLocationCoordinate2D) {
+//
+//        let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: defaultZoomLabel)
+//        mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
+//        mapView.isUserInteractionEnabled = true
+//        mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+//        view.addSubview(mapView)
+//    }
     
-    private func createMarker(location: CLLocationCoordinate2D, mapView: GMSMapView, markerTitle: String, snippet: String, image: UIImage? = nil, markerName: String? = nil) -> GMSMarker {
-        
-        let marker = GMSMarker(position: location)
-        marker.title = markerTitle
-        marker.snippet = snippet
-        if let image = image {
-            marker.icon = image
-            marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-        }
-        if let markerName = markerName {
-            marker.userData = markerName
-        }
-        
-        marker.map = mapView
-        return marker
-    }
+//    private func createMarker(location: CLLocationCoordinate2D, mapView: GMSMapView, markerTitle: String, snippet: String, image: UIImage? = nil, markerName: String? = nil) -> GMSMarker {
+//
+//        let marker = GMSMarker(position: location)
+//        marker.title = markerTitle
+//        marker.snippet = snippet
+//        if let image = image {
+//            marker.icon = image
+//            marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+//        }
+//        if let markerName = markerName {
+//            marker.userData = markerName
+//        }
+//
+//        marker.map = mapView
+//        return marker
+//    }
     
 //    private func createMAAnnotation(location: CLLocationCoordinate2D, mapView: MAMapView, annotationTitle: String, subtitle: String, image: UIImage? = nil, annotationName: String? = nil) -> MAAnnotationView {
 //
@@ -248,23 +251,23 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
 //        }
 //    }
     
-    private func removeMarker(marker: GMSMarker) {
-        marker.map = nil
-    }
-    
-    private func drawPath(map: GMSMapView, pathArray: [(Double, Double)]) {
-        
-        let path = GMSMutablePath()
-        for each in pathArray {
-            path.add(CLLocationCoordinate2D(latitude: each.0, longitude: each.1))
-        }
-        
-        let polyline = GMSPolyline(path: path)
-        polyline.strokeColor = UIColor.blue
-        polyline.strokeWidth = polylineStrokeWidth
-        polyline.geodesic = true
-        polyline.map = map
-    }
+//    private func removeMarker(marker: GMSMarker) {
+//        marker.map = nil
+//    }
+//
+//    private func drawPath(map: GMSMapView, pathArray: [(Double, Double)]) {
+//
+//        let path = GMSMutablePath()
+//        for each in pathArray {
+//            path.add(CLLocationCoordinate2D(latitude: each.0, longitude: each.1))
+//        }
+//
+//        let polyline = GMSPolyline(path: path)
+//        polyline.strokeColor = UIColor.blue
+//        polyline.strokeWidth = polylineStrokeWidth
+//        polyline.geodesic = true
+//        polyline.map = map
+//    }
     
     private func drawMAPath(map: MAMapView, pathArray: [(Double, Double)]) {
         
@@ -298,32 +301,32 @@ extension AMapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
         
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        if let location = locations.last {
-            
-            createRegion(coordinate: location.coordinate)
-            if let userLocationMarker = self.userLocationMarker {
-                removeMarker(marker: userLocationMarker)
-            }
-            
-            userLocationMarker = GMSMarker(position: location.coordinate)
-            userLocationMarker.title = "User Location"
-            userLocationMarker.snippet = ""
-            if let image = UIImage(named: "blue-dot") {
-                userLocationMarker.icon = image
-                userLocationMarker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-            }
-            userLocationMarker.map = mapView
-            
-            // one time execution
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, appDelegate.one_time_execution == false {
-                appDelegate.one_time_execution = true
-                let cameraPosition = GMSCameraPosition(target: location.coordinate, zoom: defaultZoomLabel, bearing: 0, viewingAngle: 0)
-                mapView.animate(to: cameraPosition)
-            }
-        }
-    }
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//
+//        if let location = locations.last {
+//
+//            createRegion(coordinate: location.coordinate)
+//            if let userLocationMarker = self.userLocationMarker {
+//                removeMarker(marker: userLocationMarker)
+//            }
+//
+//            userLocationMarker = GMSMarker(position: location.coordinate)
+//            userLocationMarker.title = "User Location"
+//            userLocationMarker.snippet = ""
+//            if let image = UIImage(named: "blue-dot") {
+//                userLocationMarker.icon = image
+//                userLocationMarker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+//            }
+//            userLocationMarker.map = mapView
+//
+//            // one time execution
+//            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, appDelegate.one_time_execution == false {
+//                appDelegate.one_time_execution = true
+//                let cameraPosition = GMSCameraPosition(target: location.coordinate, zoom: defaultZoomLabel, bearing: 0, viewingAngle: 0)
+//                mapView.animate(to: cameraPosition)
+//            }
+//        }
+//    }
     
     // Getting a new heading
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -356,105 +359,105 @@ extension AMapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
 }
 
 
-extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchDelegate {
+extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
     
     
     
-    // MARK: - Create marker on long press
-    
-    func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
-        
-        self.dropLocationMarker?.map = nil
-        self.dropLocationMarker = createMarker(location: coordinate, mapView: self.mapView, markerTitle: "Destination", snippet: "", image: UIImage(named: "drop-pin"))
-        
-        reachabilityCheck()
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        
-        if let userLocation = appDelegate.locationManager.location?.coordinate {
-            
-            if NetworkReachability.isInternetAvailable() {
-                
-                fetchRoute(source: userLocation, destination: coordinate, completionHandler: { [weak self] (polyline) in
-                    
-                    if let polyline = polyline as? GMSPolyline {
-                        
-                        // Add user location
-                        let path = GMSMutablePath()
-                        if let userLocation = self?.userLocationMarker.position {
-                            path.add(userLocation)
-                        }
-                        
-                        // Add rest of the coordinates
-                        if let polylinePath = polyline.path, polylinePath.count() > 0 {
-                            for i in 0..<polylinePath.count() {
-                                path.add(polylinePath.coordinate(at: i))
-                            }
-                        }
-                        
-                        let updatedPolyline = GMSPolyline(path: path)
-                        updatedPolyline.strokeColor = UIColor.blue
-                        updatedPolyline.strokeWidth = self?.polylineStrokeWidth ?? 5.0
-                        
-                        self?.polyline?.map = nil
-                        self?.polyline = updatedPolyline
-                        self?.polyline?.map = self?.mapView
-                        
-                        // Update path and destination
-                        self?.destination = (coordinate.latitude, coordinate.longitude)
-                        
-                        if let path = updatedPolyline.path {
-                            
-                            var polylinePath: [(Double, Double)] = []
-                            for i in 0..<path.count() {
-                                let point = path.coordinate(at: i)
-                                polylinePath.append((point.latitude, point.longitude))
-                            }
-                            self?.paths = []
-                            self?.paths.append(polylinePath)
-                        }
-                    }
-                    
-                })
-            }
-        }
-    }
-    
-    private func fetchRoute(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D, completionHandler: ((Any) -> ())? ) {
-        
-        let origin = String(format: "%f, %f", source.latitude, source.longitude)
-        let destination = String(format: "%f, %f", destination.latitude, destination.longitude)
-        let directionAPI = "https://maps.googleapis.com/maps/api/directions/json?"
-        let directionUrlString = String(format: "%@&origin=%@&destination=%@&mode=driving", directionAPI, origin, destination)  // walking, driving
-        
-        if let url = URL(string: directionUrlString) {
-            
-            let fetchDirection = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-                
-                DispatchQueue.main.async {
-                    if error == nil && data != nil {
-                        var polyline: GMSPolyline?
-                        if let dictionary = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
-                            if let routesArray = dictionary?["routes"] as? [Any], !routesArray.isEmpty {
-                                if let routeDict = routesArray.first as? [String: Any], !routesArray.isEmpty {
-                                    if let routeOverviewPolyline = routeDict["overview_polyline"] as? [String: Any], !routeOverviewPolyline.isEmpty {
-                                        if let points = routeOverviewPolyline["points"] as? String {
-                                            if let path = GMSPath(fromEncodedPath: points) {
-                                                polyline = GMSPolyline(path: path)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if let polyline = polyline { completionHandler?(polyline) }
-                    }
-                }
-            }
-            
-            fetchDirection.resume()
-        }
-    }
+//    // MARK: - Create marker on long press
+//    
+//    func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+//        
+//        self.dropLocationMarker?.map = nil
+//        self.dropLocationMarker = createMarker(location: coordinate, mapView: self.mapView, markerTitle: "Destination", snippet: "", image: UIImage(named: "drop-pin"))
+//        
+//        reachabilityCheck()
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        
+//        if let userLocation = appDelegate.locationManager.location?.coordinate {
+//            
+//            if NetworkReachability.isInternetAvailable() {
+//                
+//                fetchRoute(source: userLocation, destination: coordinate, completionHandler: { [weak self] (polyline) in
+//                    
+//                    if let polyline = polyline as? GMSPolyline {
+//                        
+//                        // Add user location
+//                        let path = GMSMutablePath()
+//                        if let userLocation = self?.userLocationMarker.position {
+//                            path.add(userLocation)
+//                        }
+//                        
+//                        // Add rest of the coordinates
+//                        if let polylinePath = polyline.path, polylinePath.count() > 0 {
+//                            for i in 0..<polylinePath.count() {
+//                                path.add(polylinePath.coordinate(at: i))
+//                            }
+//                        }
+//                        
+//                        let updatedPolyline = GMSPolyline(path: path)
+//                        updatedPolyline.strokeColor = UIColor.blue
+//                        updatedPolyline.strokeWidth = self?.polylineStrokeWidth ?? 5.0
+//                        
+//                        self?.polyline?.map = nil
+//                        self?.polyline = updatedPolyline
+//                        self?.polyline?.map = self?.mapView
+//                        
+//                        // Update path and destination
+//                        self?.destination = (coordinate.latitude, coordinate.longitude)
+//                        
+//                        if let path = updatedPolyline.path {
+//                            
+//                            var polylinePath: [(Double, Double)] = []
+//                            for i in 0..<path.count() {
+//                                let point = path.coordinate(at: i)
+//                                polylinePath.append((point.latitude, point.longitude))
+//                            }
+//                            self?.paths = []
+//                            self?.paths.append(polylinePath)
+//                        }
+//                    }
+//                    
+//                })
+//            }
+//        }
+//    }
+//    
+//    private func fetchRoute(source: CLLocationCoordinate2D, destination: CLLocationCoordinate2D, completionHandler: ((Any) -> ())? ) {
+//        
+//        let origin = String(format: "%f, %f", source.latitude, source.longitude)
+//        let destination = String(format: "%f, %f", destination.latitude, destination.longitude)
+//        let directionAPI = "https://maps.googleapis.com/maps/api/directions/json?"
+//        let directionUrlString = String(format: "%@&origin=%@&destination=%@&mode=driving", directionAPI, origin, destination)  // walking, driving
+//        
+//        if let url = URL(string: directionUrlString) {
+//            
+//            let fetchDirection = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
+//                
+//                DispatchQueue.main.async {
+//                    if error == nil && data != nil {
+//                        var polyline: GMSPolyline?
+//                        if let dictionary = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] {
+//                            if let routesArray = dictionary?["routes"] as? [Any], !routesArray.isEmpty {
+//                                if let routeDict = routesArray.first as? [String: Any], !routesArray.isEmpty {
+//                                    if let routeOverviewPolyline = routeDict["overview_polyline"] as? [String: Any], !routeOverviewPolyline.isEmpty {
+//                                        if let points = routeOverviewPolyline["points"] as? String {
+//                                            if let path = GMSPath(fromEncodedPath: points) {
+//                                                polyline = GMSPolyline(path: path)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        
+//                        if let polyline = polyline { completionHandler?(polyline) }
+//                    }
+//                }
+//            }
+//            
+//            fetchDirection.resume()
+//        }
+//    }
     
     
     func mapView(_ mapView: MAMapView!, didLongPressedAt coordinate: CLLocationCoordinate2D) {
@@ -468,7 +471,7 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
             
             if NetworkReachability.isInternetAvailable() {
                 
-                fetchRoute(source: userLocation, destination: coordinate) { [weak self] (polyline) in
+                fetchMARoute(source: userLocation, destination: coordinate) { [weak self] (polyline) in
                     
                     if let polyline = polyline as? MAPolylineRenderer {
                         
@@ -531,25 +534,6 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
         search.aMapWalkingRouteSearch(request)
     }
     
-    // Show current routing plan
-    private func presentCurrentWalkingCourse() {
-        
-        let start = AMapGeoPoint.location(withLatitude: CGFloat(startCoordinate.latitude), longitude: CGFloat(startCoordinate.longitude))
-        let end = AMapGeoPoint.location(withLatitude: CGFloat(destinationCoordiante.latitude), longitude: CGFloat(destinationCoordiante.longitude))
-        
-        if currentSearchType == AMapRoutePlanningType.Bus || currentSearchType == .BusCrossCity {
-//            naviRoute = MANaviRoute(transit: route!.transits.first!, startPoint: start!, endPoint: end!)
-        } else {
-            let type = MANaviAnnotationType(rawValue: currentSearchType.rawValue)
-            naviRoute = MANaviRoute(for: route!.paths.first!, naviType: type!, showTraffic: true, startPoint: start!, endPoint: end!)
-        }
-        
-        naviRoute!.addToMapView(mapView: amapView)
-        
-        amapView.showOverlays(naviRoute!.routePolylines, edgePadding: UIEdgeInsetsMake(20, 20, 20, 20), animated: true)
-        
-    }
-    
     // MARK: - AMapSearchDelegate
     
     func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
@@ -567,6 +551,25 @@ extension AMapViewController: GMSMapViewDelegate, MAMapViewDelegate, AMapSearchD
             self.route = response.route
             presentCurrentWalkingCourse()
         }
+    }
+    
+    // Show current routing plan
+    private func presentCurrentWalkingCourse() {
+        
+        let start = AMapGeoPoint.location(withLatitude: CGFloat(startCoordinate.latitude), longitude: CGFloat(startCoordinate.longitude))
+        let end = AMapGeoPoint.location(withLatitude: CGFloat(destinationCoordiante.latitude), longitude: CGFloat(destinationCoordiante.longitude))
+        
+        if currentSearchType == AMapRoutePlanningType.Bus || currentSearchType == .BusCrossCity {
+            //            naviRoute = MANaviRoute(transit: route!.transits.first!, startPoint: start!, endPoint: end!)
+        } else {
+            let type = MANaviAnnotationType(rawValue: currentSearchType.rawValue)
+            naviRoute = MANaviRoute(for: route!.paths.first!, naviType: type!, showTraffic: true, startPoint: start!, endPoint: end!)
+        }
+        
+        naviRoute!.addToMapView(mapView: amapView)
+        
+        amapView.showOverlays(naviRoute!.routePolylines, edgePadding: UIEdgeInsetsMake(20, 20, 20, 20), animated: true)
+        
     }
     
     // MARK: - MAMapViewDelegate
