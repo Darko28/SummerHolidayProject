@@ -62,20 +62,13 @@
                         <viewLayoutGuide key="safeArea" id="PMe-uF-N4b"/>
                     </view>
                     <navigationItem key="navigationItem" id="vNd-tl-KkL">
-                        <barButtonItem key="leftBarButtonItem" title="Clean Map" id="fjZ-gY-uSi">
-                            <connections>
-                                <action selector="clearGoogleMap:" destination="1Mu-q9-agf" id="20y-I2-RPc"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="leftBarButtonItem" title="Clean Map" id="fjZ-gY-uSi"/>
                         <barButtonItem key="rightBarButtonItem" title="ARView" id="flE-CB-KnE">
                             <connections>
                                 <action selector="openARView:" destination="1Mu-q9-agf" id="8VJ-g0-j6n"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="googleMapCleanOutlet" destination="fjZ-gY-uSi" id="ggB-aq-drl"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rea-6V-fqz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

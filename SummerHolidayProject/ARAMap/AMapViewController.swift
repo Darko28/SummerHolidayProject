@@ -244,6 +244,8 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
                 
                 fetchMARoute(source: userLocation, destination: coordinate) { [weak self] (polyline) in
                     
+                    print("fetchRoute Completion called")
+                    
                     if let polyline = polyline as? MAPolylineRenderer {
                         
                         // Add user location
@@ -349,7 +351,7 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
     
     // MARK: - MAMapViewDelegate
     
-    @nonobjc func mapView(_ mapView: MAMapView!, rendererFor overlay: MAOverlay!) -> MAOverlayRenderer! {
+    func mapView(_ mapView: MAMapView!, rendererFor overlay: MAOverlay!) -> MAOverlayRenderer! {
         
         print("Render for overlay called")
         

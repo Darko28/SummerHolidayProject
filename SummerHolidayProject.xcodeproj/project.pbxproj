@@ -59,6 +59,7 @@
 		A25EBB40210048F0009D9091 /* AMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBB3F210048F0009D9091 /* AMapViewController.swift */; };
 		A26EB8E020FE670300CE9A5C /* car_detection_keras_CNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A26EB8DE20FE670300CE9A5C /* car_detection_keras_CNN.mlmodel */; };
 		A26EB8E120FE670300CE9A5C /* car_detection_keras_DNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A26EB8DF20FE670300CE9A5C /* car_detection_keras_DNN.mlmodel */; };
+		A2B59BC3211719040063DB52 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B59BC2211719040063DB52 /* art.scnassets */; };
 		A2B842E720FBF0E20036E5C0 /* SceneNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842E620FBF0E20036E5C0 /* SceneNode.swift */; };
 		A2B842E920FCEC650036E5C0 /* Classification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842E820FCEC650036E5C0 /* Classification.swift */; };
 		A2B842EB20FCF8830036E5C0 /* ImagePreProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842EA20FCF8830036E5C0 /* ImagePreProcessing.swift */; };
@@ -201,6 +202,7 @@
 		A25EBB3F210048F0009D9091 /* AMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AMapViewController.swift; sourceTree = "<group>"; };
 		A26EB8DE20FE670300CE9A5C /* car_detection_keras_CNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = car_detection_keras_CNN.mlmodel; sourceTree = "<group>"; };
 		A26EB8DF20FE670300CE9A5C /* car_detection_keras_DNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = car_detection_keras_DNN.mlmodel; sourceTree = "<group>"; };
+		A2B59BC2211719040063DB52 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		A2B842E620FBF0E20036E5C0 /* SceneNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneNode.swift; sourceTree = "<group>"; };
 		A2B842E820FCEC650036E5C0 /* Classification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classification.swift; sourceTree = "<group>"; };
 		A2B842EA20FCF8830036E5C0 /* ImagePreProcessing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreProcessing.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				A201F4D120EB5FF6000E574A /* LaunchScreen.storyboard */,
 				A201F4D420EB5FF6000E574A /* Info.plist */,
 				A201F4CF20EB5FF6000E574A /* Assets.xcassets */,
+				A2B59BC2211719040063DB52 /* art.scnassets */,
 			);
 			path = SummerHolidayProject;
 			sourceTree = "<group>";
@@ -643,6 +646,7 @@
 				A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */,
 				A2E05EED20F6E4C300BEC59D /* GameTex.png in Resources */,
 				A2E05EEE20F6E4C300BEC59D /* Square.obj in Resources */,
+				A2B59BC3211719040063DB52 /* art.scnassets in Resources */,
 				A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */,
 				A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */,
 				A2E05EEC20F6E4C300BEC59D /* Game.obj in Resources */,

@@ -366,6 +366,8 @@ class MANaviRoute: NSObject {
         }
         
         if (self.annotationVisible && self.naviAnnotations.count > 0) {
+            
+            print("add to mapView annotations")
             mapView.addAnnotations(self.naviAnnotations)
         }
     }
