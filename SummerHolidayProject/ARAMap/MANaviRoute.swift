@@ -81,11 +81,13 @@ class MANaviRoute: NSObject {
         
         self.init()
         
+        print("init for path called")
+        
         //        var polylines: [MAPolyline] = []
         var naviAnnotations: [MANaviAnnotation] = []
         
         if (showTraffic && (type == MANaviAnnotationType.Drive)) {
-            
+            print("type == .Drive")
         } else {
             
             for i in 0..<path.steps.count {
@@ -94,10 +96,12 @@ class MANaviRoute: NSObject {
                 let stepPolyline: MAPolyline? = polylineForStep(step: step)
                 
                 if (stepPolyline != nil) {
+                    
+                    print("init for path")
                     let naviPolyline: MANaviPolyline = MANaviPolyline(polyline: stepPolyline!)
                     naviPolyline.type = type
                     
-                    polylines.append(naviPolyline)
+                    polylines.append(naviPolyline.polyline)
                     
                     if (i > 0) {
                         let annotation: MANaviAnnotation = MANaviAnnotation()
@@ -115,9 +119,13 @@ class MANaviRoute: NSObject {
             }
         }
         
-        replenishPolylinesForStartPoint(start: start, endPoint: end, polylines: polylines as! [MANaviPolyline])
+        replenishPolylinesForStartPoint(start: start, endPoint: end, polylines: polylines.map { (polyline) -> MANaviPolyline in
+            MANaviPolyline(polyline: polyline)
+        })
         
-        self.routePolylines = polylines as! [MANaviPolyline]
+        self.routePolylines = polylines.map { (polyline) -> MANaviPolyline in
+            MANaviPolyline(polyline: polyline)
+        }
         self.naviAnnotations = naviAnnotations
     }
 
@@ -127,6 +135,8 @@ class MANaviRoute: NSObject {
     
     func polylineForStep(step: AMapStep?) -> MAPolyline? {
         
+        print("polyline for step")
+        
         if step == nil {
             return nil
         }
@@ -135,6 +145,8 @@ class MANaviRoute: NSObject {
     }
     
     class func polylineForCoordinateString(coodinateString: String) -> MAPolyline? {
+        
+        print("polyline for coordinate string")
         
         if coodinateString.count == 0 {
             return nil
@@ -247,7 +259,7 @@ class MANaviRoute: NSObject {
             if naviPolyline!.isKind(of: MANaviPolyline.self) {
                 polyline = naviPolyline!.polyline
             } else if naviPolyline!.isKind(of: MAPolyline.self) {
-                polyline = naviPolyline
+                polyline = naviPolyline!.polyline
             }
             
             if polyline != nil {
@@ -267,7 +279,7 @@ class MANaviRoute: NSObject {
             if naviPolyline!.isKind(of: MANaviPolyline.self) {
                 polyline = naviPolyline!.polyline
             } else if naviPolyline!.isKind(of: MAPolyline.self) {
-                polyline = naviPolyline
+                polyline = naviPolyline!.polyline
             }
             
             if polyline != nil {
@@ -279,10 +291,10 @@ class MANaviRoute: NSObject {
         }
         
         if startDashPolyline != nil {
-            self.polylines.append(startDashPolyline!)
+            self.polylines.append(startDashPolyline!.polyline)
         }
         if endDashPolyline != nil {
-            self.polylines.append(endDashPolyline!)
+            self.polylines.append(endDashPolyline!.polyline)
         }
     }
     
@@ -300,8 +312,10 @@ class MANaviRoute: NSObject {
         if distance > kMANaviRouteReplenishPolylineFilter {
             
             var points: [CLLocationCoordinate2D] = []
-            points[0] = startCoord
-            points[1] = endCoord
+//            points[0] = startCoord
+//            points[1] = endCoord
+            points.append(startCoord)
+            points.append(endCoord)
             
             let polyline: MAPolyline = MAPolyline(coordinates: &points, count: 2)
             dashPolyline = LineDashPolyline(polyline: polyline)
@@ -322,7 +336,7 @@ class MANaviRoute: NSObject {
             
             let dashPolyline: LineDashPolyline? = self.replenishPolylineWithStart(startCoord: startCoord, end: endCoord)
             if dashPolyline != nil {
-                self.polylines.append(dashPolyline!)
+                self.polylines.append(dashPolyline!.polyline)
             }
         }
     }
@@ -340,7 +354,15 @@ class MANaviRoute: NSObject {
         self.mapView = mapView
         
         if self.routePolylines.count > 0 {
+            
+            print("Adding overlays to mapView")
+            
+//            mapView.addOverlays(self.routePolylines.map { (polyline) -> MAPolyline in
+//                polyline.polyline
+//            })
+            
             mapView.addOverlays(self.routePolylines)
+
         }
         
         if (self.annotationVisible && self.naviAnnotations.count > 0) {
