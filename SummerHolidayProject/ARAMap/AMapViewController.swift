@@ -36,11 +36,11 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
 //    private var dropLocationMarker: GMSMarker!
     private var dropLocationAnnotation = MAPointAnnotation()
     
-    private var flow: Flow = .createMarkerByLongPressAndShowDirection
+    private var flow: Flow = .createMarkerByServerProvidedLocations
     private var paths: [[(Double, Double)]] = []
-    private var maPaths: [[(Double, Double)]] = []
+    var maPaths: [[(Double, Double)]] = []
     private var destination: (Double, Double) = (Double(), Double())
-    private var maDestination: (Double, Double) = (Double(), Double())
+    var maDestination: (Double, Double) = (Double(), Double())
     
     var search: AMapSearchAPI!
     var startCoordinate: CLLocationCoordinate2D!
@@ -50,6 +50,11 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     var route: AMapRoute?
     var currentSearchType: AMapRoutePlanningType = AMapRoutePlanningType.Walk
 
+    public static let sharedInstance: AMapViewController = {
+        let instance = AMapViewController()
+        return instance
+    }()
+    
     
     // MARK: View Controller Life Cycle
     
@@ -130,9 +135,9 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBAction func openARView(_ sender: UIBarButtonItem) {
         if let arVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ARAMapViewController") as? UINavigationController {
-            if let vc = arVC.visibleViewController as? ARMapViewController {
-                vc.sectionCoordinates = paths
-                vc.carLocation = destination
+            if let vc = arVC.visibleViewController as? ARAMapViewController {
+                vc.sectionCoordinates = maPaths
+                vc.carLocation = maDestination
             }
             self.present(arVC, animated: true, completion: nil)
         }
@@ -155,11 +160,15 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             title = "Tap On Map"
         } else if flow == .createMarkerByServerProvidedLocations {
-            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
-            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.cherryHillPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
+            
+            if amapView != nil {
+                amapView.delegate = self
+            }
+            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.nuistPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
+            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.nuistPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
 //            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "From Location", subtitle: "")
 //            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "Cab Location", subtitle: "Waiting...")
-            drawMAPath(map: amapView, pathArray: GPXFile.cherryHillPath)
+            drawMAPath(map: amapView, pathArray: GPXFile.nuistPath)
         }
     }
     
@@ -172,7 +181,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         amapView.isUserInteractionEnabled = true
         amapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.addSubview(amapView)
-        createAMapRegion(coordinate: location)
+        createAMapRegion(coordinate: AMapCoordinateConvert(location, .GPS))
     }
     
     private func drawMAPath(map: MAMapView, pathArray: [(Double, Double)]) {
@@ -183,7 +192,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         let polyline = MAPolyline(coordinates: &path, count: UInt(path.count))
         let polyOverlay = MAPolylineRenderer(polyline: polyline!)
-        polyOverlay?.strokeColor = UIColor.blue
+        polyOverlay?.strokeColor = UIColor.green
         polyOverlay?.lineWidth = polylineStrokeWidth
     }
 }
@@ -242,7 +251,7 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
             
             if NetworkReachability.isInternetAvailable() {
                 
-                fetchMARoute(source: userLocation, destination: coordinate) { [weak self] (polyline) in
+                fetchMARoute(source: AMapCoordinateConvert(userLocation, .GPS), destination: coordinate) { [weak self] (polyline) in
                     
                     print("fetchRoute Completion called")
                     
@@ -285,6 +294,8 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
                                 let point = path1[i]
                                 polylinePath.append((point.latitude, point.longitude))
                             }
+                            
+                            print("Appending maPaths")
                             self?.maPaths = []
                             self?.maPaths.append(polylinePath)
                         }
@@ -306,6 +317,7 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         request.destination = AMapGeoPoint.location(withLatitude: CGFloat(destination.latitude), longitude: CGFloat(destination.longitude))
         
         search.aMapWalkingRouteSearch(request)
+        
     }
     
     // MARK: - AMapSearchDelegate
@@ -347,6 +359,84 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         
         amapView.showOverlays(naviRoute!.routePolylines, edgePadding: UIEdgeInsetsMake(20, 20, 20, 20), animated: true)
         
+        let completionHandler = { [weak self] (route: MANaviRoute?) in
+            
+            print("fetchRoute Completion called")
+            
+            if let route = route {
+                
+                // Add user location
+                var coord: [CLLocationCoordinate2D] = []
+                coord.append(AMapCoordinateConvert(self!.startCoordinate, .GPS))
+                
+                // add rest of the coordinates
+                coord = coord + (route.routePolylines.map({ (naviPolyline) -> CLLocationCoordinate2D in
+                    return naviPolyline.coordinate
+                }))
+                
+                self!.destination = (self!.destinationCoordiante.latitude, self!.destinationCoordiante.longitude)
+                
+                let path = MAPolyline(coordinates: &coord, count: UInt(coord.count))
+                
+                //                let pathRender = MAPolylineRenderer(polyline: path)
+                //                pathRender?.strokeColor = UIColor.green
+                //                pathRender?.lineWidth = self?.polylineStrokeWidth ?? 5.0
+                
+                self?.amapView.add(path!)
+                
+                var sectionCoordinates: [(Double, Double)] = []
+                for i in 0..<Int(path!.pointCount) {
+                    sectionCoordinates.append((coord[i].latitude, coord[i].longitude))
+                }
+                
+                self?.maPaths.append(sectionCoordinates)
+                print("\(self!.maPaths)")
+                
+                //                // Add user location
+                //                var path1: [CLLocationCoordinate2D] = []
+                //                var path2: [MAMapPoint]
+                //                var wholePath: MAPolyline
+                //                if let userLocation = self?.userLocationAnnotation.annotation.coordinate {
+                //                    path1.append(userLocation)
+                //                }
+                //
+                //                // add rest of the coordinates
+                //                if let polylinePath = self!.maPolyline.points, self!.maPolyline.pointCount > 0 {
+                //                    for i in 0..<Int(self!.maPolyline.pointCount) {
+                //                        //                                path2.append(polylinePath.advanced(by: Int(i)))
+                //                        let coordinate = MACoordinateForMapPoint(polylinePath[Int(i)])
+                //                        path1.append(coordinate)
+                //                    }
+                //                }
+                //
+                //                wholePath = MAPolyline(coordinates: &path1, count: UInt(path1.count))
+                //
+                //
+                //                let updatedPolyline = MAPolylineRenderer(polyline: wholePath)
+                //                updatedPolyline?.strokeColor = UIColor.blue
+                //                updatedPolyline?.lineWidth = self?.polylineStrokeWidth ?? 5.0
+                //
+                //                self?.maPolyline = updatedPolyline?.polyline
+                //                self?.amapView.add(self?.maPolyline)
+                //
+                //                // update path and destination
+                //                self?.maDestination = (coordinate.latitude, coordinate.longitude)
+                //
+                //                if let path = updatedPolyline?.polyline.points {
+                //
+                //                    var polylinePath: [(Double, Double)] = []
+                //                    for i in 0..<Int(updatedPolyline!.polyline.pointCount) {
+                //                        let point = path1[i]
+                //                        polylinePath.append((point.latitude, point.longitude))
+                //                    }
+                //                    self?.maPaths = []
+                //                    self?.maPaths.append(polylinePath)
+                //                }
+                
+            }
+        }
+        
+        completionHandler(naviRoute)
     }
     
     // MARK: - MAMapViewDelegate

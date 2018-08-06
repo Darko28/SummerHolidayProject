@@ -23,8 +23,12 @@ class ARAMapViewController: UIViewController {
     
     @IBOutlet var sceneView: ARSCNView!
     
-    var sectionCoordinates: [[(Double, Double)]]?
-    var carLocation: (Double, Double)?
+//    var amapVC = AMapViewController()
+    
+//    var sectionCoordinates: [[(Double, Double)]]? = GPXFile.nuistPathSectionCoordinates
+    var sectionCoordinates: [[(Double, Double)]]? = AMapViewController.sharedInstance.maPaths
+//    var carLocation: (Double, Double)? = GPXFile.nuistLocation
+    var carLocation: (Double, Double)? = AMapViewController.sharedInstance.maDestination
     var worldTrackingFactor: Float = 100000 // experimental factor
     
     private var worldSectionsPositions: [[(Float, Float, Float)]]?  // (0, 0, 0) is the center of coordinates
@@ -47,6 +51,10 @@ class ARAMapViewController: UIViewController {
         sceneView.delegate = self   // ARSCNViewDelegate
         sceneView.session.delegate = self   // ARSessionDelegate
         sceneView.showsStatistics = true
+        
+//        sectionCoordinates = amapVC.maPaths
+//        carLocation = amapVC.maDestination
+        print("ARSection: \(sectionCoordinates!)")
         mapper()
     }
     
@@ -64,6 +72,7 @@ class ARAMapViewController: UIViewController {
         super.viewDidAppear(animated)
         
         sceneView.scene = getScene()    // SceneNodeCreator.sceneSetUp()
+//        sceneView.scene = SceneNodeCreator.sceneSetUp()
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = false
         addTimer()
