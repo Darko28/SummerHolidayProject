@@ -262,8 +262,14 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         
 //        self.dropLocationAnnotation = createMAAnnotation(location: coordinate, mapView: self.amapView, annotationTitle: "Destination", subtitle: "", image: UIImage(named: "drop-pin"))
         self.dropLocationAnnotation.coordinate = coordinate
-        self.dropLocationAnnotation.title = "Long Press"
+        self.dropLocationAnnotation.title = "destination"
         amapView.addAnnotation(dropLocationAnnotation)
+        
+        for annotation in amapView.annotations {
+            if (annotation as! MAAnnotation).isKind(of: MANaviAnnotation.self) {
+                amapView.removeAnnotation(annotation as! MAAnnotation)
+            }
+        }
         
         reachabilityCheck()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
@@ -352,7 +358,12 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
     
     func onRouteSearchDone(_ request: AMapRouteSearchBaseRequest!, response: AMapRouteSearchResponse!) {
         
-        amapView.removeAnnotations(amapView.annotations)
+//        for annotation in amapView.annotations {
+//            if (annotation as! MAAnnotation).isKind(of: MANaviAnnotation.self) {
+//                amapView.removeAnnotations(amapView.annotations)
+//            }
+//        }
+//        amapView.removeAnnotations(amapView.annotations)
         amapView.removeOverlays(amapView.overlays)
         
         self.route = nil

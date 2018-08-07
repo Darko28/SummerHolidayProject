@@ -39,6 +39,13 @@
 		A234FFB62119979A00EEA0A4 /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB42119979A00EEA0A4 /* beep.mp3 */; };
 		A234FFB92119AA1E00EEA0A4 /* userPosition.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB72119AA1E00EEA0A4 /* userPosition.png */; };
 		A234FFBA2119AA1E00EEA0A4 /* userPosition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */; };
+		A234FFBF2119C0E900EEA0A4 /* car@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFBC2119C0E900EEA0A4 /* car@2x.png */; };
+		A234FFC02119C0E900EEA0A4 /* man@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFBD2119C0E900EEA0A4 /* man@2x.png */; };
+		A234FFC12119C0E900EEA0A4 /* ride@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFBE2119C0E900EEA0A4 /* ride@2x.png */; };
+		A234FFC62119C27100EEA0A4 /* startPoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC22119C27100EEA0A4 /* startPoint@2x.png */; };
+		A234FFC72119C27100EEA0A4 /* startPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC32119C27100EEA0A4 /* startPoint.png */; };
+		A234FFC82119C27100EEA0A4 /* endPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC42119C27100EEA0A4 /* endPoint.png */; };
+		A234FFC92119C27100EEA0A4 /* endPoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC52119C27100EEA0A4 /* endPoint@2x.png */; };
 		A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018221099BC400BADE9C /* MANaviRoute.swift */; };
 		A2520185210AC3B500BADE9C /* MANaviAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */; };
 		A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520186210AC42900BADE9C /* MANaviPolyline.swift */; };
@@ -190,6 +197,13 @@
 		A234FFB42119979A00EEA0A4 /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
 		A234FFB72119AA1E00EEA0A4 /* userPosition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userPosition.png; sourceTree = "<group>"; };
 		A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userPosition@2x.png"; sourceTree = "<group>"; };
+		A234FFBC2119C0E900EEA0A4 /* car@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "car@2x.png"; sourceTree = "<group>"; };
+		A234FFBD2119C0E900EEA0A4 /* man@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "man@2x.png"; sourceTree = "<group>"; };
+		A234FFBE2119C0E900EEA0A4 /* ride@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ride@2x.png"; sourceTree = "<group>"; };
+		A234FFC22119C27100EEA0A4 /* startPoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startPoint@2x.png"; sourceTree = "<group>"; };
+		A234FFC32119C27100EEA0A4 /* startPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startPoint.png; sourceTree = "<group>"; };
+		A234FFC42119C27100EEA0A4 /* endPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endPoint.png; sourceTree = "<group>"; };
+		A234FFC52119C27100EEA0A4 /* endPoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "endPoint@2x.png"; sourceTree = "<group>"; };
 		A252018221099BC400BADE9C /* MANaviRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviRoute.swift; sourceTree = "<group>"; };
 		A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviAnnotation.swift; sourceTree = "<group>"; };
 		A2520186210AC42900BADE9C /* MANaviPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviPolyline.swift; sourceTree = "<group>"; };
@@ -427,6 +441,13 @@
 		A25EBB3E20FFD123009D9091 /* ARAMap */ = {
 			isa = PBXGroup;
 			children = (
+				A234FFC42119C27100EEA0A4 /* endPoint.png */,
+				A234FFC52119C27100EEA0A4 /* endPoint@2x.png */,
+				A234FFC32119C27100EEA0A4 /* startPoint.png */,
+				A234FFC22119C27100EEA0A4 /* startPoint@2x.png */,
+				A234FFBC2119C0E900EEA0A4 /* car@2x.png */,
+				A234FFBD2119C0E900EEA0A4 /* man@2x.png */,
+				A234FFBE2119C0E900EEA0A4 /* ride@2x.png */,
 				A234FFB72119AA1E00EEA0A4 /* userPosition.png */,
 				A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */,
 				A234FFB42119979A00EEA0A4 /* beep.mp3 */,
@@ -666,12 +687,19 @@
 				A234FFB52119979A00EEA0A4 /* beep.wav in Resources */,
 				A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */,
 				A234FFB62119979A00EEA0A4 /* beep.mp3 in Resources */,
+				A234FFC62119C27100EEA0A4 /* startPoint@2x.png in Resources */,
 				A2E05EED20F6E4C300BEC59D /* GameTex.png in Resources */,
+				A234FFC12119C0E900EEA0A4 /* ride@2x.png in Resources */,
+				A234FFC02119C0E900EEA0A4 /* man@2x.png in Resources */,
 				A234FFBA2119AA1E00EEA0A4 /* userPosition@2x.png in Resources */,
 				A2E05EEE20F6E4C300BEC59D /* Square.obj in Resources */,
+				A234FFC72119C27100EEA0A4 /* startPoint.png in Resources */,
 				A234FFB92119AA1E00EEA0A4 /* userPosition.png in Resources */,
+				A234FFC82119C27100EEA0A4 /* endPoint.png in Resources */,
 				A2B59BC3211719040063DB52 /* art.scnassets in Resources */,
+				A234FFC92119C27100EEA0A4 /* endPoint@2x.png in Resources */,
 				A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */,
+				A234FFBF2119C0E900EEA0A4 /* car@2x.png in Resources */,
 				A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */,
 				A2E05EEC20F6E4C300BEC59D /* Game.obj in Resources */,
 			);
