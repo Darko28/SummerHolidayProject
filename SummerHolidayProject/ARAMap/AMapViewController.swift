@@ -36,7 +36,7 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
 //    private var dropLocationMarker: GMSMarker!
     private var dropLocationAnnotation = MAPointAnnotation()
     
-    private var flow: Flow = .createMarkerByServerProvidedLocations
+    private var flow: Flow = .createMarkerByLongPressAndShowDirection
     private var paths: [[(Double, Double)]] = []
     var maPaths: [[(Double, Double)]] = []
     private var destination: (Double, Double) = (Double(), Double())
@@ -65,8 +65,8 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         
         AMapServices.shared()?.apiKey = "99d78566e646d2c30d60635ebf9a04b8"
         
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        appDelegate.locationManager.delegate = self
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        appDelegate.locationManager.delegate = self
         registerNotification()
         handleAMap()
         initSearch()
@@ -74,8 +74,8 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        appDelegate.locationManager.startUpdatingLocation()
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        appDelegate.locationManager.startUpdatingLocation()
         reachabilityCheck()
         // handleAppleMap()
 //        handleGoogleMap()
@@ -177,8 +177,15 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         amapView = MAMapView(frame: self.view.bounds)
         amapView.delegate = self
         amapView.showsUserLocation = true
-        amapView.userTrackingMode = .follow
+        amapView.userTrackingMode = .followWithHeading
         amapView.isUserInteractionEnabled = true
+        
+//        let userHeading = MAUserLocationRepresentation()
+//        userHeading.showsHeadingIndicator = true
+//        userHeading.showsAccuracyRing = true
+//
+//        amapView.update(userHeading)
+        
         amapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.addSubview(amapView)
         createAMapRegion(coordinate: AMapCoordinateConvert(location, .GPS))
@@ -198,41 +205,41 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
 }
 
 
-extension AMapViewController: CLLocationManagerDelegate {
-    
-    private func sameLocation(location1: CLLocationCoordinate2D, location2: CLLocationCoordinate2D) -> Bool {
-        return location1.latitude == location2.latitude && location1.longitude == location2.longitude
-    }
-    
-    // Getting a new heading
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        let rotation = newHeading.magneticHeading * Double.pi / 180.0
-        print("rotation: \(rotation)")
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .notDetermined:
-            // If the status has not yet been determined, ask for authorization
-            manager.requestWhenInUseAuthorization()
-            break
-        case .authorizedWhenInUse:
-            // If authorized when in use
-            manager.startUpdatingLocation()
-            break
-        case .authorizedAlways:
-            // If always authorized
-            manager.startUpdatingLocation()
-            break
-        case .restricted:
-            // If restricted by e.g. parental controls. User can't enable Location Services
-            break
-        case .denied:
-            // If user denied your app access to Location Services, but can grant access from Settings.app
-            break
-        }
-    }
-}
+//extension AMapViewController: CLLocationManagerDelegate {
+//
+//    private func sameLocation(location1: CLLocationCoordinate2D, location2: CLLocationCoordinate2D) -> Bool {
+//        return location1.latitude == location2.latitude && location1.longitude == location2.longitude
+//    }
+//
+//    // Getting a new heading
+//    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+//        let rotation = newHeading.magneticHeading * Double.pi / 180.0
+//        print("rotation: \(rotation)")
+//    }
+//
+//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+//        switch status {
+//        case .notDetermined:
+//            // If the status has not yet been determined, ask for authorization
+//            manager.requestWhenInUseAuthorization()
+//            break
+//        case .authorizedWhenInUse:
+//            // If authorized when in use
+//            manager.startUpdatingLocation()
+//            break
+//        case .authorizedAlways:
+//            // If always authorized
+//            manager.startUpdatingLocation()
+//            break
+//        case .restricted:
+//            // If restricted by e.g. parental controls. User can't enable Location Services
+//            break
+//        case .denied:
+//            // If user denied your app access to Location Services, but can grant access from Settings.app
+//            break
+//        }
+//    }
+//}
 
 
 extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
@@ -253,54 +260,54 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
                 
                 fetchMARoute(source: AMapCoordinateConvert(userLocation, .GPS), destination: coordinate) { [weak self] (polyline) in
                     
-                    print("fetchRoute Completion called")
+//                    print("fetchRoute Completion called")
                     
-                    if let polyline = polyline as? MAPolylineRenderer {
-                        
-                        // Add user location
-                        var path1: [CLLocationCoordinate2D] = []
-                        var path2: [MAMapPoint]
-                        var wholePath: MAPolyline
-                        if let userLocation = self?.userLocationAnnotation.annotation.coordinate {
-                            path1.append(userLocation)
-                        }
-                        
-                        // add rest of the coordinates
-                        if let polylinePath = self!.maPolyline.points, self!.maPolyline.pointCount > 0 {
-                            for i in 0..<Int(self!.maPolyline.pointCount) {
-//                                path2.append(polylinePath.advanced(by: Int(i)))
-                                let coordinate = MACoordinateForMapPoint(polylinePath[Int(i)])
-                                path1.append(coordinate)
-                            }
-                        }
-                        
-                        wholePath = MAPolyline(coordinates: &path1, count: UInt(path1.count))
-                        
-                        
-                        let updatedPolyline = MAPolylineRenderer(polyline: wholePath)
-                        updatedPolyline?.strokeColor = UIColor.blue
-                        updatedPolyline?.lineWidth = self?.polylineStrokeWidth ?? 5.0
-                        
-                        self?.maPolyline = updatedPolyline?.polyline
-                        self?.amapView.add(self?.maPolyline)
-                        
-                        // update path and destination
-                        self?.maDestination = (coordinate.latitude, coordinate.longitude)
-                        
-                        if let path = updatedPolyline?.polyline.points {
-                            
-                            var polylinePath: [(Double, Double)] = []
-                            for i in 0..<Int(updatedPolyline!.polyline.pointCount) {
-                                let point = path1[i]
-                                polylinePath.append((point.latitude, point.longitude))
-                            }
-                            
-                            print("Appending maPaths")
-                            self?.maPaths = []
-                            self?.maPaths.append(polylinePath)
-                        }
-                        
-                    }
+//                    if let polyline = polyline as? MAPolylineRenderer {
+//
+//                        // Add user location
+//                        var path1: [CLLocationCoordinate2D] = []
+//                        var path2: [MAMapPoint]
+//                        var wholePath: MAPolyline
+//                        if let userLocation = self?.userLocationAnnotation.annotation.coordinate {
+//                            path1.append(userLocation)
+//                        }
+//
+//                        // add rest of the coordinates
+//                        if let polylinePath = self!.maPolyline.points, self!.maPolyline.pointCount > 0 {
+//                            for i in 0..<Int(self!.maPolyline.pointCount) {
+////                                path2.append(polylinePath.advanced(by: Int(i)))
+//                                let coordinate = MACoordinateForMapPoint(polylinePath[Int(i)])
+//                                path1.append(coordinate)
+//                            }
+//                        }
+//
+//                        wholePath = MAPolyline(coordinates: &path1, count: UInt(path1.count))
+//
+//
+//                        let updatedPolyline = MAPolylineRenderer(polyline: wholePath)
+//                        updatedPolyline?.strokeColor = UIColor.blue
+//                        updatedPolyline?.lineWidth = self?.polylineStrokeWidth ?? 5.0
+//
+//                        self?.maPolyline = updatedPolyline?.polyline
+//                        self?.amapView.add(self?.maPolyline)
+//
+//                        // update path and destination
+//                        self?.maDestination = (coordinate.latitude, coordinate.longitude)
+//
+//                        if let path = updatedPolyline?.polyline.points {
+//
+//                            var polylinePath: [(Double, Double)] = []
+//                            for i in 0..<Int(updatedPolyline!.polyline.pointCount) {
+//                                let point = path1[i]
+//                                polylinePath.append((point.latitude, point.longitude))
+//                            }
+//
+//                            print("Appending maPaths")
+//                            self?.maPaths = []
+//                            self?.maPaths.append(polylinePath)
+//                        }
+//
+//                    }
                 }
             }
         }
@@ -311,6 +318,8 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         print("Fetch MARoute")
         self.startCoordinate = source
         self.destinationCoordiante = destination
+//        self.startCoordinate = GCJ02_WGS84.gcj02ToWGS84(lat: source.latitude, lon: source.longitude)
+//        self.destinationCoordiante = GCJ02_WGS84.gcj02ToWGS84(lat: destination.latitude, lon: destination.longitude)
         
         let request = AMapWalkingRouteSearchRequest()
         request.origin = AMapGeoPoint.location(withLatitude: CGFloat(source.latitude), longitude: CGFloat(source.longitude))
@@ -367,14 +376,15 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
                 
                 // Add user location
                 var coord: [CLLocationCoordinate2D] = []
-                coord.append(AMapCoordinateConvert(self!.startCoordinate, .GPS))
+//                coord.append(AMapCoordinateConvert(self!.startCoordinate, .GPS))
+                coord.append(self!.startCoordinate)
                 
                 // add rest of the coordinates
                 coord = coord + (route.routePolylines.map({ (naviPolyline) -> CLLocationCoordinate2D in
                     return naviPolyline.coordinate
                 }))
                 
-                self!.destination = (self!.destinationCoordiante.latitude, self!.destinationCoordiante.longitude)
+                self!.maDestination = ((GCJ02_WGS84.gcj02ToWGS84(lat: self!.destinationCoordiante.latitude, lon: self!.destinationCoordiante.longitude)).latitude, (GCJ02_WGS84.gcj02ToWGS84(lat: self!.destinationCoordiante.latitude, lon: self!.destinationCoordiante.longitude)).longitude)
                 
                 let path = MAPolyline(coordinates: &coord, count: UInt(coord.count))
                 
@@ -385,11 +395,13 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
                 self?.amapView.add(path!)
                 
                 var sectionCoordinates: [(Double, Double)] = []
+                var transformCoordinates: [(Double, Double)] = []
                 for i in 0..<Int(path!.pointCount) {
                     sectionCoordinates.append((coord[i].latitude, coord[i].longitude))
+                    transformCoordinates.append(((GCJ02_WGS84.gcj02ToWGS84(lat: coord[i].latitude, lon: coord[i].longitude)).latitude, (GCJ02_WGS84.gcj02ToWGS84(lat: coord[i].latitude, lon: coord[i].longitude)).longitude))
                 }
                 
-                self?.maPaths.append(sectionCoordinates)
+                self?.maPaths.append(transformCoordinates)
                 print("\(self!.maPaths)")
                 
                 //                // Add user location
