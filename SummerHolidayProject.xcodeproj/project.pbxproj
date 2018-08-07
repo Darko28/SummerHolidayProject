@@ -35,6 +35,10 @@
 		A201F53E20ECEB28000E574A /* UIImageView+SRCNN.swift in Sources */ = {isa = PBXBuildFile; fileRef = A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */; };
 		A234FFB121198E3000EEA0A4 /* GCJ02-WGS84.swift in Sources */ = {isa = PBXBuildFile; fileRef = A234FFAE21198E2F00EEA0A4 /* GCJ02-WGS84.swift */; };
 		A234FFB221198E3000EEA0A4 /* WGS84-GCJ02.m in Sources */ = {isa = PBXBuildFile; fileRef = A234FFB021198E3000EEA0A4 /* WGS84-GCJ02.m */; };
+		A234FFB52119979A00EEA0A4 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB32119979A00EEA0A4 /* beep.wav */; };
+		A234FFB62119979A00EEA0A4 /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB42119979A00EEA0A4 /* beep.mp3 */; };
+		A234FFB92119AA1E00EEA0A4 /* userPosition.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB72119AA1E00EEA0A4 /* userPosition.png */; };
+		A234FFBA2119AA1E00EEA0A4 /* userPosition@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */; };
 		A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018221099BC400BADE9C /* MANaviRoute.swift */; };
 		A2520185210AC3B500BADE9C /* MANaviAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */; };
 		A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520186210AC42900BADE9C /* MANaviPolyline.swift */; };
@@ -182,6 +186,10 @@
 		A234FFAE21198E2F00EEA0A4 /* GCJ02-WGS84.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GCJ02-WGS84.swift"; sourceTree = "<group>"; };
 		A234FFAF21198E2F00EEA0A4 /* WGS84-GCJ02.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WGS84-GCJ02.h"; sourceTree = "<group>"; };
 		A234FFB021198E3000EEA0A4 /* WGS84-GCJ02.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WGS84-GCJ02.m"; sourceTree = "<group>"; };
+		A234FFB32119979A00EEA0A4 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
+		A234FFB42119979A00EEA0A4 /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
+		A234FFB72119AA1E00EEA0A4 /* userPosition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userPosition.png; sourceTree = "<group>"; };
+		A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userPosition@2x.png"; sourceTree = "<group>"; };
 		A252018221099BC400BADE9C /* MANaviRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviRoute.swift; sourceTree = "<group>"; };
 		A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviAnnotation.swift; sourceTree = "<group>"; };
 		A2520186210AC42900BADE9C /* MANaviPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviPolyline.swift; sourceTree = "<group>"; };
@@ -419,6 +427,10 @@
 		A25EBB3E20FFD123009D9091 /* ARAMap */ = {
 			isa = PBXGroup;
 			children = (
+				A234FFB72119AA1E00EEA0A4 /* userPosition.png */,
+				A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */,
+				A234FFB42119979A00EEA0A4 /* beep.mp3 */,
+				A234FFB32119979A00EEA0A4 /* beep.wav */,
 				A234FFAE21198E2F00EEA0A4 /* GCJ02-WGS84.swift */,
 				A234FFAF21198E2F00EEA0A4 /* WGS84-GCJ02.h */,
 				A234FFB021198E3000EEA0A4 /* WGS84-GCJ02.m */,
@@ -651,9 +663,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A234FFB52119979A00EEA0A4 /* beep.wav in Resources */,
 				A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */,
+				A234FFB62119979A00EEA0A4 /* beep.mp3 in Resources */,
 				A2E05EED20F6E4C300BEC59D /* GameTex.png in Resources */,
+				A234FFBA2119AA1E00EEA0A4 /* userPosition@2x.png in Resources */,
 				A2E05EEE20F6E4C300BEC59D /* Square.obj in Resources */,
+				A234FFB92119AA1E00EEA0A4 /* userPosition.png in Resources */,
 				A2B59BC3211719040063DB52 /* art.scnassets in Resources */,
 				A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */,
 				A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */,

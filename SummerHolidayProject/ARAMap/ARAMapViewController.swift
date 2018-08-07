@@ -19,7 +19,7 @@ import Vision
  */
 
 @available(iOS 11.0, *)
-class ARAMapViewController: UIViewController {
+class ARAMapViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet var sceneView: ARSCNView!
     
@@ -42,6 +42,8 @@ class ARAMapViewController: UIViewController {
     private var nodeName: String = "New Node"
     private var timer: Timer?
     
+    private var tapGesture: UITapGestureRecognizer?
+    
     // MARK: - View Controller Lifecycle
     
     override func viewDidLoad() {
@@ -51,6 +53,11 @@ class ARAMapViewController: UIViewController {
         sceneView.delegate = self   // ARSCNViewDelegate
         sceneView.session.delegate = self   // ARSessionDelegate
         sceneView.showsStatistics = true
+        
+        tapGesture = UITapGestureRecognizer()
+        tapGesture?.delegate = self
+        
+        sceneView.addGestureRecognizer(tapGesture!)
         
 //        sectionCoordinates = amapVC.maPaths
 //        carLocation = amapVC.maDestination
@@ -101,7 +108,8 @@ class ARAMapViewController: UIViewController {
         }
     }
     
-    private func handleTouchEvent(node: SCNNode) {
+    @objc private func handleTouchEvent(node: SCNNode) {
+        print("handle touch event")
         addAnimation(node: node)
         addAudioFile(node: node)
         self.tappedNode = node
@@ -122,15 +130,19 @@ class ARAMapViewController: UIViewController {
         basicAnimation.fromValue = 1.0
         basicAnimation.toValue = 0.0
         //        node.addAnimation(basicAnimation, forKey: "Change Visibility")
+        
+        print("add animation")
     }
     
     // Add audio player
     private func addAudioFile(node: SCNNode) {
         
+        print("about to add audio file")
+        
         if let path = Bundle.main.path(forResource: "beep", ofType: "wav") {
             if let scnAudioSource = SCNAudioSource(fileNamed: path) {
                 
-                scnAudioSource.volume = 1
+                scnAudioSource.volume = 0.3
                 scnAudioSource.isPositional = true
                 scnAudioSource.shouldStream = false
                 scnAudioSource.load()

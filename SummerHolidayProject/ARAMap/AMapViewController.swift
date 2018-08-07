@@ -49,6 +49,8 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     var naviRoute: MANaviRoute?
     var route: AMapRoute?
     var currentSearchType: AMapRoutePlanningType = AMapRoutePlanningType.Walk
+    
+    var customUserLocationView: MAAnnotationView!
 
     public static let sharedInstance: AMapViewController = {
         let instance = AMapViewController()
@@ -243,6 +245,18 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
 
 
 extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
+    
+    func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
+        
+        if !updatingLocation && self.customUserLocationView != nil {
+            
+            UIView.animate(withDuration: 0.1) {
+                let degree = userLocation.heading.trueHeading - Double(self.amapView.rotationDegree)
+                let radian = (degree * Double.pi) / 180.0
+                self.customUserLocationView.transform = CGAffineTransform(rotationAngle: CGFloat(radian))
+            }
+        }
+    }
     
     func mapView(_ mapView: MAMapView!, didLongPressedAt coordinate: CLLocationCoordinate2D) {
         
@@ -457,6 +471,15 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         
         print("Render for overlay called")
         
+        if (overlay.isEqual(amapView.userLocationAccuracyCircle)) {
+            
+            let circleRender = MACircleRenderer(circle: amapView.userLocationAccuracyCircle)
+            circleRender?.lineWidth = 2.0
+//            circleRender?.strokeColor = UIColor.lightGray
+//            circleRender?.fillColor = UIColor.red.withAlphaComponent(0.3)
+            return circleRender
+        }
+        
         if overlay.isKind(of: LineDashPolyline.self) {
             
             print("Render overlay for lineDash Polyline")
@@ -501,9 +524,24 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         return nil
     }
     
-    @nonobjc func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
         
-        if annotation.isKind(of: MAPointAnnotation.self) {
+        if annotation.isKind(of: MAUserLocation.self) {
+            
+            print("MAUserLocation")
+            
+            let pointReuseIdentifier = "userLocationStyleReuseIdentifier"
+            var annotationView = amapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIdentifier)
+            
+            if annotationView == nil {
+                annotationView = MAAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIdentifier)
+            }
+            
+            annotationView!.image = UIImage(named: "userPosition")
+            
+            self.customUserLocationView = annotationView
+            return annotationView!
+        } else if annotation.isKind(of: MAPointAnnotation.self) {
             
             let pointReuseIdentifier = "pointReuseIdentifier"
             var annotationView: MAAnnotationView? = amapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIdentifier)
