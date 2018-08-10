@@ -39,6 +39,8 @@ class BoundingBox {
     
     func show(frame: CGRect, label: String, color: UIColor) {
         
+        print("Second show bounding box")
+        
         CATransaction.setDisableActions(true)
         
         let path = UIBezierPath(rect: frame)

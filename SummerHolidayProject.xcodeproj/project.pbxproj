@@ -44,8 +44,8 @@
 		A234FFC12119C0E900EEA0A4 /* ride@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFBE2119C0E900EEA0A4 /* ride@2x.png */; };
 		A234FFC62119C27100EEA0A4 /* startPoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC22119C27100EEA0A4 /* startPoint@2x.png */; };
 		A234FFC72119C27100EEA0A4 /* startPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC32119C27100EEA0A4 /* startPoint.png */; };
-		A234FFC82119C27100EEA0A4 /* endPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC42119C27100EEA0A4 /* endPoint.png */; };
 		A234FFC92119C27100EEA0A4 /* endPoint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A234FFC52119C27100EEA0A4 /* endPoint@2x.png */; };
+		A2405C4A2119C67E0052736E /* endPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = A2405C492119C67E0052736E /* endPoint.png */; };
 		A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252018221099BC400BADE9C /* MANaviRoute.swift */; };
 		A2520185210AC3B500BADE9C /* MANaviAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */; };
 		A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520186210AC42900BADE9C /* MANaviPolyline.swift */; };
@@ -56,8 +56,6 @@
 		A2520196210EDD7500BADE9C /* VideoPreviewer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2520194210EDD3600BADE9C /* VideoPreviewer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A252019A210EF61E00BADE9C /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2520199210EF61E00BADE9C /* BoundingBox.swift */; };
 		A252019C210EFB7500BADE9C /* DJIMLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */; };
-		A252019E210F051300BADE9C /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A252019D210F051300BADE9C /* TinyYOLO.mlmodel */; };
-		A25201A0210F054B00BADE9C /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A252019F210F054B00BADE9C /* YOLO.swift */; };
 		A25201A2210F27B800BADE9C /* DJIVideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25201A1210F27B800BADE9C /* DJIVideoCapture.swift */; };
 		A259D29020F58F9200D0BAAC /* FilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */; };
 		A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */; };
@@ -72,6 +70,7 @@
 		A25EBB40210048F0009D9091 /* AMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25EBB3F210048F0009D9091 /* AMapViewController.swift */; };
 		A26EB8E020FE670300CE9A5C /* car_detection_keras_CNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A26EB8DE20FE670300CE9A5C /* car_detection_keras_CNN.mlmodel */; };
 		A26EB8E120FE670300CE9A5C /* car_detection_keras_DNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A26EB8DF20FE670300CE9A5C /* car_detection_keras_DNN.mlmodel */; };
+		A2A3789D211E487900BAC87A /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C6F211E46C800AC80C7 /* sample.png */; };
 		A2B59BC3211719040063DB52 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B59BC2211719040063DB52 /* art.scnassets */; };
 		A2B842E720FBF0E20036E5C0 /* SceneNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842E620FBF0E20036E5C0 /* SceneNode.swift */; };
 		A2B842E920FCEC650036E5C0 /* Classification.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842E820FCEC650036E5C0 /* Classification.swift */; };
@@ -79,6 +78,26 @@
 		A2B842ED20FD1E220036E5C0 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842EC20FD1E220036E5C0 /* MapViewController.swift */; };
 		A2B842EF20FDA8FC0036E5C0 /* ARMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842EE20FDA8FC0036E5C0 /* ARMapViewController.swift */; };
 		A2B842F120FE54A60036E5C0 /* GPXFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B842F020FE54A60036E5C0 /* GPXFile.swift */; };
+		A2DD3C52211C5ADC00AC80C7 /* UIImage+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C34211C5ADC00AC80C7 /* UIImage+MTLTexture.swift */; };
+		A2DD3C53211C5ADC00AC80C7 /* MPSYOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C35211C5ADC00AC80C7 /* MPSYOLO.swift */; };
+		A2DD3C54211C5ADC00AC80C7 /* TextureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C36211C5ADC00AC80C7 /* TextureLoader.swift */; };
+		A2DD3C55211C5ADC00AC80C7 /* UIImage+RawBytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C37211C5ADC00AC80C7 /* UIImage+RawBytes.swift */; };
+		A2DD3C56211C5ADC00AC80C7 /* SwiftFloat16.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C38211C5ADC00AC80C7 /* SwiftFloat16.swift */; };
+		A2DD3C57211C5ADC00AC80C7 /* MPSImage+Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C39211C5ADC00AC80C7 /* MPSImage+Float.swift */; };
+		A2DD3C58211C5ADC00AC80C7 /* MTLTexture+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C3A211C5ADC00AC80C7 /* MTLTexture+Array.swift */; };
+		A2DD3C59211C5ADC00AC80C7 /* conv8.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C3C211C5ADC00AC80C7 /* conv8.bin */; };
+		A2DD3C5A211C5ADC00AC80C7 /* conv9.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C3D211C5ADC00AC80C7 /* conv9.bin */; };
+		A2DD3C5B211C5ADC00AC80C7 /* conv4.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C3E211C5ADC00AC80C7 /* conv4.bin */; };
+		A2DD3C5C211C5ADC00AC80C7 /* conv5.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C3F211C5ADC00AC80C7 /* conv5.bin */; };
+		A2DD3C5D211C5ADC00AC80C7 /* conv7.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C40211C5ADC00AC80C7 /* conv7.bin */; };
+		A2DD3C5E211C5ADC00AC80C7 /* conv6.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C41211C5ADC00AC80C7 /* conv6.bin */; };
+		A2DD3C5F211C5ADC00AC80C7 /* conv2.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C42211C5ADC00AC80C7 /* conv2.bin */; };
+		A2DD3C60211C5ADC00AC80C7 /* conv3.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C43211C5ADC00AC80C7 /* conv3.bin */; };
+		A2DD3C61211C5ADC00AC80C7 /* conv1.bin in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C44211C5ADC00AC80C7 /* conv1.bin */; };
+		A2DD3C62211C5ADC00AC80C7 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C45211C5ADC00AC80C7 /* Debugging.swift */; };
+		A2DD3C6B211C5ADC00AC80C7 /* TinyYOLO.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C50211C5ADC00AC80C7 /* TinyYOLO.mlmodel */; };
+		A2DD3C6C211C5ADC00AC80C7 /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DD3C51211C5ADC00AC80C7 /* YOLO.swift */; };
+		A2DD3C70211E46C800AC80C7 /* sample.png in Resources */ = {isa = PBXBuildFile; fileRef = A2DD3C6F211E46C800AC80C7 /* sample.png */; };
 		A2E05EE820F6E22D00BEC59D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E05EE320F6E21400BEC59D /* ViewController.swift */; };
 		A2E05EEC20F6E4C300BEC59D /* Game.obj in Resources */ = {isa = PBXBuildFile; fileRef = A2E05EE920F6E4C300BEC59D /* Game.obj */; };
 		A2E05EED20F6E4C300BEC59D /* GameTex.png in Resources */ = {isa = PBXBuildFile; fileRef = A2E05EEA20F6E4C300BEC59D /* GameTex.png */; };
@@ -202,8 +221,8 @@
 		A234FFBE2119C0E900EEA0A4 /* ride@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ride@2x.png"; sourceTree = "<group>"; };
 		A234FFC22119C27100EEA0A4 /* startPoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startPoint@2x.png"; sourceTree = "<group>"; };
 		A234FFC32119C27100EEA0A4 /* startPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startPoint.png; sourceTree = "<group>"; };
-		A234FFC42119C27100EEA0A4 /* endPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endPoint.png; sourceTree = "<group>"; };
 		A234FFC52119C27100EEA0A4 /* endPoint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "endPoint@2x.png"; sourceTree = "<group>"; };
+		A2405C492119C67E0052736E /* endPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endPoint.png; sourceTree = "<group>"; };
 		A252018221099BC400BADE9C /* MANaviRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviRoute.swift; sourceTree = "<group>"; };
 		A2520184210AC3B500BADE9C /* MANaviAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviAnnotation.swift; sourceTree = "<group>"; };
 		A2520186210AC42900BADE9C /* MANaviPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MANaviPolyline.swift; sourceTree = "<group>"; };
@@ -213,8 +232,6 @@
 		A252018F210EDD3600BADE9C /* VideoPreviewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VideoPreviewer.xcodeproj; path = VideoPreviewer/VideoPreviewer.xcodeproj; sourceTree = "<group>"; };
 		A2520199210EF61E00BADE9C /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIMLHelpers.swift; sourceTree = "<group>"; };
-		A252019D210F051300BADE9C /* TinyYOLO.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = TinyYOLO.mlmodel; sourceTree = "<group>"; };
-		A252019F210F054B00BADE9C /* YOLO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
 		A25201A1210F27B800BADE9C /* DJIVideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIVideoCapture.swift; sourceTree = "<group>"; };
 		A259D28F20F58F9200D0BAAC /* FilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRenderer.swift; sourceTree = "<group>"; };
 		A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixOperations.swift; sourceTree = "<group>"; };
@@ -236,6 +253,26 @@
 		A2B842EC20FD1E220036E5C0 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		A2B842EE20FDA8FC0036E5C0 /* ARMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMapViewController.swift; sourceTree = "<group>"; };
 		A2B842F020FE54A60036E5C0 /* GPXFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXFile.swift; sourceTree = "<group>"; };
+		A2DD3C34211C5ADC00AC80C7 /* UIImage+MTLTexture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+MTLTexture.swift"; sourceTree = "<group>"; };
+		A2DD3C35211C5ADC00AC80C7 /* MPSYOLO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPSYOLO.swift; sourceTree = "<group>"; };
+		A2DD3C36211C5ADC00AC80C7 /* TextureLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextureLoader.swift; sourceTree = "<group>"; };
+		A2DD3C37211C5ADC00AC80C7 /* UIImage+RawBytes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+RawBytes.swift"; sourceTree = "<group>"; };
+		A2DD3C38211C5ADC00AC80C7 /* SwiftFloat16.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftFloat16.swift; sourceTree = "<group>"; };
+		A2DD3C39211C5ADC00AC80C7 /* MPSImage+Float.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MPSImage+Float.swift"; sourceTree = "<group>"; };
+		A2DD3C3A211C5ADC00AC80C7 /* MTLTexture+Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MTLTexture+Array.swift"; sourceTree = "<group>"; };
+		A2DD3C3C211C5ADC00AC80C7 /* conv8.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv8.bin; sourceTree = "<group>"; };
+		A2DD3C3D211C5ADC00AC80C7 /* conv9.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv9.bin; sourceTree = "<group>"; };
+		A2DD3C3E211C5ADC00AC80C7 /* conv4.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv4.bin; sourceTree = "<group>"; };
+		A2DD3C3F211C5ADC00AC80C7 /* conv5.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv5.bin; sourceTree = "<group>"; };
+		A2DD3C40211C5ADC00AC80C7 /* conv7.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv7.bin; sourceTree = "<group>"; };
+		A2DD3C41211C5ADC00AC80C7 /* conv6.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv6.bin; sourceTree = "<group>"; };
+		A2DD3C42211C5ADC00AC80C7 /* conv2.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv2.bin; sourceTree = "<group>"; };
+		A2DD3C43211C5ADC00AC80C7 /* conv3.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv3.bin; sourceTree = "<group>"; };
+		A2DD3C44211C5ADC00AC80C7 /* conv1.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = conv1.bin; sourceTree = "<group>"; };
+		A2DD3C45211C5ADC00AC80C7 /* Debugging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
+		A2DD3C50211C5ADC00AC80C7 /* TinyYOLO.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = TinyYOLO.mlmodel; sourceTree = "<group>"; };
+		A2DD3C51211C5ADC00AC80C7 /* YOLO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
+		A2DD3C6F211E46C800AC80C7 /* sample.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample.png; sourceTree = "<group>"; };
 		A2E05EE320F6E21400BEC59D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A2E05EE920F6E4C300BEC59D /* Game.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Game.obj; sourceTree = "<group>"; };
 		A2E05EEA20F6E4C300BEC59D /* GameTex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GameTex.png; sourceTree = "<group>"; };
@@ -332,8 +369,6 @@
 				A28FEF9E20F4EDD200F047D9 /* Backdrop */,
 				A201F4F720EB67B0000E574A /* CoreMLUtils */,
 				A2E05EE320F6E21400BEC59D /* ViewController.swift */,
-				A201F4CA20EB5FF4000E574A /* BackdropViewController.swift */,
-				A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */,
 				A2E05EEF20F91BA300BEC59D /* NetworkReachability.swift */,
 				A259D29120F5AF9900D0BAAC /* MatrixOperations.swift */,
 				A259D29320F6255500D0BAAC /* CommonStructs.metal */,
@@ -387,6 +422,7 @@
 		A201F51420ECE78E000E574A /* ProjectFramework */ = {
 			isa = PBXGroup;
 			children = (
+				A2DD3C6F211E46C800AC80C7 /* sample.png */,
 				A201F51520ECE78E000E574A /* ProjectFramework.h */,
 				A201F53C20ECEAE8000E574A /* UIImageView+SRCNN.swift */,
 				A201F50820EC1D60000E574A /* SRCNNModel.swift */,
@@ -405,11 +441,29 @@
 			path = ProjectFrameworkTests;
 			sourceTree = "<group>";
 		};
+		A234FFCA2119C63400EEA0A4 /* ARAMapResources */ = {
+			isa = PBXGroup;
+			children = (
+				A234FFC32119C27100EEA0A4 /* startPoint.png */,
+				A234FFC22119C27100EEA0A4 /* startPoint@2x.png */,
+				A2405C492119C67E0052736E /* endPoint.png */,
+				A234FFC52119C27100EEA0A4 /* endPoint@2x.png */,
+				A234FFBD2119C0E900EEA0A4 /* man@2x.png */,
+				A234FFBC2119C0E900EEA0A4 /* car@2x.png */,
+				A234FFBE2119C0E900EEA0A4 /* ride@2x.png */,
+				A234FFB72119AA1E00EEA0A4 /* userPosition.png */,
+				A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */,
+				A234FFB42119979A00EEA0A4 /* beep.mp3 */,
+				A234FFB32119979A00EEA0A4 /* beep.wav */,
+			);
+			path = ARAMapResources;
+			sourceTree = "<group>";
+		};
 		A252018C210EDBAA00BADE9C /* DJIML */ = {
 			isa = PBXGroup;
 			children = (
-				A252019D210F051300BADE9C /* TinyYOLO.mlmodel */,
-				A252019F210F054B00BADE9C /* YOLO.swift */,
+				A2DD3C4F211C5ADC00AC80C7 /* CoreMLYOLO */,
+				A2DD3C33211C5ADC00AC80C7 /* MPSYOLO */,
 				A252019B210EFB7500BADE9C /* DJIMLHelpers.swift */,
 				A252018D210EDBD400BADE9C /* DJIMLViewController.swift */,
 				A25201A1210F27B800BADE9C /* DJIVideoCapture.swift */,
@@ -434,6 +488,7 @@
 				A259D29520F6256800D0BAAC /* MPSFilterShaders.metal */,
 				A259D29D20F65A2B00D0BAAC /* Display.swift */,
 				A259D29B20F656BB00D0BAAC /* DisplayShaders.metal */,
+				A259D2A120F6710300D0BAAC /* MPSFilterViewController.swift */,
 			);
 			path = MPSFilter;
 			sourceTree = "<group>";
@@ -441,17 +496,7 @@
 		A25EBB3E20FFD123009D9091 /* ARAMap */ = {
 			isa = PBXGroup;
 			children = (
-				A234FFC42119C27100EEA0A4 /* endPoint.png */,
-				A234FFC52119C27100EEA0A4 /* endPoint@2x.png */,
-				A234FFC32119C27100EEA0A4 /* startPoint.png */,
-				A234FFC22119C27100EEA0A4 /* startPoint@2x.png */,
-				A234FFBC2119C0E900EEA0A4 /* car@2x.png */,
-				A234FFBD2119C0E900EEA0A4 /* man@2x.png */,
-				A234FFBE2119C0E900EEA0A4 /* ride@2x.png */,
-				A234FFB72119AA1E00EEA0A4 /* userPosition.png */,
-				A234FFB82119AA1E00EEA0A4 /* userPosition@2x.png */,
-				A234FFB42119979A00EEA0A4 /* beep.mp3 */,
-				A234FFB32119979A00EEA0A4 /* beep.wav */,
+				A234FFCA2119C63400EEA0A4 /* ARAMapResources */,
 				A234FFAE21198E2F00EEA0A4 /* GCJ02-WGS84.swift */,
 				A234FFAF21198E2F00EEA0A4 /* WGS84-GCJ02.h */,
 				A234FFB021198E3000EEA0A4 /* WGS84-GCJ02.m */,
@@ -477,8 +522,50 @@
 				A2E05EEB20F6E4C300BEC59D /* Square.obj */,
 				A201F4C820EB5FF4000E574A /* Renderer.swift */,
 				A201F4C520EB5FF4000E574A /* BackdropShaders.metal */,
+				A201F4CA20EB5FF4000E574A /* BackdropViewController.swift */,
 			);
 			path = Backdrop;
+			sourceTree = "<group>";
+		};
+		A2DD3C33211C5ADC00AC80C7 /* MPSYOLO */ = {
+			isa = PBXGroup;
+			children = (
+				A2DD3C34211C5ADC00AC80C7 /* UIImage+MTLTexture.swift */,
+				A2DD3C35211C5ADC00AC80C7 /* MPSYOLO.swift */,
+				A2DD3C36211C5ADC00AC80C7 /* TextureLoader.swift */,
+				A2DD3C37211C5ADC00AC80C7 /* UIImage+RawBytes.swift */,
+				A2DD3C38211C5ADC00AC80C7 /* SwiftFloat16.swift */,
+				A2DD3C39211C5ADC00AC80C7 /* MPSImage+Float.swift */,
+				A2DD3C3A211C5ADC00AC80C7 /* MTLTexture+Array.swift */,
+				A2DD3C3B211C5ADC00AC80C7 /* Parameters */,
+				A2DD3C45211C5ADC00AC80C7 /* Debugging.swift */,
+			);
+			path = MPSYOLO;
+			sourceTree = "<group>";
+		};
+		A2DD3C3B211C5ADC00AC80C7 /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				A2DD3C3C211C5ADC00AC80C7 /* conv8.bin */,
+				A2DD3C3D211C5ADC00AC80C7 /* conv9.bin */,
+				A2DD3C3E211C5ADC00AC80C7 /* conv4.bin */,
+				A2DD3C3F211C5ADC00AC80C7 /* conv5.bin */,
+				A2DD3C40211C5ADC00AC80C7 /* conv7.bin */,
+				A2DD3C41211C5ADC00AC80C7 /* conv6.bin */,
+				A2DD3C42211C5ADC00AC80C7 /* conv2.bin */,
+				A2DD3C43211C5ADC00AC80C7 /* conv3.bin */,
+				A2DD3C44211C5ADC00AC80C7 /* conv1.bin */,
+			);
+			path = Parameters;
+			sourceTree = "<group>";
+		};
+		A2DD3C4F211C5ADC00AC80C7 /* CoreMLYOLO */ = {
+			isa = PBXGroup;
+			children = (
+				A2DD3C50211C5ADC00AC80C7 /* TinyYOLO.mlmodel */,
+				A2DD3C51211C5ADC00AC80C7 /* YOLO.swift */,
+			);
+			path = CoreMLYOLO;
 			sourceTree = "<group>";
 		};
 		A2E05EE220F6D5A200BEC59D /* ARMap */ = {
@@ -684,24 +771,34 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2DD3C61211C5ADC00AC80C7 /* conv1.bin in Resources */,
 				A234FFB52119979A00EEA0A4 /* beep.wav in Resources */,
 				A201F4D320EB5FF6000E574A /* LaunchScreen.storyboard in Resources */,
 				A234FFB62119979A00EEA0A4 /* beep.mp3 in Resources */,
 				A234FFC62119C27100EEA0A4 /* startPoint@2x.png in Resources */,
+				A2405C4A2119C67E0052736E /* endPoint.png in Resources */,
 				A2E05EED20F6E4C300BEC59D /* GameTex.png in Resources */,
+				A2DD3C5B211C5ADC00AC80C7 /* conv4.bin in Resources */,
 				A234FFC12119C0E900EEA0A4 /* ride@2x.png in Resources */,
+				A2DD3C5F211C5ADC00AC80C7 /* conv2.bin in Resources */,
 				A234FFC02119C0E900EEA0A4 /* man@2x.png in Resources */,
+				A2DD3C5D211C5ADC00AC80C7 /* conv7.bin in Resources */,
 				A234FFBA2119AA1E00EEA0A4 /* userPosition@2x.png in Resources */,
 				A2E05EEE20F6E4C300BEC59D /* Square.obj in Resources */,
+				A2DD3C5E211C5ADC00AC80C7 /* conv6.bin in Resources */,
+				A2DD3C59211C5ADC00AC80C7 /* conv8.bin in Resources */,
 				A234FFC72119C27100EEA0A4 /* startPoint.png in Resources */,
 				A234FFB92119AA1E00EEA0A4 /* userPosition.png in Resources */,
-				A234FFC82119C27100EEA0A4 /* endPoint.png in Resources */,
 				A2B59BC3211719040063DB52 /* art.scnassets in Resources */,
+				A2A3789D211E487900BAC87A /* sample.png in Resources */,
+				A2DD3C5C211C5ADC00AC80C7 /* conv5.bin in Resources */,
+				A2DD3C60211C5ADC00AC80C7 /* conv3.bin in Resources */,
 				A234FFC92119C27100EEA0A4 /* endPoint@2x.png in Resources */,
 				A201F4D020EB5FF6000E574A /* Assets.xcassets in Resources */,
 				A234FFBF2119C0E900EEA0A4 /* car@2x.png in Resources */,
 				A201F4CE20EB5FF4000E574A /* Main.storyboard in Resources */,
 				A2E05EEC20F6E4C300BEC59D /* Game.obj in Resources */,
+				A2DD3C5A211C5ADC00AC80C7 /* conv9.bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +820,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2DD3C70211E46C800AC80C7 /* sample.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -804,13 +902,17 @@
 				A2E05EE820F6E22D00BEC59D /* ViewController.swift in Sources */,
 				A201F4CB20EB5FF4000E574A /* BackdropViewController.swift in Sources */,
 				A25201A2210F27B800BADE9C /* DJIVideoCapture.swift in Sources */,
+				A2DD3C56211C5ADC00AC80C7 /* SwiftFloat16.swift in Sources */,
 				A201F4C420EB5FF4000E574A /* AppDelegate.swift in Sources */,
+				A2DD3C6B211C5ADC00AC80C7 /* TinyYOLO.mlmodel in Sources */,
 				A26EB8E020FE670300CE9A5C /* car_detection_keras_CNN.mlmodel in Sources */,
+				A2DD3C58211C5ADC00AC80C7 /* MTLTexture+Array.swift in Sources */,
 				A2B842ED20FD1E220036E5C0 /* MapViewController.swift in Sources */,
 				A259D29820F639B000D0BAAC /* CommonShaders.metal in Sources */,
 				A259D2A020F6683F00D0BAAC /* Shutter.swift in Sources */,
 				A2520185210AC3B500BADE9C /* MANaviAnnotation.swift in Sources */,
 				A26EB8E120FE670300CE9A5C /* car_detection_keras_DNN.mlmodel in Sources */,
+				A2DD3C52211C5ADC00AC80C7 /* UIImage+MTLTexture.swift in Sources */,
 				A259D29A20F63D7F00D0BAAC /* Context.swift in Sources */,
 				A259D29220F5AF9900D0BAAC /* MatrixOperations.swift in Sources */,
 				A252019A210EF61E00BADE9C /* BoundingBox.swift in Sources */,
@@ -821,8 +923,14 @@
 				A2B842E920FCEC650036E5C0 /* Classification.swift in Sources */,
 				A201F4C920EB5FF4000E574A /* Renderer.swift in Sources */,
 				A259D29E20F65A2B00D0BAAC /* Display.swift in Sources */,
+				A2DD3C53211C5ADC00AC80C7 /* MPSYOLO.swift in Sources */,
+				A2DD3C55211C5ADC00AC80C7 /* UIImage+RawBytes.swift in Sources */,
 				A252018E210EDBD400BADE9C /* DJIMLViewController.swift in Sources */,
+				A2DD3C62211C5ADC00AC80C7 /* Debugging.swift in Sources */,
+				A2DD3C54211C5ADC00AC80C7 /* TextureLoader.swift in Sources */,
 				A252018321099BC400BADE9C /* MANaviRoute.swift in Sources */,
+				A2DD3C57211C5ADC00AC80C7 /* MPSImage+Float.swift in Sources */,
+				A2DD3C6C211C5ADC00AC80C7 /* YOLO.swift in Sources */,
 				A252019C210EFB7500BADE9C /* DJIMLHelpers.swift in Sources */,
 				A2520187210AC42900BADE9C /* MANaviPolyline.swift in Sources */,
 				A25EBB40210048F0009D9091 /* AMapViewController.swift in Sources */,
@@ -837,8 +945,6 @@
 				A2520189210AD89200BADE9C /* LineDashPolyline.swift in Sources */,
 				A234FFB221198E3000EEA0A4 /* WGS84-GCJ02.m in Sources */,
 				A2B842F120FE54A60036E5C0 /* GPXFile.swift in Sources */,
-				A25201A0210F054B00BADE9C /* YOLO.swift in Sources */,
-				A252019E210F051300BADE9C /* TinyYOLO.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -89,8 +89,8 @@ LB2AUDRemoveParserDelegate>{
 
 //basic status
 @property (assign, nonatomic) VideoPreviewerStatus status;
-//ffmpeg warpper
-@property (strong, nonatomic) VideoFrameExtractor *videoExtractor;
+////ffmpeg warpper
+//@property (strong, nonatomic) VideoFrameExtractor *videoExtractor;
 
 //hardware decode use videotool box on ios8
 @property (strong, nonatomic) H264VTDecode *hw_decoder;

@@ -168,7 +168,10 @@ class FilterRenderer {
         }
         
         let textureDescriptor: MTLTextureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .bgra8Unorm, width: capturedImageWidth, height: capturedImageHeight, mipmapped: false)
+        textureDescriptor.usage = MTLTextureUsage(rawValue: (UInt(UInt8((MTLTextureUsage.shaderRead).rawValue) | UInt8((MTLTextureUsage.shaderWrite).rawValue) | UInt8((MTLTextureUsage.renderTarget).rawValue))))
         let cameraSourceTexture: MTLTexture = device.makeTexture(descriptor: textureDescriptor)!
+//        var cameraSourceTexture: MTLTexture = device.makeTexture(descriptor: textureDescriptor)!
+//        cameraSourceTexture.usage = MTLTextureUsage.shaderRead | MTLTextureUsage.shaderWrite | MTLTextureUsage.renderTarget
         let output: MTLTexture = device.makeTexture(descriptor: textureDescriptor)!
         
         commandBuffer.addCompletedHandler{ [weak self] commandBuffer in
@@ -184,6 +187,7 @@ class FilterRenderer {
         cameraSourceRenderPassDescriptor.colorAttachments[0].texture = cameraSourceTexture
         cameraSourceRenderPassDescriptor.colorAttachments[0].loadAction = .dontCare
         cameraSourceRenderPassDescriptor.colorAttachments[0].storeAction = .store
+//        cameraSourceTexture.usage = MTLTextureUsage.shaderRead | MTLTextureUsage.shaderWrite | MTLTextureUsage.renderTarget
         
         if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: cameraSourceRenderPassDescriptor) {
             renderEncoder.label = "camera source"
@@ -294,9 +298,10 @@ class FilterRenderer {
         capturedImagePipelineStateDescriptor.fragmentFunction = capturedImageFragmentFunction
         capturedImagePipelineStateDescriptor.vertexDescriptor = imagePlaneVertexDescriptor
         capturedImagePipelineStateDescriptor.colorAttachments[0].pixelFormat = Constants.ColorPixelFormat
-        capturedImagePipelineStateDescriptor.depthAttachmentPixelFormat = Constants.DepthStencilPixelFormat
-        capturedImagePipelineStateDescriptor.stencilAttachmentPixelFormat = Constants.DepthStencilPixelFormat
-        
+//        capturedImagePipelineStateDescriptor.depthAttachmentPixelFormat = Constants.DepthStencilPixelFormat
+//        capturedImagePipelineStateDescriptor.stencilAttachmentPixelFormat = Constants.DepthStencilPixelFormat
+        capturedImagePipelineStateDescriptor.depthAttachmentPixelFormat = MTLPixelFormat.invalid
+        capturedImagePipelineStateDescriptor.stencilAttachmentPixelFormat = MTLPixelFormat.invalid
         do {
             try capturedImagePipelineState = device.makeRenderPipelineState(descriptor: capturedImagePipelineStateDescriptor)
         } catch let error {
@@ -355,9 +360,10 @@ class FilterRenderer {
         anchorPipelineStateDescriptor.fragmentFunction = anchorGeometryFragmentFunction
         anchorPipelineStateDescriptor.vertexDescriptor = geometryVertexDescriptor
         anchorPipelineStateDescriptor.colorAttachments[0].pixelFormat = Constants.ColorPixelFormat
-        anchorPipelineStateDescriptor.depthAttachmentPixelFormat = Constants.DepthStencilPixelFormat
-        anchorPipelineStateDescriptor.stencilAttachmentPixelFormat = Constants.DepthStencilPixelFormat
-        
+//        anchorPipelineStateDescriptor.depthAttachmentPixelFormat = Constants.DepthStencilPixelFormat
+//        anchorPipelineStateDescriptor.stencilAttachmentPixelFormat = Constants.DepthStencilPixelFormat
+        anchorPipelineStateDescriptor.depthAttachmentPixelFormat = MTLPixelFormat.invalid
+        anchorPipelineStateDescriptor.stencilAttachmentPixelFormat = MTLPixelFormat.invalid
         do {
             try anchorPipelineState = device.makeRenderPipelineState(descriptor: anchorPipelineStateDescriptor)
         } catch let error {
@@ -365,8 +371,14 @@ class FilterRenderer {
         }
         
         let anchorDepthStateDescriptor = MTLDepthStencilDescriptor()
-        anchorDepthStateDescriptor.depthCompareFunction = .less
-        anchorDepthStateDescriptor.isDepthWriteEnabled = true
+        anchorDepthStateDescriptor.depthCompareFunction = .always
+        anchorDepthStateDescriptor.isDepthWriteEnabled = false
+//        anchorDepthStateDescriptor.backFaceStencil.stencilFailureOperation = .keep
+//        anchorDepthStateDescriptor.frontFaceStencil.stencilFailureOperation = .keep
+//        anchorDepthStateDescriptor.backFaceStencil.depthFailureOperation = .incrementClamp
+//        anchorDepthStateDescriptor.frontFaceStencil.depthFailureOperation = .incrementClamp
+//        anchorDepthStateDescriptor.backFaceStencil.depthStencilPassOperation = .incrementClamp
+//        anchorDepthStateDescriptor.frontFaceStencil.depthStencilPassOperation = .incrementClamp
         anchorDepthState = device.makeDepthStencilState(descriptor: anchorDepthStateDescriptor)
         
         // Create the command queue

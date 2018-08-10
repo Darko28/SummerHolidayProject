@@ -29,6 +29,7 @@ class BackdropViewController: UIViewController, MTKViewDelegate, ARSessionDelega
         
         // Set the view to use the default device
         if let view = self.view as? MTKView {
+            
             view.device = MTLCreateSystemDefaultDevice()
             view.backgroundColor = UIColor.clear
             view.delegate = self
@@ -40,6 +41,8 @@ class BackdropViewController: UIViewController, MTKViewDelegate, ARSessionDelega
             
             // Configure the renderer to draw to the view
             renderer = Renderer(session: session, metalDevice: view.device!, renderDestination: view)
+            
+//            renderer.update()
             
             renderer.drawRectResized(size: view.bounds.size)
         }

@@ -51,6 +51,8 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
     var currentSearchType: AMapRoutePlanningType = AMapRoutePlanningType.Walk
     
     var customUserLocationView: MAAnnotationView!
+    
+    var isFetchingRoute = false
 
     public static let sharedInstance: AMapViewController = {
         let instance = AMapViewController()
@@ -145,6 +147,16 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    func transmitValue() {
+        if let arVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ARAMapViewController") as? UINavigationController {
+            if let vc = arVC.visibleViewController as? ARAMapViewController {
+                vc.sectionCoordinates = maPaths
+                vc.carLocation = maDestination
+            }
+            self.present(arVC, animated: true, completion: nil)
+        }
+    }
+    
     private func handleAMap() {
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
@@ -166,8 +178,8 @@ class AMapViewController: UIViewController, UIGestureRecognizerDelegate {
             if amapView != nil {
                 amapView.delegate = self
             }
-            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.nuistPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
-            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.nuistPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
+//            let fromLocation = CLLocationCoordinate2D(latitude: GPXFile.nuistPath.first?.0 ?? 0, longitude: GPXFile.cherryHillPath.first?.1 ?? 0)
+//            let cabLocation = CLLocationCoordinate2D(latitude: GPXFile.nuistPath.last?.0 ?? 0, longitude: GPXFile.cherryHillPath.last?.1 ?? 0)
 //            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "From Location", subtitle: "")
 //            let _ = createMAAnnotation(location: fromLocation, mapView: amapView, annotationTitle: "Cab Location", subtitle: "Waiting...")
             drawMAPath(map: amapView, pathArray: GPXFile.nuistPath)
@@ -255,10 +267,37 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
                 let radian = (degree * Double.pi) / 180.0
                 self.customUserLocationView.transform = CGAffineTransform(rotationAngle: CGFloat(radian))
             }
+            
+            if self.isFetchingRoute {
+                
+                self.maPaths = []
+                self.maDestination = (Double(), Double())
+                
+                for annotation in amapView.annotations {
+                    if (annotation as! MAAnnotation).isKind(of: MANaviAnnotation.self) {
+                        amapView.removeAnnotation(annotation as? MAAnnotation)
+                    }
+                }
+                
+                reachabilityCheck()
+                
+                guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+                
+                if let userLocation = appDelegate.locationManager.location?.coordinate {
+                    if NetworkReachability.isInternetAvailable() {
+                        self.fetchMARoute(source: AMapCoordinateConvert(userLocation, .GPS), destination: self.destinationCoordiante, completionHandler: nil)
+                    }
+                }
+            }
         }
     }
     
     func mapView(_ mapView: MAMapView!, didLongPressedAt coordinate: CLLocationCoordinate2D) {
+        
+        self.isFetchingRoute = true
+        
+        self.maPaths = []
+        self.maDestination = (Double(), Double())
         
 //        self.dropLocationAnnotation = createMAAnnotation(location: coordinate, mapView: self.amapView, annotationTitle: "Destination", subtitle: "", image: UIImage(named: "drop-pin"))
         self.dropLocationAnnotation.coordinate = coordinate
@@ -267,7 +306,7 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
         
         for annotation in amapView.annotations {
             if (annotation as! MAAnnotation).isKind(of: MANaviAnnotation.self) {
-                amapView.removeAnnotation(annotation as! MAAnnotation)
+                amapView.removeAnnotation(annotation as? MAAnnotation)
             }
         }
         
@@ -278,7 +317,7 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
             
             if NetworkReachability.isInternetAvailable() {
                 
-                fetchMARoute(source: AMapCoordinateConvert(userLocation, .GPS), destination: coordinate) { [weak self] (polyline) in
+                fetchMARoute(source: AMapCoordinateConvert(userLocation, .GPS), destination: coordinate) { (polyline) in
                     
 //                    print("fetchRoute Completion called")
                     
@@ -353,7 +392,7 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
     
     func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
         let nsErr: NSError? = error as NSError
-        print("Error: \(error) - \(nsErr?.code)")
+        print("Error: \(error!) - \(nsErr!.code)")
     }
     
     func onRouteSearchDone(_ request: AMapRouteSearchBaseRequest!, response: AMapRouteSearchResponse!) {
@@ -525,11 +564,19 @@ extension AMapViewController: MAMapViewDelegate, AMapSearchDelegate {
             
             print("Render overlay for multiPolyline")
             
-            let renderer: MAMultiColoredPolylineRenderer = MAMultiColoredPolylineRenderer(multiPolyline: overlay as! MAMultiPolyline!)
+            let renderer: MAMultiColoredPolylineRenderer = MAMultiColoredPolylineRenderer(multiPolyline: overlay as? MAMultiPolyline)
             renderer.lineWidth = 8.0
             renderer.strokeColors = naviRoute?.multiPolylineColors
             
             return renderer
+        }
+        
+        if overlay.isKind(of: MAPolyline.self) {
+            
+            print("Render overlay for MAPolyline")
+            let renderer: MAPolylineRenderer = MAPolylineRenderer(overlay: overlay)
+            renderer.lineWidth = 2.0
+            renderer.strokeColor = naviRoute?.walkingColor
         }
         
         return nil

@@ -124,6 +124,10 @@ typedef NS_ENUM(NSUInteger, VideoPreviewerType){
 
 @interface VideoPreviewer ()
 
+//ffmpeg warpper
+@property (strong, nonatomic) VideoFrameExtractor *videoExtractor;
+
+
 /**
  *  rotation of the preview content
  *  CAUTION: SHOULD BE CALLED IN MAIN THREAD!

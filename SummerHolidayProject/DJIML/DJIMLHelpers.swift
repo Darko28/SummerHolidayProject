@@ -71,6 +71,49 @@ func nonMaxSuppression(boxes: [YOLO.Prediction], limit: Int, threshold: Float) -
     return selected
 }
 
+func nonMaxSuppression1(boxes: [MPSYOLO.Prediction], limit: Int, threshold: Float) -> [MPSYOLO.Prediction] {
+    
+    // Do an argsort on the confidence scores, from high to low.
+    let sortedIndices = boxes.indices.sorted { boxes[$0].score > boxes[$1].score }
+    
+    var selected: [MPSYOLO.Prediction] = []
+    var active = [Bool](repeating: true, count: boxes.count)
+    var numActive = active.count
+    
+    /*
+     The algorithm is simple: Start with the box that has the highest score.
+     Remove any remaining boxes that overlap it more than the given threshold amount.
+     If there are any boxes left (i.e. these did not overlap with any previous boxes),
+     then repeat this procedure, until no more boxes remain or the limit has been reached.
+     */
+    outer: for i in 0..<boxes.count {
+        
+        if active[i] {
+            
+            let boxA = boxes[sortedIndices[i]]
+            selected.append(boxA)
+            if selected.count >= limit { break }
+            
+            for j in i+1..<boxes.count {
+                
+                if active[j] {
+                    
+                    let boxB = boxes[sortedIndices[j]]
+                    if IOU(a: boxA.rect, b: boxB.rect) > threshold {
+                        
+                        active[j] = false
+                        numActive -= 1
+                        if numActive <= 0 { break outer }
+                    }
+                }
+            }
+        }
+    }
+    
+    return selected
+}
+
+
 /**
  Computes intersection-over-union overlap between two bounding boxes.
  */
@@ -90,29 +133,6 @@ public func IOU(a: CGRect, b: CGRect) -> Float {
                            max(intersectionMaxX - intersectionMinX, 0)
     
     return Float(intersectionArea / (areaA + areaB - intersectionArea))
-}
-
-
-extension Array where Element: Comparable {
-    
-    /**
-     Returns the index and value of the largest element in the array.
-     */
-    public func argmax() -> (Int, Element) {
-        
-        precondition(self.count > 0)
-        
-        var maxIndex = 0
-        var maxValue = self[0]
-        for i in 1..<self.count {
-            if self[i] > maxValue {
-                maxValue = self[i]
-                maxIndex = i
-            }
-        }
-        
-        return (maxIndex, maxValue)
-    }
 }
 
 
